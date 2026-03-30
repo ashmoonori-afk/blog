@@ -639,16 +639,21 @@
           const file = e.target.files[0];
           if (!file) return;
 
+          const localPreviewUrl = URL.createObjectURL(file);
+          slot.innerHTML = '';
+          slot.appendChild(inp);
+          const previewImg = document.createElement('img');
+          previewImg.src = localPreviewUrl;
+          slot.appendChild(previewImg);
+
           try {
             const url = await uploadImageFile(file);
             this.data[key] = url;
-            slot.innerHTML = '';
-            slot.appendChild(inp);
-            const img = document.createElement('img');
-            img.src = url;
-            slot.appendChild(img);
+            previewImg.src = url;
           } catch (error) {
             alert(error.message);
+          } finally {
+            URL.revokeObjectURL(localPreviewUrl);
           }
         });
         return slot;
@@ -708,15 +713,20 @@
           const file = e.target.files[0];
           if (!file) return;
 
+          const localPreviewUrl = URL.createObjectURL(file);
+          imgSide.querySelectorAll('img,.col-placeholder').forEach(el => el.remove());
+          const previewImg = document.createElement('img');
+          previewImg.src = localPreviewUrl;
+          imgSide.appendChild(previewImg);
+
           try {
             const url = await uploadImageFile(file);
             this.data.image = url;
-            imgSide.querySelectorAll('img,.col-placeholder').forEach(el => el.remove());
-            const img = document.createElement('img');
-            img.src = url;
-            imgSide.appendChild(img);
+            previewImg.src = url;
           } catch (error) {
             alert(error.message);
+          } finally {
+            URL.revokeObjectURL(localPreviewUrl);
           }
         });
 
@@ -1124,6 +1134,12 @@
       const file = e.target.files[0];
       if (!file) return;
 
+      const localPreviewUrl = URL.createObjectURL(file);
+      document.getElementById('thumb-preview').src = localPreviewUrl;
+      document.getElementById('thumb-preview').style.display = 'block';
+      document.getElementById('thumb-text').style.display = 'none';
+      document.getElementById('thumb-upload').classList.add('has-image');
+
       try {
         const url = await uploadImageFile(file);
         thumbnailUrl = url;
@@ -1133,6 +1149,8 @@
         document.getElementById('thumb-upload').classList.add('has-image');
       } catch (error) {
         alert(error.message);
+      } finally {
+        URL.revokeObjectURL(localPreviewUrl);
       }
     });
 

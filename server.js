@@ -2,27 +2,25 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const sharp = require('sharp');
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || '127.0.0.1';
+const UPLOADS_DIR = path.join(__dirname, 'uploads');
+const POSTS_FILE = path.join(__dirname, 'posts', 'posts.json');
+const SETTINGS_FILE = path.join(__dirname, 'posts', 'settings.json');
+
+fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 app.use(express.json());
 app.use(express.static(__dirname));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(UPLOADS_DIR));
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, 'uploads')),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`);
-  }
-});
-
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 20 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowed = /jpeg|jpg|png|gif|webp|svg/;
@@ -31,9 +29,6 @@ const upload = multer({
     cb(null, ext && mime);
   }
 });
-
-const POSTS_FILE = path.join(__dirname, 'posts', 'posts.json');
-const SETTINGS_FILE = path.join(__dirname, 'posts', 'settings.json');
 
 const DEFAULT_SETTINGS = {
   hero: {
@@ -72,6 +67,47 @@ function readPosts() {
 
 function writePosts(posts) {
   fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2), 'utf-8');
+}
+
+function makeUploadName(ext) {
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`;
+}
+
+function saveOriginalUpload(file) {
+  const ext = path.extname(file.originalname).toLowerCase() || '.bin';
+  const filename = makeUploadName(ext);
+  fs.writeFileSync(path.join(UPLOADS_DIR, filename), file.buffer);
+  return `/uploads/${filename}`;
+}
+
+async function saveOptimizedUpload(file) {
+  const filename = makeUploadName('.webp');
+  const optimizedBuffer = await sharp(file.buffer)
+    .rotate()
+    .resize({
+      width: 1600,
+      height: 1600,
+      fit: 'inside',
+      withoutEnlargement: true
+    })
+    .webp({
+      quality: 82,
+      effort: 4
+    })
+    .toBuffer();
+
+  fs.writeFileSync(path.join(UPLOADS_DIR, filename), optimizedBuffer);
+  return `/uploads/${filename}`;
+}
+
+async function storeUpload(file) {
+  const mime = (file.mimetype || '').toLowerCase();
+
+  if (mime.includes('svg') || mime.includes('gif')) {
+    return saveOriginalUpload(file);
+  }
+
+  return saveOptimizedUpload(file);
 }
 
 app.get('/api/posts', (req, res) => {
@@ -165,12 +201,17 @@ app.put('/api/settings', (req, res) => {
   res.json(updated);
 });
 
-app.post('/api/upload', upload.single('image'), (req, res) => {
+app.post('/api/upload', upload.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: '파일이 없습니다' });
   }
 
-  res.json({ url: `/uploads/${req.file.filename}` });
+  try {
+    const url = await storeUpload(req.file);
+    res.json({ url });
+  } catch (error) {
+    res.status(500).json({ error: '이미지 처리에 실패했습니다' });
+  }
 });
 
 app.get('/article/:id', (req, res) => {

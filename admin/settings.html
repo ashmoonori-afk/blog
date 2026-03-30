@@ -369,6 +369,16 @@
       const file = e.target.files[0];
       if (!file) return;
 
+      const localPreviewUrl = URL.createObjectURL(file);
+      document.getElementById('hero-bg-preview').src = localPreviewUrl;
+      document.getElementById('hero-bg-preview').style.display = 'block';
+      document.getElementById('hero-bg-text').style.display = 'none';
+      document.getElementById('hero-bg-upload').classList.add('has-image');
+      const pv = document.getElementById('hero-preview');
+      pv.style.backgroundImage = `url('${localPreviewUrl}')`;
+      pv.style.backgroundSize = 'cover';
+      pv.style.backgroundPosition = 'center';
+
       try {
         const url = await uploadImageFile(file);
         heroBgImage = url;
@@ -376,12 +386,13 @@
         document.getElementById('hero-bg-preview').style.display = 'block';
         document.getElementById('hero-bg-text').style.display = 'none';
         document.getElementById('hero-bg-upload').classList.add('has-image');
-        const pv = document.getElementById('hero-preview');
         pv.style.backgroundImage = `url('${url}')`;
         pv.style.backgroundSize = 'cover';
         pv.style.backgroundPosition = 'center';
       } catch (error) {
         alert(error.message);
+      } finally {
+        URL.revokeObjectURL(localPreviewUrl);
       }
     });
 
