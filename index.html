@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freshoh Works</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">Freshoh</a>
+      <nav class="header-nav">
+        <a href="/" class="nav-link active">프로젝트</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-label" id="hero-label">FRESHOH WORKS</p>
+      <h1 class="hero-title" id="hero-title">음식으로 경험을 만듭니다</h1>
+      <p class="hero-subtitle" id="hero-subtitle">프레시오의 프로젝트와 이야기를 만나보세요.</p>
+      <a href="#stories" class="hero-cta" id="hero-cta">프로젝트 보기</a>
+    </div>
+  </section>
+
+  <section class="stories-section" id="stories">
+    <div class="stories-container">
+      <h2 class="section-title" id="section-title"></h2>
+      <p class="section-subtitle" id="section-subtitle"></p>
+
+      <div class="stories-grid" id="stories-grid">
+        <!-- 동적으로 로드 -->
+      </div>
+
+      <div class="load-more-wrap" id="load-more-wrap" style="display:none;">
+        <button class="btn-load-more" id="btn-load-more">더 보기</button>
+      </div>
+
+      <div class="empty-state" id="empty-state" style="display:none;">
+        <p class="empty-icon">&#9998;</p>
+        <p>아직 작성된 스토리가 없습니다.</p>
+        <p class="empty-sub">첫 번째 이야기를 기다리고 있어요.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-columns">
+        <div class="footer-col">
+          <h4 class="footer-heading">서비스</h4>
+          <ul>
+            <li><a href="#">푸드서비스 운영</a></li>
+            <li><a href="#">메뉴 R&D</a></li>
+            <li><a href="#">브랜드 경험 설계</a></li>
+            <li><a href="#">데이터 기반 관리</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-heading">프로젝트</h4>
+          <ul>
+            <li><a href="#">고객경험 설계</a></li>
+            <li><a href="#">표준화 시스템</a></li>
+            <li><a href="#">BX 재설계</a></li>
+            <li><a href="#">NPS 관리</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-heading">회사</h4>
+          <ul>
+            <li><a href="#">프레시오 소개</a></li>
+            <li><a href="#">채용</a></li>
+            <li><a href="#">문의</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-heading">팔로우</h4>
+          <div class="social-links">
+            <a href="#" aria-label="인스타그램"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+            <a href="#" aria-label="유튜브"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Freshoh. All rights reserved.</p>
+        <div class="footer-legal">
+          <a href="#">개인정보처리방침</a>
+          <a href="#">이용약관</a>
+          <a href="/admin/" class="admin-link" title="관리자">&#9881;</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const POSTS_PER_PAGE = 6;
+    let allPosts = [];
+    let displayedCount = 0;
+
+    function escapeHTML(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function sanitizeURL(url) {
+      if (!url) return '';
+      try {
+        const parsed = new URL(url, location.origin);
+        if (parsed.protocol === 'http:' || parsed.protocol === 'https:' || parsed.pathname.startsWith('/')) {
+          return parsed.href;
+        }
+      } catch (e) {}
+      return '';
+    }
+
+    function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      if (isNaN(d)) return '';
+      return `${d.getFullYear()}년 ${d.getMonth() + 1}월`;
+    }
+
+    function estimateReadTime(post) {
+      const text = (post.excerpt || '') + (post.title || '');
+      const words = text.length;
+      const mins = Math.max(3, Math.ceil(words / 80));
+      return `${mins}분 읽기`;
+    }
+
+    function getCardVariant(absoluteIdx) {
+      if (absoluteIdx === 0) return 'featured';
+      const pos = absoluteIdx - 1;
+      if ((pos % 3) === 2) return 'landscape';
+      return 'standard';
+    }
+
+    function buildThumbStyle(post) {
+      if (post.thumbnail) {
+        const url = sanitizeURL(post.thumbnail);
+        if (!url) return `background-color:${escapeHTML(post.thumbnailColor || '#c8b8a8')};`;
+        return `background-image:url('${encodeURI(url)}');background-size:cover;background-position:center;`;
+      }
+      return `background-color:${escapeHTML(post.thumbnailColor || '#c8b8a8')};`;
+    }
+
+    function createCard(post, absoluteIdx) {
+      const thumbStyle = buildThumbStyle(post);
+      const variant = getCardVariant(absoluteIdx);
+      const card = document.createElement('article');
+      card.className = 'story-card' + (variant !== 'standard' ? ' ' + variant : '');
+      card.style.animationDelay = `${(absoluteIdx % POSTS_PER_PAGE) * 0.1 + 0.1}s`;
+
+      const safeCategory = escapeHTML(post.category || '');
+      const safeTitle = escapeHTML(post.title || '');
+      const safeExcerpt = escapeHTML(post.excerpt || '');
+      const safeId = encodeURIComponent(post.id);
+      const ratioMap = { '16:9': 'ratio-16-9', '1:1': 'ratio-1-1', '4:3': 'ratio-4-3' };
+      const ratioClass = ratioMap[post.thumbnailRatio] || '';
+
+      const metaHTML = `
+        <div class="story-meta">
+          <span class="story-category">${safeCategory}</span>
+          <span class="story-divider">|</span>
+          <span class="story-date">${formatDate(post.createdAt)}</span>
+          <span class="story-divider">·</span>
+          <span class="story-read-time">${estimateReadTime(post)}</span>
+        </div>`;
+
+      if (variant === 'featured') {
+        card.innerHTML = `
+          <a href="/article/${safeId}" class="story-card-link">
+            <div class="story-image${ratioClass ? ' ' + ratioClass : ''}">
+              <div class="story-image-placeholder" style="${thumbStyle}"></div>
+            </div>
+            <div class="story-overlay">
+              ${metaHTML}
+              <h3 class="story-title">${safeTitle}</h3>
+              <p class="story-excerpt">${safeExcerpt}</p>
+            </div>
+            <div class="story-content">
+              ${metaHTML}
+              <h3 class="story-title">${safeTitle}</h3>
+              <p class="story-excerpt">${safeExcerpt}</p>
+            </div>
+          </a>`;
+      } else {
+        card.innerHTML = `
+          <a href="/article/${safeId}" class="story-card-link">
+            <div class="story-image${ratioClass ? ' ' + ratioClass : ''}">
+              <div class="story-image-placeholder" style="${thumbStyle}"></div>
+            </div>
+            <div class="story-content">
+              ${metaHTML}
+              <h3 class="story-title">${safeTitle}</h3>
+              <p class="story-excerpt">${safeExcerpt}</p>
+            </div>
+          </a>`;
+      }
+      return card;
+    }
+
+    function renderPosts() {
+      const grid = document.getElementById('stories-grid');
+      const end = Math.min(displayedCount + POSTS_PER_PAGE, allPosts.length);
+      for (let i = displayedCount; i < end; i++) {
+        grid.appendChild(createCard(allPosts[i], i));
+      }
+      displayedCount = end;
+
+      document.getElementById('load-more-wrap').style.display =
+        displayedCount < allPosts.length ? '' : 'none';
+    }
+
+    async function loadPosts() {
+      try {
+        const res = await fetch('/api/posts');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        allPosts = await res.json();
+        if (allPosts.length === 0) {
+          document.getElementById('empty-state').style.display = '';
+        } else {
+          renderPosts();
+        }
+      } catch (e) {
+        console.error('포스트 로드 실패:', e);
+        document.getElementById('empty-state').style.display = '';
+      }
+    }
+
+    document.getElementById('btn-load-more').addEventListener('click', renderPosts);
+
+    async function loadSettings() {
+      try {
+        const res = await fetch('/api/settings');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const s = await res.json();
+        document.getElementById('hero-label').textContent = s.hero.label;
+        document.getElementById('hero-title').textContent = s.hero.title;
+        document.getElementById('hero-subtitle').textContent = s.hero.subtitle;
+        document.getElementById('hero-cta').textContent = s.hero.cta;
+        document.getElementById('hero-cta').href = s.hero.ctaLink || '#stories';
+        document.getElementById('section-title').textContent = s.site.sectionTitle;
+        document.getElementById('section-subtitle').textContent = s.site.sectionSubtitle;
+        if (s.hero.bgImage) {
+          const bgUrl = sanitizeURL(s.hero.bgImage);
+          if (bgUrl) {
+            const hero = document.querySelector('.hero');
+            hero.style.backgroundImage = `url('${encodeURI(bgUrl)}')`;
+            hero.style.backgroundSize = 'cover';
+            hero.style.backgroundPosition = 'center';
+          }
+        }
+      } catch (e) {
+        console.warn('설정 로드 실패, 기본값 사용:', e);
+      }
+    }
+
+    loadSettings();
+    loadPosts();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "hero": {
+    "label": "Freshoh Works",
+    "title": "파트너의 성장을 설계합니다",
+    "subtitle": "고객경험, 브랜드, 운영 — 프레시오가 현장에서 만든 변화의 기록",
+    "cta": "프로젝트 보기",
+    "ctaLink": "#stories",
+    "bgColor": "",
+    "bgImage": ""
+  },
+  "site": {
+    "name": "Freshoh",
+    "sectionTitle": "프로젝트",
+    "sectionSubtitle": "프레시오의 에디토리얼과 프로젝트 기록"
+  }
+}

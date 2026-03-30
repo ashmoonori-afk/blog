@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="장례식장 식사를 '효율적 배식'에서 '한 사람을 위한 대접'으로 바꾼 1인 반상차림 도입 프로젝트. 쉴낙원 서울 × 프레시오.">
+    <meta name="keywords" content="장례식장 1인 반상차림, 고객 경험, 프레시오, 쉴낙원 서울, 장례식장 식사, 접객">
+    <title>프레시오는 어떻게 장례식장 경험을 바꿨을까? — 프레시오 | Freshoh Works</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-text: #2B241E;
+            --color-text-light: #5E5246;
+            --color-text-muted: #8F7A63;
+            --color-bg: #FDFBF8;
+            --color-bg-warm: #F5F1EA;
+            --color-bg-cream: #FAF7F1;
+            --color-accent: #7A6348;
+            --color-border: #E3D8CB;
+            --font-serif: 'Noto Serif KR', Georgia, 'Times New Roman', serif;
+            --font-sans: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --content-width: 720px;
+            --wide-width: 960px;
+            --full-width: 1200px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 17px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            line-height: 1.85;
+            color: var(--color-text);
+            background-color: var(--color-bg);
+        }
+
+        /* ─── Navigation (overlay on hero) ─── */
+        nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            padding: 28px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: var(--full-width);
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .nav-label {
+            font-family: var(--font-sans);
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* ─── Hero (Full-bleed overlay) ─── */
+        .hero {
+            position: relative;
+            width: 100%;
+            min-height: 88vh;
+            display: grid;
+            align-items: end;
+            overflow: hidden;
+        }
+
+        .hero-media {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-media .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+            padding: 48px;
+        }
+
+        .hero-media .image-placeholder span {
+            font-size: 13px;
+            color: rgba(255,255,255,0.2);
+            font-style: italic;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background:
+                linear-gradient(180deg, rgba(43,36,30,0.08) 0%, rgba(43,36,30,0.30) 50%, rgba(43,36,30,0.72) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: var(--full-width);
+            margin: 0 auto;
+            padding: 64px 48px 56px;
+            width: 100%;
+        }
+
+        .hero-label {
+            display: inline-block;
+            padding: 5px 10px;
+            letter-spacing: 0.13em;
+            font-family: var(--font-sans);
+            font-size: 10px;
+            font-weight: 500;
+            color: rgba(245,241,234,0.85);
+            border: 1px solid rgba(245,241,234,0.4);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 4.1vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.22;
+            color: #FFFAF4;
+            max-width: 840px;
+            margin-bottom: 14px;
+            letter-spacing: -0.5px;
+            word-break: keep-all;
+            text-wrap: balance;
+        }
+
+        .hero h1 .title-line {
+            display: block;
+            line-height: 1.18;
+        }
+
+        .hero-sub {
+            font-family: var(--font-serif);
+            font-size: clamp(0.98rem, 1.7vw, 1.15rem);
+            font-weight: 400;
+            color: rgba(245,235,224,0.9);
+            max-width: 680px;
+            margin-bottom: 22px;
+            line-height: 1.7;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .hero-chip {
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            color: rgba(245,235,224,0.8);
+            border: 1px solid rgba(245,235,224,0.3);
+            background: rgba(43,36,30,0.3);
+            padding: 5px 10px;
+        }
+
+        /* ─── Text Content ─── */
+        .text-block {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .text-block p {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--color-text);
+            margin-bottom: 28px;
+            letter-spacing: -0.2px;
+            word-break: keep-all;
+        }
+
+        .text-block p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Section headings */
+        .section-heading {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .section-heading h2 {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--color-text);
+            letter-spacing: -0.3px;
+        }
+
+        .section-heading .section-number {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        /* ─── Full Bleed Image ─── */
+        .image-full {
+            width: 100%;
+            max-width: var(--full-width);
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .image-full.landscape {
+            aspect-ratio: 3 / 2;
+        }
+
+        .image-full.wide {
+            aspect-ratio: 16 / 9;
+        }
+
+        .image-full.square {
+            aspect-ratio: 4 / 3;
+        }
+
+        /* ─── 2-Up Image Layout ─── */
+        .image-pair {
+            max-width: var(--full-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 0;
+        }
+
+        .image-pair .image-item {
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+        }
+
+        /* ─── Side-by-Side Text+Image ─── */
+        .split-layout {
+            max-width: var(--full-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 500px;
+        }
+
+        .split-layout.reverse {
+            direction: rtl;
+        }
+
+        .split-layout.reverse > * {
+            direction: ltr;
+        }
+
+        .split-layout .split-image {
+            aspect-ratio: auto;
+            min-height: 100%;
+        }
+
+        .split-layout .split-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 56px;
+        }
+
+        .split-layout .split-text p {
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--color-text);
+            margin-bottom: 24px;
+            word-break: keep-all;
+        }
+
+        .split-layout .split-text h3 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 28px;
+            color: var(--color-text);
+        }
+
+        /* ─── Pull Quote ─── */
+        .pull-quote {
+            max-width: var(--wide-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .pull-quote blockquote {
+            font-family: var(--font-serif);
+            font-size: 1.55rem;
+            font-weight: 400;
+            font-style: italic;
+            line-height: 1.7;
+            color: var(--color-text-light);
+            border: none;
+            padding: 0;
+            position: relative;
+        }
+
+        .pull-quote blockquote::before {
+            content: '';
+            display: block;
+            width: 48px;
+            height: 2px;
+            background-color: var(--color-accent);
+            margin: 0 auto 32px;
+        }
+
+        .pull-quote blockquote::after {
+            content: '';
+            display: block;
+            width: 48px;
+            height: 2px;
+            background-color: var(--color-accent);
+            margin: 32px auto 0;
+        }
+
+        .pull-quote .quote-attribution {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-top: 20px;
+            font-style: normal;
+        }
+
+        /* ─── Image Caption ─── */
+        .image-caption {
+            max-width: var(--content-width);
+            margin: 12px auto 0;
+            padding: 0 24px;
+        }
+
+        .image-caption p {
+            font-family: var(--font-sans);
+            font-size: 0.72rem;
+            color: var(--color-text-muted);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            line-height: 1.6;
+        }
+
+        /* ─── Background Transition ─── */
+        .bg-warm {
+            background-color: var(--color-bg-warm);
+        }
+
+        .bg-cream {
+            background-color: var(--color-bg-cream);
+        }
+
+        .bg-dark {
+            background-color: #14110E;
+        }
+
+        .bg-dark .text-block p,
+        .bg-dark .section-heading h2 {
+            color: #F5F1EA;
+        }
+
+        .bg-dark .section-heading .section-number {
+            color: var(--color-accent);
+        }
+
+        .bg-dark .pull-quote blockquote {
+            color: rgba(245, 241, 234, 0.8);
+        }
+
+        /* ─── Spacing System ─── */
+        .spacer-xs { height: 32px; }
+        .spacer-sm { height: 48px; }
+        .spacer-md { height: 72px; }
+        .spacer-lg { height: 100px; }
+        .spacer-xl { height: 140px; }
+
+        /* ─── Closing Section ─── */
+        .closing {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .closing p {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--color-text-light);
+            line-height: 1.8;
+        }
+
+        /* ─── Footer ─── */
+        footer {
+            max-width: var(--full-width);
+            margin: 0 auto;
+            padding: 48px 40px;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        footer .footer-brand {
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--color-text);
+        }
+
+        footer .footer-note {
+            font-family: var(--font-sans);
+            font-size: 11px;
+            color: var(--color-text-muted);
+        }
+
+        /* ─── Placeholder Styling ─── */
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: rgba(43, 36, 30, 0.25);
+            text-align: center;
+            padding: 32px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .ph-dark { background: linear-gradient(160deg, #14110E 0%, #2B241E 40%, #3A322A 100%); }
+        .ph-dark .image-placeholder { color: rgba(245,241,234,0.25); }
+        .ph-warm { background: linear-gradient(160deg, #E8DED0 0%, #D9CDB8 100%); }
+        .ph-cream { background: linear-gradient(160deg, #F5F1EA 0%, #EAE3D7 100%); }
+        .ph-stone { background: linear-gradient(160deg, #BFB5A5 0%, #A89A88 100%); }
+        .ph-stone .image-placeholder { color: rgba(255,255,255,0.3); }
+        .ph-ivory { background: linear-gradient(160deg, #FAF7F1 0%, #F0EBE2 100%); }
+        .ph-charcoal { background: linear-gradient(160deg, #3A322A 0%, #2B241E 100%); }
+        .ph-charcoal .image-placeholder { color: rgba(245,241,234,0.25); }
+        .ph-linen { background: linear-gradient(160deg, #F0E8DC 0%, #E5DDD0 100%); }
+        .ph-muted { background: linear-gradient(160deg, #C8BCA8 0%, #B0A48E 100%); }
+        .ph-muted .image-placeholder { color: rgba(255,255,255,0.3); }
+
+        /* ─── Image Direction Box ─── */
+        .image-direction {
+            max-width: var(--content-width);
+            margin: 8px auto 0;
+            padding: 0 24px;
+        }
+
+        .image-direction details {
+            border: 1px dashed var(--color-border);
+            border-radius: 4px;
+            padding: 12px 16px;
+            background: var(--color-bg-cream);
+        }
+
+        .image-direction summary {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            cursor: pointer;
+        }
+
+        .image-direction .dir-content {
+            margin-top: 12px;
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            line-height: 1.7;
+            color: var(--color-text-light);
+        }
+
+        .image-direction .dir-content strong {
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .image-direction .dir-content p {
+            margin-bottom: 8px;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1024px) {
+            html { font-size: 16px; }
+            .hero-content { padding: 48px 36px 48px; }
+            .split-layout .split-text { padding: 40px 36px; }
+        }
+
+        @media (max-width: 768px) {
+            html { font-size: 15px; }
+            nav { padding: 20px 24px; }
+            .hero { min-height: 76vh; }
+            .hero-content { padding: 38px 24px 32px; }
+            .section-heading h2 { font-size: 1.5rem; }
+            .pull-quote blockquote { font-size: 1.3rem; }
+            .text-block, .section-heading, .pull-quote, .image-caption, .closing {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .image-pair { gap: 8px; }
+            .split-layout {
+                grid-template-columns: 1fr;
+            }
+            .split-layout .split-image {
+                aspect-ratio: 4 / 3;
+            }
+            .split-layout.reverse {
+                direction: ltr;
+            }
+            .split-layout .split-text {
+                padding: 40px 20px;
+            }
+            footer {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+                padding: 36px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-heading h2 { font-size: 1.3rem; }
+            .pull-quote blockquote { font-size: 1.15rem; }
+            .spacer-xl { height: 80px; }
+            .spacer-lg { height: 64px; }
+            .spacer-md { height: 48px; }
+        }
+
+        @media print {
+            nav, footer, .image-direction { display: none; }
+            .bg-warm, .bg-cream, .bg-dark { background-color: transparent !important; }
+            .bg-dark .text-block p, .bg-dark .section-heading h2 { color: var(--color-text) !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <article>
+
+        <!-- ════════ HERO — Full-bleed overlay ════════ -->
+        <header class="hero">
+            <nav>
+                <span class="nav-logo">Freshoh</span>
+                <span class="nav-label">Works</span>
+            </nav>
+            <div class="hero-media ph-dark">
+                <div class="image-placeholder">
+                    <span>정갈하게 세팅된 1인 반상차림 전경 — 따뜻한 조명 아래, 한 사람을 위해 준비된 상</span>
+                </div>
+            </div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-label">Freshoh Works Editorial</span>
+                <h1>
+                    <span class="title-line">프레시오는 어떻게</span>
+                    <span class="title-line">장례식장 경험을 바꿨을까?</span>
+                </h1>
+                <p class="hero-sub">1인 반상차림으로 시작한 작은 변화가 고객 경험과 운영 지표를 함께 바꾼 이야기입니다</p>
+                <div class="hero-meta">
+                    <span class="hero-chip">Site: 쉴낙원 서울 장례식장</span>
+                    <span class="hero-chip">Period: 2020.03 ~ 현재 진행 중</span>
+                    <span class="hero-chip">Category: Customer Experience Design</span>
+                    <span class="hero-chip">Read Time: 8분</span>
+                </div>
+            </div>
+        </header>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — Hero</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 풀블리드 (min-height 88vh)</p>
+                    <p><strong>무드:</strong> 정돈되고 따뜻한 대접의 분위기. 은은한 조명, 나무 톤. 정중하지만 편안한 인상.</p>
+                    <p><strong>피사체:</strong> 1인 반상차림 탑다운 또는 낮은 앵글. 깔끔하게 배치된 그릇, 밥, 국, 반찬. 핵심 디테일은 중앙~상단 배치.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <!-- ════════ INTRO — Image first, then text ════════ -->
+        <div class="image-full wide">
+            <div class="image-placeholder ph-warm">기존 단체 상차림 전경 — 여러 사람이 한 상을 공유, 복잡한 배식, 음식이 식어가는 장면</div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 16:9 와이드 (1200×675px)</p>
+                    <p><strong>무드:</strong> 어수선하고 분주한 배식 현장. 형광등 아래 밋밋한 분위기. 불편함이 느껴지는 톤.</p>
+                    <p><strong>피사체:</strong> 넓은 앵글. 여러 명이 한 상을 공유하는 장면. 반찬이 어지럽게 놓이고, 사람들이 불편한 자세로 식사.</p>
+                </div>
+            </details>
+        </div>
+        <div class="image-caption">
+            <p>효율은 높았지만, "대접받고 있다"는 감각은 남기기 어려웠습니다</p>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <div class="text-block">
+            <p>장례식장에서의 식사 경험. 전통적인 장례식장 상차림은 효율성을 중심으로 설계되었습니다. 많은 사람들을 빠르게 먹여야 하니까요. 하지만 조문객 입장은 다릅니다. 누군가 옆에서 밥을 덜어주고, 국을 퍼주는 과정에서 자신이 대접받는다는 느낌보다는 "빨리 먹어야 하나"라는 불안감이 생깁니다.</p>
+            <p>프레시오는 이 문제를 보았습니다. 처음 팀이 본 건 메뉴표가 아니라 식사 장면이었습니다. 그리고 질문을 바꿨습니다. "무엇을 더 올릴까?"가 아니라 "어떤 순간에, 어떤 방식으로 대접할까?"로.</p>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER ONE — 문제 인식과 해답 (Scene 1+2 통합) ════════ -->
+        <div class="section-heading">
+            <span class="section-number">Chapter One — The Question</span>
+            <h2>문제를 맛에서 찾지 않고,<br>장면에서 찾다</h2>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="text-block">
+            <p>다수를 효율적으로 먹이는 구조에서는 개인이 존중받는 느낌을 만들기 어렵습니다. 한 상을 공유하고, 남이 퍼주는 밥을 받아 먹고, 옆 사람의 속도에 맞춰야 하는 식사. 이 구조 자체가 '어쩔 수 없는 절차'라는 인상을 만들고 있었습니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- Split — Before(문제) + 해설 -->
+        <div class="split-layout">
+            <div class="split-image ph-cream">
+                <div class="image-placeholder">배식 과정 — 줄지어 기다리는 조문객, 커다란 솥에서 퍼담는 국, 좁은 테이블</div>
+            </div>
+            <div class="split-text">
+                <h3>효율이 지워버린 것,<br>대접의 감각</h3>
+                <p>음식이 식는 것도 신경 쓰이고, 위생도 걱정됩니다. 가장 중요한 순간에 편안함을 느껴야 하는데, 오히려 어색함과 불편함만 남습니다.</p>
+                <p>메뉴의 문제가 아니라 경험의 문제였습니다. 프레시오는 이 지점에서 답을 찾기 시작했습니다.</p>
+            </div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — Split Layout</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 세로형 자유 비율 (600×500px 이상)</p>
+                    <p><strong>무드:</strong> 다큐멘터리 관찰 톤. 불편함이 자연스럽게 드러나는 현장 포착.</p>
+                    <p><strong>피사체:</strong> 배식 줄 또는 단체 식사 장면. 정리되지 않은 상. 연출 없이 있는 그대로.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <div class="pull-quote">
+            <blockquote>
+                "무엇을 더 올릴까?"가 아니라<br>"어떤 방식으로 대접할까?"
+            </blockquote>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <!-- 풀블리드 — 1인 반상 전환 이미지 -->
+        <div class="image-full landscape">
+            <div class="image-placeholder ph-muted" style="color:rgba(255,255,255,0.3);">새롭게 설계된 1인 반상차림 — 정렬된 그릇들, 한 사람을 위한 완성된 상, 따뜻한 자연광</div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 3:2 가로형 (1200×800px)</p>
+                    <p><strong>무드:</strong> 정돈되고 아름다운 반상. 따뜻한 자연광, 나무 테이블. 앞선 기존 이미지와 극적 대비.</p>
+                    <p><strong>피사체:</strong> 탑다운 45도. 완벽하게 세팅된 1인 반상차림. 밥, 국, 반찬이 질서 있게 배치된 모습.</p>
+                </div>
+            </details>
+        </div>
+        <div class="image-caption">
+            <p>한 사람을 기준으로, 상차림의 질서를 다시 만들다</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="text-block">
+            <p>프레시오가 선택한 답은 1인 반상차림이었습니다. 단순한 메뉴 변경이 아닙니다. 한 사람을 기준으로 경험을 다시 설계하는 것입니다. 각 조문객이 자신의 상을 가집니다. 모든 음식이 이미 담겨 있어서 추가로 덜거나 퍼할 필요가 없습니다. 온도와 신선도가 일관되게 유지됩니다.</p>
+            <p>가장 중요한 것은, 이 모든 것이 자연스럽다는 점입니다. 한 사람을 위해 준비된 상은, 말하지 않아도 정성이 전달됩니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- 2-up — 디테일 -->
+        <div class="image-pair">
+            <div class="image-item ph-stone">
+                <div class="image-placeholder" style="color:rgba(255,255,255,0.3);">1인 반상차림 디테일 — 수저 놓인 자리, 정갈한 그릇 배치</div>
+            </div>
+            <div class="image-item ph-ivory">
+                <div class="image-placeholder">반찬 클로즈업 — 깔끔하게 담긴 소분된 반찬들, 온기가 느껴지는 정물</div>
+            </div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — 디테일</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 4:3 × 2장 (각 594×446px)</p>
+                    <p><strong>무드:</strong> 정돈된 미니멀. 따뜻한 톤. 정성이 느껴지는 접사.</p>
+                    <p><strong>피사체:</strong> 좌측 — 수저 배치, 그릇 정렬 디테일. 우측 — 소분된 반찬 클로즈업. 색감과 질감 강조.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER TWO — 현장 적용 (bg-warm) ════════ -->
+        <div class="bg-warm" style="padding: 100px 0;">
+
+            <div class="section-heading">
+                <span class="section-number">Chapter Two — The Field</span>
+                <h2>현장은 느리게 바뀌지만,<br>한번 바뀌면 오래갑니다</h2>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <div class="text-block">
+                <p>변화는 항상 저항을 만납니다. 처음 1인 반상차림을 도입했을 때, 주방 팀의 반응은 회의적이었습니다. "이렇게 하면 시간이 더 오래 걸리지 않을까?" "실수할 가능성이 높아지지 않을까?" 프레시오의 운영 팀은 이것을 단순한 매뉴얼 문제로 보지 않았습니다. 현장에 직접 들어갔습니다.</p>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <!-- Split reverse — 직원 인터뷰 (다른 블로그와 다른 위치) -->
+            <div class="split-layout reverse">
+                <div class="split-image ph-linen">
+                    <div class="image-placeholder">주방 팀이 함께 상차림을 연습하는 현장 — 매뉴얼 확인, 팀 협력 장면</div>
+                </div>
+                <div class="split-text">
+                    <h3>"해야 하는 일"에서<br>"우리가 만드는 경험"으로</h3>
+                    <p>주방 팀과 함께 상차림을 연습했습니다. 왜 이렇게 해야 하는지, 이것이 고객에게 어떤 의미인지를 설명했습니다.</p>
+                    <p>시간이 지나면서 주방 팀은 자신들의 손으로 만든 상차림이 조문객에게 어떤 위로가 되는지를 깨달으면서, 일에 대한 자부심이 생겼습니다.</p>
+                </div>
+            </div>
+            <div class="image-direction">
+                <details>
+                    <summary>Photo Direction — Split Reverse</summary>
+                    <div class="dir-content">
+                        <p><strong>비율:</strong> 세로형 자유 비율 (600×500px 이상)</p>
+                        <p><strong>무드:</strong> 협력과 몰입의 현장. 연출 없이 실제 업무 흐름 속 포착.</p>
+                        <p><strong>피사체:</strong> 주방에서 상차림 배치를 확인하고 조정하는 팀. 손과 그릇에 포커스.</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <!-- 풀블리드 — 조문객 식사 -->
+            <div class="image-full landscape">
+                <div class="image-placeholder ph-stone" style="color:rgba(255,255,255,0.3);">조문객이 1인 반상차림을 받고 편안하게 식사하는 장면 — 정중한 분위기, 만족스러운 표정</div>
+            </div>
+            <div class="image-direction">
+                <details>
+                    <summary>Photo Direction</summary>
+                    <div class="dir-content">
+                        <p><strong>비율:</strong> 3:2 가로형 (1200×800px)</p>
+                        <p><strong>무드:</strong> 편안하고 정중한 식사 시간. 따뜻한 조명, 자연스러운 다큐멘터리 톤.</p>
+                        <p><strong>피사체:</strong> 조문객들이 각자의 1인 반상 앞에서 식사하는 모습. 다양한 연령대. 편안한 자세.</p>
+                    </div>
+                </details>
+            </div>
+            <div class="image-caption">
+                <p>변화의 신호는 작은 곳에서부터 나타났습니다. "정성이 느껴진다", "깔끔하고 신경 쓴 느낌이 든다"</p>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <div class="text-block">
+                <p>더 흥미로운 것은 해외 손님들의 반응이었습니다. 일본의 장례 관계자들이 쉴낙원을 방문했을 때, 그들이 가장 먼저 주목한 것은 메뉴가 아니라 운영 방식이었습니다. "한 사람을 기준으로 모든 것을 설계했다"는 개념에 깊은 인상을 받았고, 이를 자신들의 나라에도 도입할 수 있을지 질문했습니다. 이것은 단순한 "좋은 평가"를 넘어, 모델로서 인정받기 시작했다는 뜻이었습니다.</p>
+            </div>
+
+            <div class="spacer-sm"></div>
+
+            <div class="pull-quote">
+                <blockquote>
+                    더 정교한 운영은<br>더 따뜻한 경험과 함께 갈 수 있습니다
+                </blockquote>
+            </div>
+
+            <div class="spacer-sm"></div>
+
+        </div><!-- end bg-warm -->
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER THREE — 결과 증명 (외부 검증 + 성과 통합) ════════ -->
+        <div class="bg-dark" style="padding: 100px 0;">
+
+            <div class="section-heading">
+                <span class="section-number">Chapter Three — The Evidence</span>
+                <h2>경험이 달라지면,<br>숫자도 결국 따라옵니다</h2>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <div class="text-block">
+                <p style="color: #F5F1EA;">1인 반상차림 도입 후, 쉴낙원의 식수 전환율이 눈에 띄게 올랐습니다. 기존에는 조문객의 약 60%가 식사를 선택했다면, 이제는 75% 이상이 식사를 합니다. 객단가도 15% 개선되었습니다. 더 이상 "먹기 불편한 음식"이 아니라 "편안하게 즐길 수 있는 경험"이 되었기 때문입니다.</p>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <!-- Split — 리뷰 변화 + KPI (split 사용으로 변주) -->
+            <div class="split-layout">
+                <div class="split-image ph-charcoal">
+                    <div class="image-placeholder" style="color:rgba(122,99,72,0.3);">KPI 인포그래픽 — 식수 전환율 60%→75%+ / 객단가 15% 상승 / 리뷰 톤 변화</div>
+                </div>
+                <div class="split-text" style="background: #1A1510;">
+                    <h3 style="color: #F5F1EA;">리뷰의 언어가<br>달라졌습니다</h3>
+                    <p style="color: rgba(245,241,234,0.85);">구글 리뷰, SNS, 입소문에서 "무난하다"는 표현이 사라졌습니다. 대신 "정돈되어 있다", "깔끔하다", "신경 쓴 느낌이 난다"는 표현이 늘어났습니다.</p>
+                    <p style="color: rgba(245,241,234,0.85);">이것은 단순한 만족도 상승이 아닙니다. 브랜드 이미지의 변화입니다.</p>
+                </div>
+            </div>
+            <div class="image-direction">
+                <details>
+                    <summary>Infographic Direction — KPI + 리뷰</summary>
+                    <div class="dir-content">
+                        <p><strong>비율:</strong> 세로형 자유 비율 (600×500px 이상)</p>
+                        <p><strong>무드:</strong> 다크 배경, 따뜻한 골드 악센트. 신뢰감 있는 비즈니스 대시보드.</p>
+                        <p><strong>구성:</strong> 세로 3단 카드. 식수 전환율 / 객단가 / 리뷰 톤 변화. 대형 숫자 + 보조 텍스트. 산세리프, 미니멀.</p>
+                    </div>
+                </details>
+            </div>
+            <div class="image-caption">
+                <p style="color: var(--color-text-muted);">2020.03~, 쉴낙원 서울 장례식장 고객 경험 데이터 기반</p>
+            </div>
+
+            <div class="spacer-lg"></div>
+
+            <div class="text-block">
+                <p style="color: #F5F1EA;">"장례식장 식사도 경험으로 설계할 수 있다"는 사실이, 숫자로 증명된 것입니다. 경험이 달라지면, 사람들이 쓰는 언어도 달라집니다.</p>
+            </div>
+
+            <div class="spacer-sm"></div>
+
+            <div class="pull-quote">
+                <blockquote style="color: rgba(245,241,234,0.7);">
+                    사람을 기준으로 설계하면,<br>신뢰는 자연스럽게 이어집니다
+                </blockquote>
+            </div>
+
+            <div class="spacer-sm"></div>
+
+        </div><!-- end bg-dark -->
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CLOSING IMAGE ════════ -->
+        <div class="image-full wide">
+            <div class="image-placeholder ph-warm">깔끔하게 세팅된 빈 1인 반상 — 다음 손님을 기다리는 정갈한 상, 넓은 여백</div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — Closing</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 16:9 와이드 (1200×675px)</p>
+                    <p><strong>무드:</strong> 고요한 완결. 부드러운 자연광, 따뜻한 나무 톤. 정돈된 아름다움.</p>
+                    <p><strong>피사체:</strong> 빈 1인 반상차림. 수저, 그릇이 정갈하게 놓인 상태. 음식 없이 세팅만. 여백을 넉넉히.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <!-- ════════ CLOSING TEXT ════════ -->
+        <div class="closing">
+            <p>프레시오가 복원한 건<br>상차림이 아니라,<br>대접의 감각입니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="closing">
+            <p style="font-size: 1.2rem; font-weight: 600; font-style: normal; color: var(--color-text);">사람을 기준으로 설계하면,<br>신뢰는 자연스럽게 숫자로 이어집니다.</p>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+    </article>
+
+    <!-- Footer -->
+    <footer>
+        <span class="footer-brand">Freshoh</span>
+        <span class="footer-note">이 글은 쉴낙원 서울 장례식장의 1인 반상차림 도입 사례를 바탕으로 작성되었습니다</span>
+    </footer>
+
+</body>
+</html>

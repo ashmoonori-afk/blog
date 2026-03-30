@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>사이트 설정 - 이야기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background: #f5f3f0;
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    .topbar {
+      background: #1a1a1a; color: #fff; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px; position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-logo {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.1rem; font-weight: 400; letter-spacing: 0.1em;
+    }
+    .topbar-actions { display:flex; gap:12px; align-items:center; }
+    .topbar-link { font-size:0.78rem; color:#aaa; transition:color 0.2s; }
+    .topbar-link:hover { color:#fff; }
+
+    .container { max-width: 720px; margin: 0 auto; padding: 40px 24px; }
+    .page-header {
+      display:flex; justify-content:space-between; align-items:center; margin-bottom:32px;
+    }
+    .page-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.6rem; font-weight: 400;
+    }
+
+    .nav-tabs {
+      display: flex; gap: 0; margin-bottom: 32px;
+      border-bottom: 1px solid #ddd;
+    }
+    .nav-tab {
+      padding: 12px 24px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #999;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-tab:hover { color: #1a1a1a; }
+    .nav-tab.active {
+      color: #1a1a1a;
+      border-bottom-color: #1a1a1a;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f0ede8;
+    }
+
+    .field { margin-bottom: 20px; }
+    .field:last-child { margin-bottom: 0; }
+    .field-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #888;
+      margin-bottom: 6px;
+    }
+    .field-input {
+      width: 100%;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 0.9rem;
+      padding: 10px 14px;
+      border: 1px solid #e8e4e0;
+      outline: none;
+      background: #fafafa;
+      transition: border-color 0.2s;
+    }
+    .field-input:focus { border-color: #1a1a1a; }
+    .field-textarea {
+      width: 100%;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 0.9rem;
+      padding: 10px 14px;
+      border: 1px solid #e8e4e0;
+      outline: none;
+      background: #fafafa;
+      resize: vertical;
+      min-height: 60px;
+      line-height: 1.6;
+    }
+    .field-textarea:focus { border-color: #1a1a1a; }
+    .field-hint {
+      font-size: 0.72rem;
+      color: #bbb;
+      margin-top: 4px;
+    }
+
+    /* Hero preview */
+    .hero-preview {
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      position: relative;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+    }
+    .hero-preview-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.3);
+    }
+    .hero-preview-content {
+      position: relative; z-index: 2; padding: 20px;
+    }
+    .hero-preview-label { font-size:0.6rem; letter-spacing:0.15em; opacity:0.8; margin-bottom:6px; }
+    .hero-preview-title {
+      font-family:'Noto Serif KR',serif; font-size:1.3rem; font-weight:300; margin-bottom:6px;
+    }
+    .hero-preview-sub { font-size:0.72rem; font-weight:300; opacity:0.8; }
+
+    .thumb-area {
+      border: 2px dashed #ddd;
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .thumb-area:hover { border-color: #999; }
+    .thumb-area.has-image { border-style:solid; padding: 0; overflow:hidden; }
+    .thumb-area img { width:100%; height:120px; object-fit:cover; }
+    .thumb-area-text { font-size:0.78rem; color:#aaa; }
+    .thumb-area-remove {
+      position:absolute; top:6px; right:6px; width:22px; height:22px;
+      border-radius:50%; background:rgba(0,0,0,0.6); color:#fff;
+      border:none; cursor:pointer; font-size:12px; line-height:22px; display:none;
+    }
+    .thumb-area.has-image .thumb-area-remove { display:block; }
+
+    .btn {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 0.85rem; font-weight: 500; padding: 12px 32px;
+      border: none; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-primary { background: #1a1a1a; color: #fff; }
+    .btn-primary:hover { background: #333; }
+
+    .save-bar {
+      position: sticky;
+      bottom: 0;
+      background: #fff;
+      border-top: 1px solid #e8e4e0;
+      padding: 16px 28px;
+      display: flex;
+      justify-content: flex-end;
+      border-radius: 0 0 8px 8px;
+      margin-top: -20px;
+    }
+
+    .status-msg {
+      position:fixed; bottom:24px; right:24px; background:#1a1a1a;
+      color:#fff; padding:12px 24px; font-size:0.82rem; border-radius:4px;
+      opacity:0; transform:translateY(10px); transition:all 0.3s; z-index:200;
+    }
+    .status-msg.show { opacity:1; transform:translateY(0); }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <span class="topbar-logo">이야기 관리</span>
+    <div class="topbar-actions">
+      <a href="/admin/" class="topbar-link">글 관리</a>
+      <a href="/" class="topbar-link" target="_blank">사이트 보기 ↗</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title">사이트 설정</h1>
+    </div>
+
+    <div class="nav-tabs">
+      <div class="nav-tab active" data-tab="hero">히어로 배너</div>
+      <div class="nav-tab" data-tab="site">사이트 기본</div>
+    </div>
+
+    <!-- Hero Tab -->
+    <div id="tab-hero">
+      <div class="hero-preview" id="hero-preview" style="background: linear-gradient(135deg, #8b9e8b, #3a5a4a);">
+        <div class="hero-preview-overlay"></div>
+        <div class="hero-preview-content">
+          <div class="hero-preview-label" id="pv-label"></div>
+          <div class="hero-preview-title" id="pv-title"></div>
+          <div class="hero-preview-sub" id="pv-sub"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">히어로 배너 내용</div>
+        <div class="field">
+          <label class="field-label">상단 라벨</label>
+          <input type="text" class="field-input" id="hero-label" placeholder="예: 2026 여행">
+          <div class="field-hint">히어로 최상단 작은 텍스트</div>
+        </div>
+        <div class="field">
+          <label class="field-label">메인 타이틀</label>
+          <input type="text" class="field-input" id="hero-title" placeholder="예: 우리와 함께하는 여정">
+        </div>
+        <div class="field">
+          <label class="field-label">서브 타이틀</label>
+          <textarea class="field-textarea" id="hero-subtitle" placeholder="설명 문구"></textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">버튼 텍스트</label>
+          <input type="text" class="field-input" id="hero-cta" placeholder="예: 자세히 보기">
+        </div>
+        <div class="field">
+          <label class="field-label">버튼 링크</label>
+          <input type="text" class="field-input" id="hero-cta-link" placeholder="예: #stories">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">히어로 배경 이미지</div>
+        <div class="thumb-area" id="hero-bg-upload" onclick="document.getElementById('hero-bg-file').click()">
+          <span class="thumb-area-text" id="hero-bg-text">클릭하여 배경 이미지 업로드 (권장: 1920x1080)</span>
+          <img id="hero-bg-preview" style="display:none;">
+          <button class="thumb-area-remove" id="hero-bg-remove" onclick="event.stopPropagation();removeHeroBg();">&times;</button>
+        </div>
+        <input type="file" id="hero-bg-file" accept="image/*" style="display:none;">
+        <div class="field-hint" style="margin-top:8px;">이미지 없으면 기본 그라데이션 배경 사용</div>
+      </div>
+
+      <div class="save-bar">
+        <button class="btn btn-primary" onclick="saveSettings()">저장하기</button>
+      </div>
+    </div>
+
+    <!-- Site Tab -->
+    <div id="tab-site" style="display:none;">
+      <div class="card">
+        <div class="card-title">사이트 기본 정보</div>
+        <div class="field">
+          <label class="field-label">사이트 이름</label>
+          <input type="text" class="field-input" id="site-name" placeholder="예: 이야기">
+        </div>
+        <div class="field">
+          <label class="field-label">스토리 섹션 제목</label>
+          <input type="text" class="field-input" id="site-section-title" placeholder="예: 스토리">
+        </div>
+        <div class="field">
+          <label class="field-label">스토리 섹션 부제</label>
+          <input type="text" class="field-input" id="site-section-subtitle" placeholder="예: 엄선된 여행 이야기와 에디토리얼">
+        </div>
+      </div>
+
+      <div class="save-bar">
+        <button class="btn btn-primary" onclick="saveSettings()">저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-msg" id="status-msg"></div>
+
+  <script>
+    let heroBgImage = '';
+
+    // Tabs
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('tab-hero').style.display = tab.dataset.tab === 'hero' ? '' : 'none';
+        document.getElementById('tab-site').style.display = tab.dataset.tab === 'site' ? '' : 'none';
+      });
+    });
+
+    // Live preview
+    function updatePreview() {
+      document.getElementById('pv-label').textContent = document.getElementById('hero-label').value;
+      document.getElementById('pv-title').textContent = document.getElementById('hero-title').value;
+      document.getElementById('pv-sub').textContent = document.getElementById('hero-subtitle').value;
+    }
+    ['hero-label','hero-title','hero-subtitle'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updatePreview);
+    });
+
+    // Hero bg upload
+    document.getElementById('hero-bg-file').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const fd = new FormData();
+      fd.append('image', file);
+      const res = await fetch('/api/upload', { method:'POST', body:fd });
+      const data = await res.json();
+      heroBgImage = data.url;
+      document.getElementById('hero-bg-preview').src = data.url;
+      document.getElementById('hero-bg-preview').style.display = 'block';
+      document.getElementById('hero-bg-text').style.display = 'none';
+      document.getElementById('hero-bg-upload').classList.add('has-image');
+      // Update preview
+      const pv = document.getElementById('hero-preview');
+      pv.style.backgroundImage = `url('${data.url}')`;
+      pv.style.backgroundSize = 'cover';
+      pv.style.backgroundPosition = 'center';
+    });
+
+    function removeHeroBg() {
+      heroBgImage = '';
+      document.getElementById('hero-bg-preview').style.display = 'none';
+      document.getElementById('hero-bg-text').style.display = '';
+      document.getElementById('hero-bg-upload').classList.remove('has-image');
+      document.getElementById('hero-bg-file').value = '';
+      const pv = document.getElementById('hero-preview');
+      pv.style.backgroundImage = '';
+      pv.style.background = 'linear-gradient(135deg, #8b9e8b, #3a5a4a)';
+    }
+
+    // Load settings
+    async function loadSettings() {
+      const res = await fetch('/api/settings');
+      const s = await res.json();
+      document.getElementById('hero-label').value = s.hero.label || '';
+      document.getElementById('hero-title').value = s.hero.title || '';
+      document.getElementById('hero-subtitle').value = s.hero.subtitle || '';
+      document.getElementById('hero-cta').value = s.hero.cta || '';
+      document.getElementById('hero-cta-link').value = s.hero.ctaLink || '';
+      document.getElementById('site-name').value = s.site.name || '';
+      document.getElementById('site-section-title').value = s.site.sectionTitle || '';
+      document.getElementById('site-section-subtitle').value = s.site.sectionSubtitle || '';
+
+      if (s.hero.bgImage) {
+        heroBgImage = s.hero.bgImage;
+        document.getElementById('hero-bg-preview').src = s.hero.bgImage;
+        document.getElementById('hero-bg-preview').style.display = 'block';
+        document.getElementById('hero-bg-text').style.display = 'none';
+        document.getElementById('hero-bg-upload').classList.add('has-image');
+        const pv = document.getElementById('hero-preview');
+        pv.style.backgroundImage = `url('${s.hero.bgImage}')`;
+        pv.style.backgroundSize = 'cover';
+        pv.style.backgroundPosition = 'center';
+      }
+
+      updatePreview();
+    }
+
+    // Save
+    async function saveSettings() {
+      const body = {
+        hero: {
+          label: document.getElementById('hero-label').value,
+          title: document.getElementById('hero-title').value,
+          subtitle: document.getElementById('hero-subtitle').value,
+          cta: document.getElementById('hero-cta').value,
+          ctaLink: document.getElementById('hero-cta-link').value,
+          bgImage: heroBgImage
+        },
+        site: {
+          name: document.getElementById('site-name').value,
+          sectionTitle: document.getElementById('site-section-title').value,
+          sectionSubtitle: document.getElementById('site-section-subtitle').value
+        }
+      };
+      await fetch('/api/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify(body)
+      });
+      showStatus('설정이 저장되었습니다');
+    }
+
+    function showStatus(msg) {
+      const el = document.getElementById('status-msg');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2000);
+    }
+
+    loadSettings();
+  </script>
+
+</body>
+</html>

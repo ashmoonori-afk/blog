@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freshoh Works</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    /* Prevent horizontal scroll from full-width blocks */
+    html { overflow-x: hidden; }
+    body { overflow-x: clip; }
+
+    /* Article content block rendering */
+    .article-rendered h2 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      line-height: 1.5;
+      margin: 48px 0 24px;
+      color: #1a1a1a;
+    }
+    .article-rendered h3 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.3rem;
+      font-weight: 400;
+      line-height: 1.5;
+      margin: 36px 0 16px;
+    }
+    .article-rendered h4 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin: 28px 0 12px;
+    }
+    .article-rendered p {
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 2;
+      color: #333;
+      margin-bottom: 24px;
+    }
+    .article-rendered p:first-child::first-letter {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 3.5rem;
+      font-weight: 500;
+      float: left;
+      line-height: 1;
+      margin-right: 12px;
+      margin-top: 4px;
+      color: #1a1a1a;
+    }
+
+    /* Image blocks */
+    .article-img { margin: 36px 0; }
+    .article-img img { width: 100%; border-radius: 4px; }
+    .article-img figcaption {
+      text-align: center;
+      font-size: 0.82rem;
+      color: #999;
+      margin-top: 10px;
+    }
+    .article-img--stretched {
+      width: 720px;
+      max-width: 100vw;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .article-img--left {
+      float: left;
+      width: 50%;
+      margin: 8px 28px 16px 0;
+    }
+    .article-img--right {
+      float: right;
+      width: 50%;
+      margin: 8px 0 16px 28px;
+    }
+    .article-img--bordered img { border: 1px solid #e8e4e0; }
+
+    /* Quote */
+    .article-quote {
+      border-left: 2px solid #c8b8a8;
+      padding: 8px 0 8px 28px;
+      margin: 40px 0;
+    }
+    .article-quote p {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      font-weight: 300;
+      line-height: 1.9;
+      color: #555;
+      margin-bottom: 0;
+    }
+    .article-quote cite {
+      display: block;
+      font-size: 0.82rem;
+      color: #999;
+      margin-top: 10px;
+      font-style: normal;
+    }
+
+    /* Delimiter */
+    .article-delimiter {
+      text-align: center;
+      padding: 32px 0;
+      font-size: 1.5rem;
+      letter-spacing: 0.5em;
+      color: #ddd;
+    }
+
+    /* List */
+    .article-rendered ul, .article-rendered ol {
+      margin: 16px 0 24px 24px;
+    }
+    .article-rendered li {
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 2;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    /* Checklist */
+    .article-check { margin: 16px 0 24px; list-style: none; padding: 0; }
+    .article-check li {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 1rem; font-weight: 300; line-height: 1.8; color: #333;
+      margin-bottom: 4px;
+    }
+    .article-check li.checked { color: #999; text-decoration: line-through; }
+    .article-check li::before { content: '☐'; flex-shrink: 0; }
+    .article-check li.checked::before { content: '☑'; }
+
+    /* Code */
+    .article-code {
+      background: #1a1a1a;
+      color: #e8e4e0;
+      padding: 20px 24px;
+      border-radius: 6px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      margin: 24px 0;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+
+    /* Table */
+    .article-table { margin: 24px 0; overflow-x: auto; }
+    .article-table table {
+      width: 100%; border-collapse: collapse;
+    }
+    .article-table td, .article-table th {
+      border: 1px solid #e8e4e0;
+      padding: 10px 14px;
+      font-size: 0.92rem;
+      font-weight: 300;
+      line-height: 1.6;
+      text-align: left;
+    }
+    .article-table tr:first-child td {
+      background: #f7f5f2;
+      font-weight: 500;
+    }
+
+    /* Warning */
+    .article-warning {
+      background: #faf6ed;
+      border-left: 3px solid #e6c84e;
+      padding: 16px 20px;
+      border-radius: 0 4px 4px 0;
+      margin: 24px 0;
+    }
+    .article-warning strong {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .article-warning p { margin: 0; font-size: 0.92rem; color: #555; }
+
+    /* Alert */
+    .article-alert {
+      padding: 16px 20px;
+      border-radius: 4px;
+      margin: 24px 0;
+      font-size: 0.92rem;
+    }
+    .article-alert--info { background: #eef4ff; border-left: 3px solid #4a90d9; color: #2c5282; }
+    .article-alert--success { background: #edf7ed; border-left: 3px solid #48bb78; color: #276749; }
+    .article-alert--warning { background: #faf6ed; border-left: 3px solid #e6c84e; color: #744210; }
+    .article-alert--danger { background: #fff0f0; border-left: 3px solid #e74c3c; color: #9b2c2c; }
+
+    /* Embed */
+    .article-embed { margin: 32px 0; }
+    .article-embed iframe { width: 100%; border: none; border-radius: 6px; }
+
+    /* ===== Editorial Layout Blocks ===== */
+
+    /* Gallery — multi-layout */
+    .article-gallery {
+      display: grid; gap: 12px;
+      margin: 48px 0;
+    }
+    .article-gallery img {
+      width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 4px;
+    }
+    .article-gallery figcaption {
+      grid-column: 1/-1; text-align: center;
+      font-size: 0.82rem; color: #999; margin-top: 4px;
+    }
+    /* Gallery layout variants */
+    .article-gallery--2-equal { grid-template-columns: 1fr 1fr; }
+    .article-gallery--1-large-r { grid-template-columns: 2fr 1fr; }
+    .article-gallery--1-large-l { grid-template-columns: 1fr 2fr; }
+    .article-gallery--3-up { grid-template-columns: 1fr 1fr 1fr; }
+    .article-gallery--full { grid-template-columns: 1fr; }
+    .article-gallery--full img { aspect-ratio: 21/9; }
+
+    /* Gallery aspect ratio variants */
+    .article-gallery.gallery-ratio--16-9 img { aspect-ratio: 16/9; }
+    .article-gallery.gallery-ratio--1-1 img  { aspect-ratio: 1/1; }
+    .article-gallery.gallery-ratio--4-3 img  { aspect-ratio: 4/3; }
+    /* full layout with explicit ratio overrides the 21/9 default */
+    .article-gallery--full.gallery-ratio--16-9 img { aspect-ratio: 16/9; }
+    .article-gallery--full.gallery-ratio--1-1 img  { aspect-ratio: 1/1; }
+    .article-gallery--full.gallery-ratio--4-3 img  { aspect-ratio: 4/3; }
+
+    /* Width modifiers (shared by gallery & columns)
+       .article-body is max-width:720px with padding:0 40px → content = 640px
+       wide  = article-body width (720px) by breaking out of padding
+       full  = viewport width (100vw) by breaking out of everything
+    */
+    .block-width--normal { /* default: stays within content area */ }
+    .block-width--wide {
+      width: 720px;
+      max-width: 100vw;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .block-width--full {
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* Columns (split layout) */
+    .article-columns {
+      display: grid; gap: 0;
+      margin: 48px 0;
+      min-height: 420px;
+    }
+    /* Column ratio variants */
+    .article-columns--1-1 { grid-template-columns: 1fr 1fr; }
+    .article-columns--2-1 { grid-template-columns: 2fr 1fr; }
+    .article-columns--1-2 { grid-template-columns: 1fr 2fr; }
+    .article-columns--3-1 { grid-template-columns: 3fr 1fr; }
+
+    .article-columns.reverse { direction: rtl; }
+    .article-columns.reverse > * { direction: ltr; }
+    .article-columns__image {
+      overflow: hidden; background: #f0ede8;
+    }
+    .article-columns__image img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .article-columns__text {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 48px 56px; background: #faf8f5;
+    }
+    .article-columns__text h3 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.35rem; font-weight: 500; line-height: 1.5;
+      margin: 0 0 20px; color: #1a1a1a;
+    }
+    .article-columns__text .col-body {
+      font-size: 0.95rem; font-weight: 300; line-height: 1.9;
+      color: #444; margin: 0;
+    }
+    .article-columns__text .col-body p { margin-bottom: 16px; font-size: inherit; color: inherit; }
+
+    /* Chapter Heading */
+    .article-chapter {
+      text-align: center; margin: 80px 0 40px; padding: 0;
+    }
+    .article-chapter__label {
+      font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase;
+      color: #999; display: block; margin-bottom: 14px;
+      font-family: 'Pretendard', sans-serif;
+    }
+    .article-chapter__title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.7rem; font-weight: 500; line-height: 1.4;
+      color: #1a1a1a;
+    }
+
+    /* Pull Quote */
+    .article-pullquote {
+      text-align: center; margin: 64px auto; max-width: 680px;
+      padding: 0 20px; position: relative;
+    }
+    .article-pullquote::before, .article-pullquote::after {
+      content: ''; display: block; width: 48px; height: 2px;
+      background: #c8b8a8; margin: 0 auto;
+    }
+    .article-pullquote::before { margin-bottom: 28px; }
+    .article-pullquote::after { margin-top: 28px; }
+    .article-pullquote blockquote {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.4rem; font-style: italic; font-weight: 400;
+      line-height: 1.8; color: #555; border: none; padding: 0; margin: 0;
+    }
+    .article-pullquote .attribution {
+      font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase;
+      color: #999; margin-top: 18px; font-style: normal;
+      font-family: 'Pretendard', sans-serif;
+    }
+
+    /* Spacer */
+    .article-spacer--sm { height: 48px; }
+    .article-spacer--md { height: 72px; }
+    .article-spacer--lg { height: 100px; }
+    .article-spacer--xl { height: 140px; }
+
+    /* Clearfix */
+    .article-rendered::after { content:''; display:table; clear:both; }
+
+    @media (max-width: 600px) {
+      .article-img--stretched { width: 100vw; left: 50%; transform: translateX(-50%); }
+      .article-img--left, .article-img--right { float: none; width: 100%; margin: 24px 0; }
+      .article-rendered p:first-child::first-letter { font-size: 2.8rem; }
+      .article-gallery { grid-template-columns: 1fr !important; }
+      .block-width--wide, .block-width--full {
+        width: 100vw;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .article-columns { grid-template-columns: 1fr !important; }
+      .article-columns.reverse { direction: ltr; }
+      .article-columns__image { aspect-ratio: 4/3; }
+      .article-columns__text { padding: 32px 20px; }
+      .article-chapter { margin: 48px 0 24px; }
+      .article-pullquote blockquote { font-size: 1.15rem; }
+      .article-spacer--xl { height: 80px; }
+      .article-spacer--lg { height: 64px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">Freshoh</a>
+      <nav class="header-nav">
+        <a href="/" class="nav-link">스토리</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="article-hero" id="article-hero">
+    <div class="article-hero-bg" id="hero-bg"></div>
+    <div class="article-hero-overlay"></div>
+    <div class="article-hero-content">
+      <div class="article-hero-meta">
+        <span class="article-hero-category" id="hero-category"></span>
+        <span class="story-divider" style="color:rgba(255,255,255,0.5);">|</span>
+        <span class="article-hero-date" id="hero-date"></span>
+      </div>
+      <h1 class="article-hero-title" id="hero-title"></h1>
+    </div>
+  </section>
+
+  <article class="article-body">
+    <a href="/" class="article-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      모든 스토리
+    </a>
+    <div class="article-rendered" id="article-content"></div>
+  </article>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-bottom">
+        <p>&copy; 2026 Freshoh. All rights reserved.</p>
+        <div class="footer-legal">
+          <a href="#">개인정보처리방침</a>
+          <a href="#">이용약관</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ===== Editor.js Block Renderer =====
+    function renderBlocks(data) {
+      if (!data || !data.blocks) return '';
+      return data.blocks.map(renderBlock).join('\n');
+    }
+
+    function renderBlock(block) {
+      switch (block.type) {
+        case 'paragraph':
+          return `<p>${block.data.text}</p>`;
+
+        case 'header':
+          return `<h${block.data.level}>${block.data.text}</h${block.data.level}>`;
+
+        case 'image': {
+          const cls = [];
+          if (block.data.stretched) cls.push('article-img--stretched');
+          if (block.data.withBorder) cls.push('article-img--bordered');
+          // Check tunes for alignment
+          const align = block.tunes?.alignmentTune?.alignment;
+          if (align === 'left') cls.push('article-img--left');
+          if (align === 'right') cls.push('article-img--right');
+          const caption = block.data.caption ? `<figcaption>${block.data.caption}</figcaption>` : '';
+          return `<figure class="article-img ${cls.join(' ')}"><img src="${block.data.file?.url || ''}" alt="${block.data.caption || ''}">${caption}</figure>`;
+        }
+
+        case 'list': {
+          const tag = block.data.style === 'ordered' ? 'ol' : 'ul';
+          const items = block.data.items.map(i => {
+            const text = typeof i === 'string' ? i : i.content || i.text || i;
+            return `<li>${text}</li>`;
+          }).join('');
+          return `<${tag}>${items}</${tag}>`;
+        }
+
+        case 'checklist': {
+          const items = block.data.items.map(i =>
+            `<li class="${i.checked ? 'checked' : ''}">${i.text}</li>`
+          ).join('');
+          return `<ul class="article-check">${items}</ul>`;
+        }
+
+        case 'quote':
+          const cite = block.data.caption ? `<cite>${block.data.caption}</cite>` : '';
+          return `<blockquote class="article-quote"><p>${block.data.text}</p>${cite}</blockquote>`;
+
+        case 'delimiter':
+          return `<div class="article-delimiter">···</div>`;
+
+        case 'code':
+          return `<pre class="article-code"><code>${block.data.code}</code></pre>`;
+
+        case 'table': {
+          const rows = block.data.content.map((row, i) => {
+            const cells = row.map(c => `<td>${c}</td>`).join('');
+            return `<tr>${cells}</tr>`;
+          }).join('');
+          return `<div class="article-table"><table>${rows}</table></div>`;
+        }
+
+        case 'warning':
+          return `<div class="article-warning"><strong>${block.data.title}</strong><p>${block.data.message}</p></div>`;
+
+        case 'alert':
+          return `<div class="article-alert article-alert--${block.data.type || 'info'}">${block.data.message}</div>`;
+
+        case 'embed':
+          return `<div class="article-embed"><iframe src="${block.data.embed}" height="${block.data.height || 320}" allowfullscreen></iframe></div>`;
+
+        case 'gallery': {
+          const layout = block.data.layout || '2-equal';
+          const width = block.data.width || 'wide';
+          const arMap = {'16:9':'gallery-ratio--16-9','1:1':'gallery-ratio--1-1','4:3':'gallery-ratio--4-3'};
+          const arClass = arMap[block.data.aspectRatio] || '';
+          const images = [block.data.image1, block.data.image2, block.data.image3]
+            .filter(Boolean).map(src => `<img src="${src}" alt="">`).join('');
+          const cap = block.data.caption ? `<figcaption>${block.data.caption}</figcaption>` : '';
+          return `<figure class="article-gallery article-gallery--${layout} block-width--${width}${arClass ? ' '+arClass : ''}">${images}${cap}</figure>`;
+        }
+
+        case 'columns': {
+          const rev = block.data.layout === 'image-right' ? ' reverse' : '';
+          const ratio = (block.data.ratio || '1:1').replace(':', '-');
+          const width = block.data.width || 'wide';
+          const img = block.data.image ? `<img src="${block.data.image}" alt="">` : '';
+          const heading = block.data.heading ? `<h3>${block.data.heading}</h3>` : '';
+          return `<div class="article-columns article-columns--${ratio} block-width--${width}${rev}"><div class="article-columns__image">${img}</div><div class="article-columns__text">${heading}<div class="col-body">${block.data.text||''}</div></div></div>`;
+        }
+
+        case 'chapterHeading': {
+          const label = block.data.label ? `<span class="article-chapter__label">${block.data.label}</span>` : '';
+          return `<div class="article-chapter">${label}<div class="article-chapter__title">${block.data.title||''}</div></div>`;
+        }
+
+        case 'pullQuote': {
+          const attr = block.data.attribution ? `<div class="attribution">${block.data.attribution}</div>` : '';
+          return `<div class="article-pullquote"><blockquote>${block.data.text||''}</blockquote>${attr}</div>`;
+        }
+
+        case 'spacer':
+          return `<div class="article-spacer--${block.data.size||'md'}"></div>`;
+
+        default:
+          return '';
+      }
+    }
+
+    // ===== Load Article =====
+    async function loadArticle() {
+      const id = window.location.pathname.split('/').pop();
+      try {
+        const res = await fetch(`/api/posts/${id}`);
+        if (!res.ok) throw new Error();
+        const post = await res.json();
+
+        document.title = `${post.title} - Freshoh`;
+        document.getElementById('hero-category').textContent = post.category;
+        const d = new Date(post.createdAt);
+        document.getElementById('hero-date').textContent = `${d.getFullYear()}년 ${d.getMonth()+1}월`;
+        document.getElementById('hero-title').textContent = post.title;
+
+        const bg = document.getElementById('hero-bg');
+        if (post.thumbnail) {
+          bg.style.backgroundImage = `url('${post.thumbnail}')`;
+          bg.style.backgroundSize = 'cover';
+          bg.style.backgroundPosition = 'center';
+        } else {
+          bg.style.backgroundColor = post.thumbnailColor || '#c8b8a8';
+        }
+
+        // Render content
+        let html = '';
+        try {
+          const data = JSON.parse(post.content);
+          html = renderBlocks(data);
+        } catch (e) {
+          html = post.content; // fallback: raw HTML
+        }
+        document.getElementById('article-content').innerHTML = html;
+      } catch (e) {
+        document.getElementById('article-content').innerHTML = '<p>글을 찾을 수 없습니다.</p>';
+      }
+    }
+    loadArticle();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="장례식장 푸드서비스 운영을 감이 아닌 구조로 전환한 프레시오의 데이터 기반 운영 인프라 구축 프로젝트. 첫 주문부터 NPS까지 연결한 지속 성장 관리 시스템.">
+    <meta name="keywords" content="장례식장 운영, 프레시오, 데이터 기반 운영, 장례식장 위탁급식, NPS, 태블릿 주문, 장례식장 관리 시스템">
+    <title>호텔보다 더 체계적인 장례식장 운영을 만들다 — 프레시오 | Freshoh Stories</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-text: #1B2838;
+            --color-text-light: #5A6570;
+            --color-text-muted: #8A9099;
+            --color-bg: #FFFFFF;
+            --color-bg-warm: #F0F2F5;
+            --color-bg-cream: #F7F8FA;
+            --color-accent: #C9A96E;
+            --color-border: #DEE2E6;
+            --font-serif: 'Noto Serif KR', Georgia, 'Times New Roman', serif;
+            --font-sans: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --content-width: 720px;
+            --wide-width: 960px;
+            --full-width: 1200px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 17px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            line-height: 1.85;
+            color: var(--color-text);
+            background-color: var(--color-bg);
+        }
+
+        /* ─── Navigation (overlay on hero) ─── */
+        nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            padding: 28px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: var(--full-width);
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .nav-label {
+            font-family: var(--font-sans);
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* ─── Hero (Full-bleed overlay) ─── */
+        .hero {
+            position: relative;
+            width: 100%;
+            min-height: 88vh;
+            display: grid;
+            align-items: end;
+            overflow: hidden;
+        }
+
+        .hero-media {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-media .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+            padding: 48px;
+        }
+
+        .hero-media .image-placeholder span {
+            font-size: 13px;
+            color: rgba(255,255,255,0.2);
+            font-style: italic;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background:
+                linear-gradient(180deg, rgba(27,40,56,0.10) 0%, rgba(27,40,56,0.35) 50%, rgba(27,40,56,0.75) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: var(--full-width);
+            margin: 0 auto;
+            padding: 64px 48px 56px;
+            width: 100%;
+        }
+
+        .hero-label {
+            display: inline-block;
+            padding: 5px 10px;
+            letter-spacing: 0.13em;
+            font-family: var(--font-sans);
+            font-size: 10px;
+            font-weight: 500;
+            color: rgba(240,242,245,0.85);
+            border: 1px solid rgba(240,242,245,0.4);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 4.1vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.22;
+            color: #FFFAF4;
+            max-width: 840px;
+            margin-bottom: 14px;
+            letter-spacing: -0.5px;
+            word-break: keep-all;
+            text-wrap: balance;
+        }
+
+        .hero h1 .title-line {
+            display: block;
+            line-height: 1.18;
+        }
+
+        .hero-sub {
+            font-family: var(--font-serif);
+            font-size: clamp(0.98rem, 1.7vw, 1.15rem);
+            font-weight: 400;
+            color: rgba(242,228,213,0.9);
+            max-width: 680px;
+            margin-bottom: 22px;
+            line-height: 1.7;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .hero-chip {
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            color: rgba(240,242,245,0.8);
+            border: 1px solid rgba(240,242,245,0.3);
+            background: rgba(27,40,56,0.3);
+            padding: 5px 10px;
+        }
+
+        /* ─── Text Content ─── */
+        .text-block {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .text-block p {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--color-text);
+            margin-bottom: 28px;
+            letter-spacing: -0.2px;
+            word-break: keep-all;
+        }
+
+        .text-block p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Section headings */
+        .section-heading {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .section-heading h2 {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--color-text);
+            letter-spacing: -0.3px;
+        }
+
+        .section-heading .section-number {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        /* ─── Full Bleed Image ─── */
+        .image-full {
+            width: 100%;
+            max-width: var(--full-width);
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .image-full.landscape {
+            aspect-ratio: 3 / 2;
+        }
+
+        .image-full.wide {
+            aspect-ratio: 16 / 9;
+        }
+
+        .image-full.square {
+            aspect-ratio: 4 / 3;
+        }
+
+        /* ─── 2-Up Image Layout ─── */
+        .image-pair {
+            max-width: var(--full-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 0;
+        }
+
+        .image-pair .image-item {
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+        }
+
+        /* ─── Side-by-Side Text+Image ─── */
+        .split-layout {
+            max-width: var(--full-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 500px;
+        }
+
+        .split-layout.reverse {
+            direction: rtl;
+        }
+
+        .split-layout.reverse > * {
+            direction: ltr;
+        }
+
+        .split-layout .split-image {
+            aspect-ratio: auto;
+            min-height: 100%;
+        }
+
+        .split-layout .split-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 56px;
+        }
+
+        .split-layout .split-text p {
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--color-text);
+            margin-bottom: 24px;
+            word-break: keep-all;
+        }
+
+        .split-layout .split-text h3 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 28px;
+            color: var(--color-text);
+        }
+
+        /* ─── Pull Quote ─── */
+        .pull-quote {
+            max-width: var(--wide-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .pull-quote blockquote {
+            font-family: var(--font-serif);
+            font-size: 1.55rem;
+            font-weight: 400;
+            font-style: italic;
+            line-height: 1.7;
+            color: var(--color-text-light);
+            border: none;
+            padding: 0;
+            position: relative;
+        }
+
+        .pull-quote blockquote::before {
+            content: '';
+            display: block;
+            width: 48px;
+            height: 2px;
+            background-color: var(--color-accent);
+            margin: 0 auto 32px;
+        }
+
+        .pull-quote blockquote::after {
+            content: '';
+            display: block;
+            width: 48px;
+            height: 2px;
+            background-color: var(--color-accent);
+            margin: 32px auto 0;
+        }
+
+        .pull-quote .quote-attribution {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-top: 20px;
+            font-style: normal;
+        }
+
+        /* ─── Image Caption ─── */
+        .image-caption {
+            max-width: var(--content-width);
+            margin: 12px auto 0;
+            padding: 0 24px;
+        }
+
+        .image-caption p {
+            font-family: var(--font-sans);
+            font-size: 0.72rem;
+            color: var(--color-text-muted);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            line-height: 1.6;
+        }
+
+        /* ─── Background Transition ─── */
+        .bg-warm {
+            background-color: var(--color-bg-warm);
+        }
+
+        .bg-cream {
+            background-color: var(--color-bg-cream);
+        }
+
+        .bg-dark {
+            background-color: #1B2838;
+        }
+
+        .bg-dark .text-block p,
+        .bg-dark .section-heading h2 {
+            color: #F0F2F5;
+        }
+
+        .bg-dark .section-heading .section-number {
+            color: var(--color-accent);
+        }
+
+        .bg-dark .pull-quote blockquote {
+            color: rgba(240, 242, 245, 0.8);
+        }
+
+        /* ─── Spacing System ─── */
+        .spacer-xs { height: 32px; }
+        .spacer-sm { height: 48px; }
+        .spacer-md { height: 72px; }
+        .spacer-lg { height: 100px; }
+        .spacer-xl { height: 140px; }
+
+        /* ─── Closing Section ─── */
+        .closing {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .closing p {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--color-text-light);
+            line-height: 1.8;
+        }
+
+        /* ─── Footer ─── */
+        footer {
+            max-width: var(--full-width);
+            margin: 0 auto;
+            padding: 48px 40px;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        footer .footer-brand {
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--color-text);
+        }
+
+        footer .footer-note {
+            font-family: var(--font-sans);
+            font-size: 11px;
+            color: var(--color-text-muted);
+        }
+
+        /* ─── Placeholder Styling ─── */
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: rgba(27, 40, 56, 0.25);
+            text-align: center;
+            padding: 32px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .ph-navy { background: linear-gradient(160deg, #1B2838 0%, #2C3E50 40%, #34495E 100%); }
+        .ph-navy .image-placeholder { color: rgba(255,255,255,0.3); }
+        .ph-steel { background: linear-gradient(160deg, #E8ECEF 0%, #D5DCE0 100%); }
+        .ph-cool { background: linear-gradient(160deg, #F0F2F5 0%, #DEE2E6 100%); }
+        .ph-slate { background: linear-gradient(160deg, #4A5568 0%, #2D3748 100%); }
+        .ph-slate .image-placeholder { color: rgba(255,255,255,0.3); }
+        .ph-light { background: linear-gradient(160deg, #F7F8FA 0%, #EDF0F2 100%); }
+        .ph-screen { background: linear-gradient(160deg, #1A1F2E 0%, #2C3E50 100%); }
+        .ph-screen .image-placeholder { color: rgba(100,180,255,0.3); }
+        .ph-warm-accent { background: linear-gradient(160deg, #F5F0EB 0%, #E8E0D5 100%); }
+        .ph-data { background: linear-gradient(160deg, #0F1923 0%, #1B2838 100%); }
+        .ph-data .image-placeholder { color: rgba(201,169,110,0.3); }
+
+        /* ─── Image Direction Box ─── */
+        .image-direction {
+            max-width: var(--content-width);
+            margin: 8px auto 0;
+            padding: 0 24px;
+        }
+
+        .image-direction details {
+            border: 1px dashed var(--color-border);
+            border-radius: 4px;
+            padding: 12px 16px;
+            background: var(--color-bg-cream);
+        }
+
+        .image-direction summary {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            cursor: pointer;
+        }
+
+        .image-direction .dir-content {
+            margin-top: 12px;
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            line-height: 1.7;
+            color: var(--color-text-light);
+        }
+
+        .image-direction .dir-content strong {
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .image-direction .dir-content p {
+            margin-bottom: 8px;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1024px) {
+            html { font-size: 16px; }
+            .hero-content { padding: 48px 36px 48px; }
+            .split-layout .split-text { padding: 40px 36px; }
+        }
+
+        @media (max-width: 768px) {
+            html { font-size: 15px; }
+            nav { padding: 20px 24px; }
+            .hero { min-height: 76vh; }
+            .hero-content { padding: 38px 24px 32px; }
+            .section-heading h2 { font-size: 1.5rem; }
+            .pull-quote blockquote { font-size: 1.3rem; }
+            .text-block, .section-heading, .pull-quote, .image-caption, .closing {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .image-pair { gap: 8px; }
+            .split-layout {
+                grid-template-columns: 1fr;
+            }
+            .split-layout .split-image {
+                aspect-ratio: 4 / 3;
+            }
+            .split-layout.reverse {
+                direction: ltr;
+            }
+            .split-layout .split-text {
+                padding: 40px 20px;
+            }
+            footer {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+                padding: 36px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .article-header h1 { font-size: 1.55rem; }
+            .section-heading h2 { font-size: 1.3rem; }
+            .pull-quote blockquote { font-size: 1.15rem; }
+            .spacer-xl { height: 80px; }
+            .spacer-lg { height: 64px; }
+            .spacer-md { height: 48px; }
+        }
+
+        @media print {
+            nav, footer, .image-direction { display: none; }
+            .bg-warm, .bg-cream, .bg-dark { background-color: transparent !important; }
+            .bg-dark .text-block p, .bg-dark .section-heading h2 { color: var(--color-text) !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <article>
+
+        <!-- ════════ HERO — Full-bleed overlay ════════ -->
+        <header class="hero">
+            <nav>
+                <span class="nav-logo">Freshoh</span>
+                <span class="nav-label">Stories</span>
+            </nav>
+            <div class="hero-media ph-navy">
+                <div class="image-placeholder">
+                    <span>운영 사무실 전경 — 모니터에 대시보드가 띄워져 있고 태블릿 주문 시스템이 도킹된 장면</span>
+                </div>
+            </div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-label">Freshoh Works Editorial</span>
+                <h1>
+                    <span class="title-line">호텔보다 더 체계적인</span>
+                    <span class="title-line">장례식장 운영을 만들다</span>
+                </h1>
+                <p class="hero-sub">첫 주문부터 NPS까지 연결한 지속 성장 관리 시스템</p>
+                <div class="hero-meta">
+                    <span class="hero-chip">Site: 쉴낙원 서울 장례식장</span>
+                    <span class="hero-chip">Period: 2020 ~ 현재 진행 중</span>
+                    <span class="hero-chip">Category: Data-Driven Operations</span>
+                    <span class="hero-chip">Read Time: 10분</span>
+                </div>
+            </div>
+        </header>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — Hero</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 풀블리드 (min-height 88vh)</p>
+                    <p><strong>무드:</strong> 모던하고 세련된 쿨톤. 모니터 푸른빛 + 간접 조명. "식당 뒷방이 아니라 데이터 센터" 같은 놀라움. 핵심 디테일은 상단~중앙 배치 (하단에 텍스트 오버레이).</p>
+                    <p><strong>피사체:</strong> 운영 사무실 전경. 듀얼 모니터(대시보드), 태블릿 디바이스, 제본된 월간 리포트, 노트북. 사람은 없거나 뒷모습만.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ INTRO ════════ -->
+        <div class="text-block">
+            <p>장례식장 푸드서비스는 매출 규모에 비해 관리 체계가 단순한 산업입니다. 총매출은 확인할 수 있었지만, 첫 주문과 재주문의 구조, 상품별 기여도, 이탈 구간을 명확히 설명하기는 어려웠습니다. 고객만족도 역시 체계적으로 수집되지 않았습니다. 불만은 개별 사례로 전달되었고, 만족은 막연한 분위기로만 인식되었습니다.</p>
+            <p>운영은 성실했지만, 경영은 정량적으로 관리되지 않는 상태였습니다. 프레시오는 이 지점을 문제로 보았습니다. 매출을 올리기 전에, 매출을 설명할 수 있어야 한다고 판단했습니다. 만족도를 높이기 전에, 만족도를 확인할 수 있어야 한다고 보았습니다.</p>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <!-- Intro — Full Bleed Image -->
+        <div class="image-full landscape">
+            <div class="image-placeholder ph-steel">POS 출력물, 수기 메모, 계산기가 어지럽게 놓인 사무 책상 — 총매출 숫자만 보이는 세계</div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 3:2 가로형 (1200×800px)</p>
+                    <p><strong>무드:</strong> 답답함, 정체. 형광등 느낌의 차갑고 평평한 조명. 탁한 톤, 무미건조. "숫자는 있는데 아무것도 설명되지 않는" 상태.</p>
+                    <p><strong>피사체:</strong> 탑다운 45도. POS 출력물, 수기 메모, 계산기가 어지럽게 놓인 책상. A4에 "총매출" 숫자만 적혀 있고 세부 분류는 비어 있음.</p>
+                </div>
+            </details>
+        </div>
+        <div class="image-caption">
+            <p>총매출은 확인할 수 있었지만, 그 안의 구조는 누구도 설명하지 못했습니다</p>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <div class="text-block">
+            <p>프레시오는 이 산업을 다시 정의하기로 했습니다. 장례식장 서비스도 고객 유치, 공실 관리, 식수 전환, 객단가, 서비스 만족도를 체계적으로 관리해야 성공하는 호텔 서비스 등의 선진 산업과 다르지 않다고 판단했습니다. 감이 아닌 구조, 관행이 아닌 기준, 추정이 아닌 데이터 위에서 운영되는 체계를 구축하기로 결정했습니다.</p>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER ONE — 매출 구조를 분석할 수 없었습니다 ════════ -->
+        <div class="section-heading">
+            <span class="section-number">Chapter One</span>
+            <h2>매출 구조를<br>분석할 수 없었습니다</h2>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="text-block">
+            <p>저희는 단순히 총매출을 확인하지 않았습니다. 첫 주문, 재주문, 부가 주문의 흐름을 분리하고 상품별 기여도와 이탈 구간을 재구성하려 했습니다. 하지만 기존 POS 시스템은 그런 분류를 제공하지 않았습니다. 수동으로 정리하는 수밖에 없었고, 그마저도 한계가 명확했습니다.</p>
+            <p>주문 흐름도 비효율적이었습니다. 빈소에서 접수된 주문이 운영 사무실을 경유해 주방으로 전달되는 3단계 구조. 중간에 누락과 지연이 발생했고, 데이터는 어디에도 남지 않았습니다. 문제의 본질이 '운영 역량'이 아니라 '구조'에 있다는 것을 확인하는 데는 오래 걸리지 않았습니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- 2-up Image Pair -->
+        <div class="image-pair">
+            <div class="image-item ph-cool">
+                <div class="image-placeholder">복도를 따라 전표를 들고 이동하는 직원의 뒷모습 — 사람이 데이터를 운반하는 아날로그 방식</div>
+            </div>
+            <div class="image-item ph-light">
+                <div class="image-placeholder">화이트보드에 매출 구조를 트리 다이어그램으로 분해하는 장면 — 구조를 보기 시작하다</div>
+            </div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — 2-Up Pair</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 4:3 × 2장 (각 594×446px)</p>
+                    <p><strong>무드:</strong> 좌측은 비효율·소모 (복도의 차가운 조명, 모션 블러), 우측은 발견·각성 (밝은 회의실). 아날로그 vs 구조적 사고의 대비.</p>
+                    <p><strong>피사체:</strong> 좌측 — 전표를 들고 복도를 걷는 직원 뒷모습. 우측 — 화이트보드에 매출 구조 트리를 그리는 손 클로즈업.</p>
+                </div>
+            </details>
+        </div>
+        <div class="image-caption">
+            <p>사람이 데이터를 운반하던 구조에서, 구조 자체를 분석하기 시작하다</p>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <div class="text-block">
+            <p>보이지 않던 구조가 드러나기 시작했습니다. 총매출이라는 하나의 숫자 아래에 첫 주문과 재주문이 분리되었고, 상품별 기여도가 보이기 시작했습니다. 어느 구간에서 이탈이 발생하는지, 어떤 상품이 재주문을 이끄는지 — 매출을 '결과'가 아니라 '구조'로 읽을 수 있게 되었습니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- Pull Quote -->
+        <div class="pull-quote">
+            <blockquote>
+                우리는 숫자가 아니라 구조를 봅니다.<br>매출을 올리기 전에, 매출을 설명할 수 있어야 합니다
+            </blockquote>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER TWO — 구조가 없다면, 직접 설계합니다 ════════ -->
+        <!-- Full bleed transition image -->
+        <div class="image-full wide">
+            <div class="image-placeholder ph-slate">개발 회의 장면 — 노트북, 태블릿 프로토타입, 와이어프레임이 펼쳐진 회의 테이블</div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 16:9 와이드 (1200×675px)</p>
+                    <p><strong>무드:</strong> 집중과 결정. 깨끗한 회의실 조명, 뉴트럴 톤. "직접 만듭니다"라는 결연함이 느껴지는 프로페셔널 작업 현장.</p>
+                    <p><strong>피사체:</strong> 회의 테이블에 노트북(와이어프레임), 태블릿 프로토타입, 스케치, 포스트잇. 2-3명의 손만 보임(얼굴 없이).</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <div class="section-heading">
+            <span class="section-number">Chapter Two</span>
+            <h2>구조가 없다면,<br>직접 설계합니다</h2>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="text-block">
+            <p>POS가 제공하지 않는다면 직접 구조를 설계하기로 했습니다. 빈소에서 주방으로 바로 연결되는 태블릿 주문 시스템을 개발했습니다. 기존에는 빈소에서 운영 사무실을 경유해 주방으로 주문이 전달되었습니다. 저희는 이 중간 단계를 제거했습니다.</p>
+            <p>동시에 첫 주문, 재주문, 부가 주문을 분리해 분석 가능한 구조로 주문 데이터를 재설계했습니다. 주문이 접수되는 순간 자동으로 분류되는 체계입니다. 운영은 더 단순해졌고, 데이터는 더 정확해졌습니다. 이 변화는 단순한 IT 도입이 아닙니다. 운영을 감이 아닌 구조로 관리하기 위한 기반 구축이었습니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- Side-by-Side Layout — 태블릿 + 설명 -->
+        <div class="split-layout">
+            <div class="split-image ph-screen">
+                <div class="image-placeholder" style="color:rgba(100,180,255,0.3);">빈소에서 태블릿으로 주문을 입력하는 장면 — 오버더숄더 앵글, 화면에 메뉴와 빈소 번호 표시</div>
+            </div>
+            <div class="split-text bg-cream">
+                <h3>빈소에서 주방까지, 1초</h3>
+                <p>빈소에서 접수된 주문은 태블릿을 통해 주방 디스플레이에 실시간으로 전달됩니다. 중간 경유 단계가 사라졌습니다. 누락과 지연이 구조적으로 불가능해졌습니다.</p>
+                <p>동시에 모든 주문 데이터가 자동으로 분류됩니다. 빈소별, 상품별, 시간대별 데이터가 쌓이기 시작했습니다. 운영자가 보고서를 만드는 것이 아니라, 시스템이 운영의 구조를 기록합니다.</p>
+            </div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — Split Layout</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 세로형 자유 비율 (600×500px 이상)</p>
+                    <p><strong>무드:</strong> 조용하고 효율적. 빈소의 차분한 간접 조명 + 태블릿 화면 빛. 소란 없이 작동하는 시스템.</p>
+                    <p><strong>피사체:</strong> 오버더숄더. 직원 어깨 너머로 태블릿 주문 화면(메뉴, 수량, 빈소 번호)이 보이는 구성. 배경에 빈소 보케.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- 2-up — 주방 수신 + 인포그래픽 -->
+        <div class="image-pair">
+            <div class="image-item ph-cool">
+                <div class="image-placeholder">주방 디스플레이에 실시간 주문 내역이 표시되는 장면 — "빈소 3호 / 육개장 20인분 / 접수 완료"</div>
+            </div>
+            <div class="image-item ph-data">
+                <div class="image-placeholder" style="color:rgba(201,169,110,0.3);">주문 흐름 Before/After 인포그래픽 — 3단계 경유 vs 태블릿 직결</div>
+            </div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — 주방 수신 + 인포그래픽</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 4:3 × 2장 (각 594×446px)</p>
+                    <p><strong>무드:</strong> 좌측은 효율·정확 (주방 현장), 우측은 정보 디자인 (다크 배경 인포그래픽). 시스템 직결의 명확한 증거.</p>
+                    <p><strong>피사체:</strong> 좌측 — 주방 벽면 모니터에 실시간 주문 내역 표시. 우측 — Before/After 인포그래픽 (3단계 경유 → 태블릿 직결).</p>
+                </div>
+            </details>
+        </div>
+        <div class="image-caption">
+            <p>빈소에서 접수된 주문이 주방에 실시간으로 전달되는 직결 시스템</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="pull-quote">
+            <blockquote>
+                우리는 필요하면 직접 만듭니다.<br>운영은 단순해졌고, 데이터는 정확해졌습니다
+            </blockquote>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER THREE — 위기: 고객의 목소리가 보이지 않았습니다 ════════ -->
+        <div class="bg-warm" style="padding: 100px 0;">
+
+            <div class="section-heading">
+                <span class="section-number">Chapter Three</span>
+                <h2>시스템은 만들었지만,<br>고객의 목소리가 보이지 않았습니다</h2>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <div class="text-block">
+                <p>매출의 구조는 보이기 시작했습니다. 하지만 한 가지가 빠져 있었습니다. 고객이 실제로 만족하고 있는지, 어디서 불만을 느끼는지를 정량적으로 확인할 방법이 없었습니다. 불만은 개별 사례로 전달되었고, 만족은 막연한 분위기로만 인식되었습니다. "요즘 반응 어때?" — 이 질문에 데이터로 답할 수 없는 상태였습니다.</p>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <!-- Full bleed within warm background -->
+            <div class="image-full landscape">
+                <div class="image-placeholder ph-steel">책상 위에 수기 메모, 포스트잇, 빈 양식이 흩어진 장면 — 데이터라 부를 수 없는 단편적 정보들</div>
+            </div>
+            <div class="image-direction">
+                <details>
+                    <summary>Photo Direction</summary>
+                    <div class="dir-content">
+                        <p><strong>비율:</strong> 3:2 가로형 (1200×800px)</p>
+                        <p><strong>무드:</strong> 불완전, 불안. 어둡고 무디한 데스크 램프. 따뜻하지만 탁한 톤. 체계 없이 산재된 정보들.</p>
+                        <p><strong>피사체:</strong> 탑다운 45도. 리뷰/컴플레인 수기 메모, 포스트잇, 빈 엑셀 양식이 무질서하게 흩어진 책상.</p>
+                    </div>
+                </details>
+            </div>
+            <div class="image-caption">
+                <p>고객의 불만은 포스트잇으로 전달되었고, 만족은 "분위기"로만 인식되었습니다</p>
+            </div>
+
+            <div class="spacer-lg"></div>
+
+            <div class="text-block">
+                <p>운영은 성실했습니다. 현장 팀은 최선을 다하고 있었습니다. 하지만 성실함만으로는 개선의 방향을 알 수 없었습니다. 고객만족도를 높이려면, 먼저 고객만족도를 확인할 수 있어야 합니다. 측정할 수 없으면 관리할 수 없습니다. 저희에게는 고객의 목소리를 체계적으로 수집하고 분석하는 구조가 필요했습니다.</p>
+            </div>
+
+            <div class="spacer-sm"></div>
+
+            <div class="pull-quote">
+                <blockquote>
+                    성실하게 운영했지만,<br>경영은 정량적으로 관리되지 않는 상태였습니다
+                </blockquote>
+            </div>
+
+            <div class="spacer-sm"></div>
+
+        </div><!-- end bg-warm -->
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER FOUR — 해결: 고객만족도를 직접 설계하다 ════════ -->
+
+        <!-- Full bleed — NPS 설계 화면 -->
+        <div class="image-full landscape">
+            <div class="image-placeholder ph-screen" style="color:rgba(100,180,255,0.3);">노트북 화면에 NPS 설문 설계 인터페이스가 보이는 장면 — 고객만족도 조사 체계 구축</div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 3:2 가로형 (1200×800px)</p>
+                    <p><strong>무드:</strong> 각성과 설계. 깨끗한 모니터 빛 + 간접 조명. 이전 탁한 톤에서 전환. "측정할 수 없으면 관리할 수 없다."</p>
+                    <p><strong>피사체:</strong> 노트북/모니터 클로즈업. NPS 설문 설계 화면("1-10점 추천 의향" 문항 구조)이 선명하게 보이는 장면.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <div class="section-heading">
+            <span class="section-number">Chapter Four</span>
+            <h2>고객의 목소리를<br>구조로 만들다</h2>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="text-block">
+            <p>저희는 고객만족도 조사 시스템을 직접 설계했습니다. NPS(순추천지수)를 도입하고, 실제 리뷰 데이터를 정기적으로 수집하고 분석하기 시작했습니다. 불만의 유형과 반복 구간을 분류했고, 만족의 요인과 불만의 원인을 구체적으로 확인할 수 있게 되었습니다. 이제 고객의 목소리는 개별 사례가 아니라 월간 관리 리포트의 핵심 지표가 되었습니다.</p>
+            <p>그리고 데이터가 쌓이자, 개선이 시작되었습니다. 인기 상품과 비인기 상품을 명확히 구분할 수 있게 되었고, 재주문율을 분석해 메뉴 구성을 조정했습니다. 비인기 상품을 정리하고, 재주문율이 높은 상품을 중심으로 세트 구조를 재설계했습니다. 이 변화는 추정이 아니라 근거로 이루어졌습니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="pull-quote">
+            <blockquote>
+                개선은 추정이 아니라 근거로 합니다.<br>데이터가 쌓이자, 개선의 방향이 보이기 시작했습니다
+            </blockquote>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- Side-by-Side reversed — 월간 리포트 회의 -->
+        <div class="split-layout reverse">
+            <div class="split-image ph-steel">
+                <div class="image-placeholder">월간 리포트가 펼쳐진 회의 테이블 — TV에 매출 추이 그래프, 파트너와 데이터 공유 장면</div>
+            </div>
+            <div class="split-text">
+                <h3>매달, 근거로 말합니다</h3>
+                <p>프레시오는 매월 파트너에게 월간 관리 리포트를 전달합니다. 매출 구조 분석, NPS 변화 추이, 상품별 기여도, 개선 사항과 다음 액션까지 — 데이터를 바탕으로 운영의 현재와 방향을 공유합니다.</p>
+                <p>호텔 운영 회의와 다르지 않은 수준의 리포팅입니다. 장례식장 푸드서비스 운영도 이 정도의 체계적 관리가 가능하다는 것을, 매달 증명하고 있습니다.</p>
+            </div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — Split Layout Reverse</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 세로형 자유 비율 (600×500px 이상)</p>
+                    <p><strong>무드:</strong> 신뢰와 전문성. 회의실 조명 + TV 화면 빛. 쿨톤. 호텔 운영 회의와 다르지 않은 수준의 리포팅.</p>
+                    <p><strong>피사체:</strong> 회의 테이블에 월간 리포트가 펼쳐져 있고, TV에 매출/NPS 그래프. 2-3인의 손만 보임(얼굴 없이).</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- 2-up — 메뉴 Before/After + 리포트 누적 -->
+        <div class="image-pair">
+            <div class="image-item ph-light">
+                <div class="image-placeholder">메뉴 구조 Before/After 비교 — 좌측 복잡한 기존 메뉴, 우측 데이터 기반 재구성 메뉴</div>
+            </div>
+            <div class="image-item ph-cool">
+                <div class="image-placeholder">깔끔하게 제본된 월간 리포트 6-12개월분이 시간순으로 쌓인 장면 — 체계의 축적</div>
+            </div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — 메뉴 비교 + 리포트 누적</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 4:3 × 2장 (각 594×446px)</p>
+                    <p><strong>무드:</strong> 좌측은 명확한 전환 (같은 장례식장, 다른 메뉴), 우측은 축적과 지속 ("한 달이 아니라 매달").</p>
+                    <p><strong>피사체:</strong> 좌측 — 메뉴판 Before/After 비교 (산만한 기존 → 정돈된 재구성). 우측 — 제본된 월간 리포트 6-12개월분이 시간순으로 쌓인 장면.</p>
+                </div>
+            </details>
+        </div>
+        <div class="image-caption">
+            <p>데이터 기반으로 재구성된 메뉴 구조와, 매달 축적되는 월간 관리 리포트</p>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER FIVE — 결과 ════════ -->
+        <div class="bg-dark" style="padding: 100px 0;">
+
+            <div class="section-heading">
+                <span class="section-number">Chapter Five</span>
+                <h2>구조가 자리 잡자,<br>숫자가 따라왔습니다</h2>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <div class="text-block">
+                <p style="color: #F0F2F5;">이 프로젝트의 결론은 명확합니다. 구조가 자리 잡자 평균 매출은 10% 이상 상승했습니다. NPS는 초기 대비 20점 이상 개선되었습니다. 재주문율이 개선되었고, 주문 처리 시간이 단축되었습니다.</p>
+                <p style="color: #F0F2F5;">하지만 이 프로젝트의 핵심 성과는 숫자 자체가 아닙니다. 이제 저희는 매출과 고객만족을 설명할 수 있는 구조를 갖추었고, 개선의 방향을 추정이 아닌 근거로 판단할 수 있게 되었습니다. 구조는 자리 잡았고, 개선은 반복 가능합니다.</p>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <!-- KPI Dashboard infographic -->
+            <div class="image-full wide">
+                <div class="image-placeholder ph-data" style="color:rgba(201,169,110,0.3);">KPI 대시보드 — 평균 매출 +10% 상승, NPS +20점 개선, 재주문율 향상, 주문 처리 시간 단축</div>
+            </div>
+            <div class="image-direction">
+                <details>
+                    <summary>Infographic Direction — KPI Dashboard</summary>
+                    <div class="dir-content">
+                        <p><strong>비율:</strong> 16:9 와이드 (1200×675px)</p>
+                        <p><strong>무드:</strong> 다크 네이비 배경, 골드 악센트. 프로페셔널 비즈니스 대시보드. 미니멀 산세리프.</p>
+                        <p><strong>구성:</strong> 가로 4등분 카드 — 매출 +10% / NPS +20점 / 재주문율 향상 / 주문 처리 시간 단축.</p>
+                    </div>
+                </details>
+            </div>
+            <div class="image-caption">
+                <p style="color: var(--color-text-muted);">2020–2026, 쉴낙원 서울 장례식장 운영 데이터 기반</p>
+            </div>
+
+            <div class="spacer-lg"></div>
+
+            <div class="text-block">
+                <p style="color: #F0F2F5;">이것은 '매출을 올린 이야기'가 아닙니다. 장례식장 푸드서비스 운영도 호텔과 같은 수준의 체계적 관리가 가능하다는 것을 증명한 프로젝트입니다. 한 사람의 뛰어난 감각이나 현장 경험에 의존하는 대신, 누구나 따를 수 있는 구조를 만든 것 — 파트너의 성장은 우연이 아닌 체계가 되었습니다.</p>
+            </div>
+
+            <div class="spacer-sm"></div>
+
+            <div class="pull-quote">
+                <blockquote style="color: rgba(240,242,245,0.7);">
+                    발전하고 성장하는 운영체계는<br>전문적인 데이터 관리로부터 시작됩니다
+                </blockquote>
+            </div>
+
+            <div class="spacer-sm"></div>
+
+        </div><!-- end bg-dark -->
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CLOSING IMAGE ════════ -->
+        <div class="image-full landscape">
+            <div class="image-placeholder ph-warm-accent">클로징 정물 — 태블릿(대시보드 화면), 제본된 월간 리포트, 완성된 육개장 한 그릇이 나란히 놓인 장면</div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — Closing</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 3:2 가로형 (1200×800px)</p>
+                    <p><strong>무드:</strong> 고요한 완결. 부드러운 자연광. 웜톤과 쿨톤의 조화. "체계적 관리의 끝에는 따뜻한 한 그릇이 있습니다."</p>
+                    <p><strong>피사체:</strong> 깨끗한 테이블 위 정물 — 태블릿(NPS 그래프), 제본된 리포트 스택, 육개장 한 그릇. 넉넉한 여백.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <!-- ════════ CLOSING TEXT ════════ -->
+        <div class="closing">
+            <p>장례식장 푸드서비스는<br>매출 규모에 비해 관리 체계가 단순한 산업이었습니다.<br>이제는 아닙니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="closing">
+            <p>매출과 고객만족을 추정하지 않고<br>분석하고 개선합니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="closing">
+            <p style="font-size: 1.2rem; font-weight: 600; font-style: normal; color: var(--color-text);">파트너의 성장은<br>우연이 아닌 체계가 되었습니다.</p>
+        </div>
+
+        <div class="spacer-sm"></div>
+
+        <div class="closing">
+            <p style="font-size: 0.95rem;">우리는 파트너의 승리를 설계합니다.</p>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+    </article>
+
+    <!-- Footer -->
+    <footer>
+        <span class="footer-brand">Freshoh</span>
+        <span class="footer-note">이 글은 쉴낙원 서울 장례식장의 운영 사례를 바탕으로 작성되었습니다</span>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="수십 번의 테스트, 하나의 공정표 — 장례식장 육개장의 품질을 구조로 바꾼 프레시오의 R&D 개발기. 쉴낙원 서울 × 프레시오.">
+    <meta name="keywords" content="장례식장 육개장, 소고기 능이 육개장, 프레시오, 쉴낙원 서울, 표준화, 공정표, R&D">
+    <title>한 그릇의 기준을 다시 세우다 — 프레시오 | Freshoh Works</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-text: #2E1F0E;
+            --color-text-light: #5C4A36;
+            --color-text-muted: #8A7561;
+            --color-bg: #FDFAF6;
+            --color-bg-warm: #F5EDE0;
+            --color-bg-cream: #FAF5ED;
+            --color-accent: #A0522D;
+            --color-border: #DDD0C0;
+            --font-serif: 'Noto Serif KR', Georgia, 'Times New Roman', serif;
+            --font-sans: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --content-width: 720px;
+            --wide-width: 960px;
+            --full-width: 1200px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 17px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            line-height: 1.85;
+            color: var(--color-text);
+            background-color: var(--color-bg);
+        }
+
+        /* ─── Navigation (overlay on hero) ─── */
+        nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            padding: 28px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: var(--full-width);
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .nav-label {
+            font-family: var(--font-sans);
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* ─── Hero (Full-bleed overlay) ─── */
+        .hero {
+            position: relative;
+            width: 100%;
+            min-height: 88vh;
+            display: grid;
+            align-items: end;
+            overflow: hidden;
+        }
+
+        .hero-media {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-media .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+            padding: 48px;
+        }
+
+        .hero-media .image-placeholder span {
+            font-size: 13px;
+            color: rgba(255,255,255,0.2);
+            font-style: italic;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background:
+                linear-gradient(180deg, rgba(46,31,14,0.08) 0%, rgba(46,31,14,0.30) 50%, rgba(46,31,14,0.75) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: var(--full-width);
+            margin: 0 auto;
+            padding: 64px 48px 56px;
+            width: 100%;
+        }
+
+        .hero-label {
+            display: inline-block;
+            padding: 5px 10px;
+            letter-spacing: 0.13em;
+            font-family: var(--font-sans);
+            font-size: 10px;
+            font-weight: 500;
+            color: rgba(250,240,225,0.85);
+            border: 1px solid rgba(250,240,225,0.4);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 4.1vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.22;
+            color: #FFFAF4;
+            max-width: 840px;
+            margin-bottom: 14px;
+            letter-spacing: -0.5px;
+            word-break: keep-all;
+            text-wrap: balance;
+        }
+
+        .hero h1 .title-line {
+            display: block;
+            line-height: 1.18;
+        }
+
+        .hero-sub {
+            font-family: var(--font-serif);
+            font-size: clamp(0.98rem, 1.7vw, 1.15rem);
+            font-weight: 400;
+            color: rgba(250,235,215,0.9);
+            max-width: 680px;
+            margin-bottom: 22px;
+            line-height: 1.7;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .hero-chip {
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            color: rgba(250,235,215,0.8);
+            border: 1px solid rgba(250,235,215,0.3);
+            background: rgba(46,31,14,0.3);
+            padding: 5px 10px;
+        }
+
+        /* ─── Text Content ─── */
+        .text-block {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .text-block p {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--color-text);
+            margin-bottom: 28px;
+            letter-spacing: -0.2px;
+            word-break: keep-all;
+        }
+
+        .text-block p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Section headings */
+        .section-heading {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .section-heading h2 {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--color-text);
+            letter-spacing: -0.3px;
+        }
+
+        .section-heading .section-number {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        /* ─── Full Bleed Image ─── */
+        .image-full {
+            width: 100%;
+            max-width: var(--full-width);
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .image-full.landscape {
+            aspect-ratio: 3 / 2;
+        }
+
+        .image-full.wide {
+            aspect-ratio: 16 / 9;
+        }
+
+        .image-full.square {
+            aspect-ratio: 4 / 3;
+        }
+
+        /* ─── 2-Up Image Layout ─── */
+        .image-pair {
+            max-width: var(--full-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 0;
+        }
+
+        .image-pair .image-item {
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+        }
+
+        /* ─── Side-by-Side Text+Image ─── */
+        .split-layout {
+            max-width: var(--full-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 500px;
+        }
+
+        .split-layout.reverse {
+            direction: rtl;
+        }
+
+        .split-layout.reverse > * {
+            direction: ltr;
+        }
+
+        .split-layout .split-image {
+            aspect-ratio: auto;
+            min-height: 100%;
+        }
+
+        .split-layout .split-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 56px;
+        }
+
+        .split-layout .split-text p {
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--color-text);
+            margin-bottom: 24px;
+            word-break: keep-all;
+        }
+
+        .split-layout .split-text h3 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 28px;
+            color: var(--color-text);
+        }
+
+        /* ─── Pull Quote ─── */
+        .pull-quote {
+            max-width: var(--wide-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .pull-quote blockquote {
+            font-family: var(--font-serif);
+            font-size: 1.55rem;
+            font-weight: 400;
+            font-style: italic;
+            line-height: 1.7;
+            color: var(--color-text-light);
+            border: none;
+            padding: 0;
+            position: relative;
+        }
+
+        .pull-quote blockquote::before {
+            content: '';
+            display: block;
+            width: 48px;
+            height: 2px;
+            background-color: var(--color-accent);
+            margin: 0 auto 32px;
+        }
+
+        .pull-quote blockquote::after {
+            content: '';
+            display: block;
+            width: 48px;
+            height: 2px;
+            background-color: var(--color-accent);
+            margin: 32px auto 0;
+        }
+
+        .pull-quote .quote-attribution {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-top: 20px;
+            font-style: normal;
+        }
+
+        /* ─── Image Caption ─── */
+        .image-caption {
+            max-width: var(--content-width);
+            margin: 12px auto 0;
+            padding: 0 24px;
+        }
+
+        .image-caption p {
+            font-family: var(--font-sans);
+            font-size: 0.72rem;
+            color: var(--color-text-muted);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            line-height: 1.6;
+        }
+
+        /* ─── Background Transition ─── */
+        .bg-warm {
+            background-color: var(--color-bg-warm);
+        }
+
+        .bg-cream {
+            background-color: var(--color-bg-cream);
+        }
+
+        .bg-dark {
+            background-color: #1F170E;
+        }
+
+        .bg-dark .text-block p,
+        .bg-dark .section-heading h2 {
+            color: #F5EDE0;
+        }
+
+        .bg-dark .section-heading .section-number {
+            color: var(--color-accent);
+        }
+
+        .bg-dark .pull-quote blockquote {
+            color: rgba(245, 237, 224, 0.8);
+        }
+
+        /* ─── Spacing System ─── */
+        .spacer-xs { height: 32px; }
+        .spacer-sm { height: 48px; }
+        .spacer-md { height: 72px; }
+        .spacer-lg { height: 100px; }
+        .spacer-xl { height: 140px; }
+
+        /* ─── Closing Section ─── */
+        .closing {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .closing p {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--color-text-light);
+            line-height: 1.8;
+        }
+
+        /* ─── Footer ─── */
+        footer {
+            max-width: var(--full-width);
+            margin: 0 auto;
+            padding: 48px 40px;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        footer .footer-brand {
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--color-text);
+        }
+
+        footer .footer-note {
+            font-family: var(--font-sans);
+            font-size: 11px;
+            color: var(--color-text-muted);
+        }
+
+        /* ─── Placeholder Styling ─── */
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: rgba(46, 31, 14, 0.25);
+            text-align: center;
+            padding: 32px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .ph-dark { background: linear-gradient(160deg, #1F170E 0%, #2E1F0E 40%, #3D2E1A 100%); }
+        .ph-dark .image-placeholder { color: rgba(250,240,225,0.25); }
+        .ph-warm { background: linear-gradient(160deg, #E8D8C0 0%, #D9C5A8 100%); }
+        .ph-cream { background: linear-gradient(160deg, #FAF5ED 0%, #F0E8DA 100%); }
+        .ph-sienna { background: linear-gradient(160deg, #A0522D 0%, #8B4513 100%); }
+        .ph-sienna .image-placeholder { color: rgba(255,255,255,0.3); }
+        .ph-ivory { background: linear-gradient(160deg, #FAF7F1 0%, #F0EBE2 100%); }
+        .ph-amber { background: linear-gradient(160deg, #D4A040 0%, #C08C30 100%); }
+        .ph-amber .image-placeholder { color: rgba(255,255,255,0.3); }
+        .ph-linen { background: linear-gradient(160deg, #F0E8DC 0%, #E5DDD0 100%); }
+        .ph-stone { background: linear-gradient(160deg, #BFB5A5 0%, #A89A88 100%); }
+        .ph-stone .image-placeholder { color: rgba(255,255,255,0.3); }
+        .ph-charcoal { background: linear-gradient(160deg, #3A2E1E 0%, #2E1F0E 100%); }
+        .ph-charcoal .image-placeholder { color: rgba(250,240,225,0.25); }
+
+        /* ─── Image Direction Box ─── */
+        .image-direction {
+            max-width: var(--content-width);
+            margin: 8px auto 0;
+            padding: 0 24px;
+        }
+
+        .image-direction details {
+            border: 1px dashed var(--color-border);
+            border-radius: 4px;
+            padding: 12px 16px;
+            background: var(--color-bg-cream);
+        }
+
+        .image-direction summary {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            cursor: pointer;
+        }
+
+        .image-direction .dir-content {
+            margin-top: 12px;
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            line-height: 1.7;
+            color: var(--color-text-light);
+        }
+
+        .image-direction .dir-content strong {
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .image-direction .dir-content p {
+            margin-bottom: 8px;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1024px) {
+            html { font-size: 16px; }
+            .hero-content { padding: 48px 36px 48px; }
+            .split-layout .split-text { padding: 40px 36px; }
+        }
+
+        @media (max-width: 768px) {
+            html { font-size: 15px; }
+            nav { padding: 20px 24px; }
+            .hero { min-height: 76vh; }
+            .hero-content { padding: 38px 24px 32px; }
+            .section-heading h2 { font-size: 1.5rem; }
+            .pull-quote blockquote { font-size: 1.3rem; }
+            .text-block, .section-heading, .pull-quote, .image-caption, .closing {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .image-pair { gap: 8px; }
+            .split-layout {
+                grid-template-columns: 1fr;
+            }
+            .split-layout .split-image {
+                aspect-ratio: 4 / 3;
+            }
+            .split-layout.reverse {
+                direction: ltr;
+            }
+            .split-layout .split-text {
+                padding: 40px 20px;
+            }
+            footer {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+                padding: 36px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-heading h2 { font-size: 1.3rem; }
+            .pull-quote blockquote { font-size: 1.15rem; }
+            .spacer-xl { height: 80px; }
+            .spacer-lg { height: 64px; }
+            .spacer-md { height: 48px; }
+        }
+
+        @media print {
+            nav, footer, .image-direction { display: none; }
+            .bg-warm, .bg-cream, .bg-dark { background-color: transparent !important; }
+            .bg-dark .text-block p, .bg-dark .section-heading h2 { color: var(--color-text) !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <article>
+
+        <!-- ════════ HERO — Full-bleed overlay ════════ -->
+        <header class="hero">
+            <nav>
+                <span class="nav-logo">Freshoh</span>
+                <span class="nav-label">Works</span>
+            </nav>
+            <div class="hero-media ph-sienna">
+                <div class="image-placeholder">
+                    <span>완성된 소고기 능이 육개장 한 그릇 — 진한 붉은 국물, 고기와 능이버섯의 질감이 선명한 45도 앵글</span>
+                </div>
+            </div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-label">Freshoh Works Editorial</span>
+                <h1>
+                    <span class="title-line">한 그릇의 기준을</span>
+                    <span class="title-line">다시 세우다</span>
+                </h1>
+                <p class="hero-sub">수십 번의 테스트, 하나의 공정표 — 정성을 구조로 바꾼 육개장 개발기</p>
+                <div class="hero-meta">
+                    <span class="hero-chip">Site: 쉴낙원 서울 장례식장</span>
+                    <span class="hero-chip">Period: 2025.06 ~ on going</span>
+                    <span class="hero-chip">Category: Menu R&D · Standardization</span>
+                    <span class="hero-chip">Read Time: 12분</span>
+                </div>
+            </div>
+        </header>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — Hero</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 풀블리드 (min-height 88vh)</p>
+                    <p><strong>무드:</strong> 깊고 진한 붉은 톤. 김이 피어오르는 순간. 완성된 한 그릇의 품격과 무게감.</p>
+                    <p><strong>피사체:</strong> 소고기 능이 육개장 한 그릇 45도 앵글. 국물의 깊은 붉은색, 고기 결, 능이버섯이 선명하게. 주변 여백 충분히. 히어로 텍스트는 하단에 위치하므로 핵심 디테일은 중앙~상단 배치.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <!-- ════════ INTRO — Text first, then landscape ════════ -->
+        <div class="text-block">
+            <p>장례식장에서 육개장은 단순한 메뉴가 아닙니다. 조문객이 먼 길을 와서, 슬픔 속에서 받아드는 첫 번째 온기입니다. 그런데 저희가 처음 현장에 들어섰을 때, 그 한 그릇에는 기준이 없었습니다. 누가 끓이느냐에 따라 맛이 달랐고, 대량 조리로 넘어가는 순간 국물은 탁해지고 고기는 퍼졌습니다.</p>
+            <p>수백 명분을 한꺼번에 끓여야 하는 현장의 압박 속에서, '정성'이라는 말은 의지의 문제로만 남아 있었습니다. 저희는 그 의지를 시스템으로 바꾸기로 했습니다.</p>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <div class="image-full landscape">
+            <div class="image-placeholder ph-warm">장례식장 대량 조리 현장 전경 — 커다란 솥, 일렬로 놓인 빈 그릇들, 형광등 아래 반복적인 세팅</div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — 현장 전경</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 3:2 가로형 (1200×800px)</p>
+                    <p><strong>무드:</strong> 무미건조한 대량 조리 현장. 형광등, 반복적인 세팅. 정성보다 효율의 느낌. 다큐멘터리 톤.</p>
+                    <p><strong>피사체:</strong> 넓은 앵글. 대형 솥에서 끓고 있는 육개장, 일렬로 놓인 빈 그릇들, 조리 인력의 뒷모습. 현장의 규모감.</p>
+                </div>
+            </details>
+        </div>
+        <div class="image-caption">
+            <p>기준 없이 만들어지는 음식에 정성을 기대하는 것 자체가 모순이었습니다</p>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER ONE — 민낯 ════════ -->
+
+        <div class="section-heading">
+            <span class="section-number">Chapter One — The Unspoken Problem</span>
+            <h2>아무도 의심하지 않던<br>육개장의 민낯</h2>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="text-block">
+            <p>장례식장 육개장은 오랫동안 '어차피 이런 음식'이라는 인식 속에 방치되어 왔습니다. 조문객이 가장 먼저 접하는 음식이지만, 대부분의 현장에서 대량 조리 시 품질이 급격히 저하됩니다. 조리자마다 맛의 편차가 크고, 수백 인분을 한꺼번에 끓이면 국물 농도와 고기 식감이 무너집니다.</p>
+            <p>경력 있는 조리사의 감에 의존하는 방식이 유일한 기준이었습니다. 레시피가 있어도 완전히 계량화·공정화되지 않아 사람이 바뀌면 맛이 달라지고, 대량 전환 시 품질 저하를 막을 수단이 없었습니다. '어떤 재료를 끓여라'는 지시만 있을 뿐, '어떻게'에 해당하는 표준 공정이 존재하지 않았습니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- 2-up — 문제의 장면들 -->
+        <div class="image-pair">
+            <div class="image-item ph-stone">
+                <div class="image-placeholder" style="color:rgba(255,255,255,0.3);">탁해진 국물 클로즈업 — 대량 조리로 농도가 무너진 육개장, 기름이 뜬 표면</div>
+            </div>
+            <div class="image-item ph-linen">
+                <div class="image-placeholder">조리자별 상이한 계량 — 눈대중으로 양념을 넣는 손, 저울 없이 진행되는 조리</div>
+            </div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — 문제의 장면</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 4:3 × 2장 (각 594×446px)</p>
+                    <p><strong>무드:</strong> 좌측은 품질 저하의 결과물(탁한 국물), 우측은 원인(비표준 계량). 다큐멘터리적 관찰 톤.</p>
+                    <p><strong>피사체:</strong> 좌측 — 탑다운, 탁해진 국물 표면 클로즈업. 우측 — 양념을 눈대중으로 넣는 손과 그릇, 계량도구 부재가 드러나는 앵글.</p>
+                </div>
+            </details>
+        </div>
+        <div class="image-caption">
+            <p>누가 끓이느냐에 따라 달라지는 맛 — 그것은 정성이 아니라 관리의 부재였습니다</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="pull-quote">
+            <blockquote>
+                이 구조를 바꾸지 않으면,<br>육개장은 관행적이고 기대 없는 메뉴로<br>남게 됩니다
+            </blockquote>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER TWO — 공정표 (bg-warm wrapping) ════════ -->
+        <div class="bg-warm" style="padding: 100px 0;">
+
+            <div class="section-heading">
+                <span class="section-number">Chapter Two — Building the Standard</span>
+                <h2>감을 숫자로 바꾸다<br>수십 번의 테스트, 하나의 공정표</h2>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <div class="text-block">
+                <p>이번 프로젝트의 출발점은 단순한 레시피 개선이 아니었습니다. 장례식장 육개장의 품질 기준을 다시 세우기 위해, 먼저 시장의 기준부터 확인했습니다. 수도권 육개장 맛집과 대구 지역 대표 매장을 직접 방문해 국물의 농도, 향의 깊이, 대파·고사리 사용 방식, 고기 결 처리, 매운맛의 결을 비교했습니다.</p>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <!-- Split layout — 맛집 리서치 -->
+            <div class="split-layout">
+                <div class="split-image ph-stone">
+                    <div class="image-placeholder" style="color:rgba(255,255,255,0.3);">맛집 현장 방문 — 수도권·대구 육개장 맛집 테이블 위 여러 그릇, 비교 메모와 펜</div>
+                </div>
+                <div class="split-text">
+                    <h3>시장의 기준을 먼저<br>확인하다</h3>
+                    <p>맛집 사장 인터뷰를 통해 매장별 핵심 공정과 손맛의 포인트를 구조화했고, 식재료 소싱 경로와 계절별 원물 편차까지 함께 점검했습니다. '맛집 모방'이 아니라, 인사이트를 구조화해 프레시오 현장에 맞는 표준 레시피로 재설계하는 것이 목표였습니다.</p>
+                    <p>수집된 데이터를 바탕으로 프레시오 내부 R&D에서 복수의 시제품을 설계했습니다. 평가 기준은 단순 기호도가 아니라 대중성, 지역성, 현장 재현성, 배식 안정성, 원가 지속가능성까지 포함했습니다.</p>
+                </div>
+            </div>
+            <div class="image-direction">
+                <details>
+                    <summary>Photo Direction — Split Layout</summary>
+                    <div class="dir-content">
+                        <p><strong>비율:</strong> 세로형 자유 비율 (600×500px 이상)</p>
+                        <p><strong>무드:</strong> 리서치와 탐구의 현장. 여러 그릇이 비교 대조되는 진지한 분위기. 자연광.</p>
+                        <p><strong>피사체:</strong> 맛집 테이블 위 5~6개 육개장 그릇, 비교 메모지, 사진 촬영 중인 손. 위에서 비스듬히.</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <div class="text-block">
+                <p>소고기능이육개장. 이름부터 재료의 본질을 걸었습니다. 개발 과정은 집요했습니다. 육수의 농도, 고기의 결, 대파의 숨김 정도, 고춧가루의 투입 시점 — 한 변수를 바꿀 때마다 전체 균형이 흔들렸고, 그때마다 처음부터 다시 끓였습니다.</p>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <!-- 풀블리드 정사각형 — R&D 테스트 -->
+            <div class="image-full square">
+                <div class="image-placeholder ph-amber" style="color:rgba(255,255,255,0.3);">R&D 테스트 기록 — 시제품 여러 버전이 번호표와 함께 놓인 블라인드 시식 테이블</div>
+            </div>
+            <div class="image-direction">
+                <details>
+                    <summary>Photo Direction — R&D 시식</summary>
+                    <div class="dir-content">
+                        <p><strong>비율:</strong> 4:3 정사각에 가까운 형 (1200×900px)</p>
+                        <p><strong>무드:</strong> R&D 현장의 체계적 분위기. 번호표, 평가 시트, 시제품이 정돈된 느낌.</p>
+                        <p><strong>피사체:</strong> 블라인드 시식 테이블. 번호가 매겨진 육개장 그릇 3~5개, 평가 시트, 펜. 위에서 내려다보는 앵글.</p>
+                    </div>
+                </details>
+            </div>
+            <div class="image-caption">
+                <p>'강한 인상'보다 '반복 가능한 완성도'에 무게를 두었습니다</p>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <!-- Split reverse — 공정표 설계 -->
+            <div class="split-layout reverse">
+                <div class="split-image ph-ivory">
+                    <div class="image-placeholder">공정표 문서 — 투입량, 조리 순서, 온도, 시간이 수치화된 표준 공정 문서 클로즈업</div>
+                </div>
+                <div class="split-text">
+                    <h3>레시피가 아니라<br>공정표를 만들었습니다</h3>
+                    <p>식재료 선별 기준을 세웠습니다. 투입량과 순서를 수치화했습니다. 조리 온도, 시간, 불 조절의 타이밍까지 — 감에 의존하던 모든 공정을 문서와 숫자로 치환했습니다. 그래야 조리자의 컨디션이나 경력에 관계없이, 매일 같은 품질이 나옵니다.</p>
+                    <p>각 레시피를 블라인드 시식과 운영 테스트로 검증하면서, 대중적으로 수용되면서도 대구식 붉은 국물의 지역적 개성을 살린 프레시오만의 표준 레시피가 확정되었습니다.</p>
+                </div>
+            </div>
+            <div class="image-direction">
+                <details>
+                    <summary>Photo Direction — Split Reverse</summary>
+                    <div class="dir-content">
+                        <p><strong>비율:</strong> 세로형 자유 비율 (600×500px 이상)</p>
+                        <p><strong>무드:</strong> 정돈되고 체계적인 문서의 무게감. 밝은 배경, 선명한 타이포.</p>
+                        <p><strong>피사체:</strong> 공정표 문서 클로즈업. 투입량 테이블, 온도·시간 수치, 공정 순서 플로우가 보이는 페이지. 펜과 마커 흔적.</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <div class="pull-quote">
+                <blockquote>
+                    현장에서 모은 인사이트를 표준으로 바꿀 때,<br>한 그릇의 품질은 매번 증명됩니다
+                </blockquote>
+            </div>
+
+            <div class="spacer-sm"></div>
+
+        </div><!-- end bg-warm -->
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER THREE — 현장의 손 ════════ -->
+
+        <div class="section-heading">
+            <span class="section-number">Chapter Three — Hands in the Field</span>
+            <h2>설득하지 않았습니다<br>끓여서 보여드렸습니다</h2>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="text-block">
+            <p>표준화의 진짜 난관은 종이 위가 아니라 현장에 있었습니다. 수년간 자기 방식으로 끓여온 조리팀에게 '이제부터 이렇게 하십시오'라고 말하는 건, 그들의 경험을 부정하는 것처럼 들릴 수 있습니다. 저희는 설득 대신 시연을 택했습니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- 풀블리드 landscape — 시연 장면 -->
+        <div class="image-full landscape">
+            <div class="image-placeholder ph-dark" style="color:rgba(250,240,225,0.25);">조리팀 앞에서 직접 끓이는 시연 — 공정표를 벽에 붙여놓고 단계별로 조리하는 장면, 지켜보는 조리팀</div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — 시연 장면</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 3:2 가로형 (1200×800px)</p>
+                    <p><strong>무드:</strong> 현장 교육의 긴장감과 진정성. 연출 없는 다큐멘터리 톤. 따뜻하지만 진지한.</p>
+                    <p><strong>피사체:</strong> 조리대 앞에서 직접 끓이며 설명하는 담당자, 뒤에서 지켜보는 조리팀 2~3명. 벽면에 공정표 부착. 측면 앵글로 양측 모두 포착.</p>
+                </div>
+            </details>
+        </div>
+        <div class="image-caption">
+            <p>"왜 바꿔야 합니까"가 아니라 "바뀌면 이렇게 됩니다"를 몸으로 증명했습니다</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- Split — 전후 비교 시식 + 텍스트 -->
+        <div class="split-layout">
+            <div class="split-text bg-cream">
+                <h3>종이 위의 기준을<br>현장의 손으로 옮기다</h3>
+                <p>직접 끓여 보여드리고, 전후 차이를 함께 맛보게 했습니다. 결과가 설득보다 강했고, 그제야 현장의 손이 움직이기 시작했습니다. 공정표를 보며 조리하는 습관이 생기고, 반복 교육과 피드백을 거치며 일관된 품질이 현장에서 실현되기 시작했습니다.</p>
+                <p>조리팀이 공정표를 자발적으로 따르기 시작한 순간, 이 프로젝트의 가장 어려운 단계가 끝났습니다.</p>
+            </div>
+            <div class="split-image ph-warm">
+                <div class="image-placeholder">전후 비교 시식 — 기존 방식과 표준 공정 결과물이 나란히 놓인 테이블, 비교하는 손</div>
+            </div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — Split</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 세로형 자유 비율 (600×500px 이상)</p>
+                    <p><strong>무드:</strong> 전후 대비가 분명한 시식 장면. 자연광, 깨끗한 테이블.</p>
+                    <p><strong>피사체:</strong> 두 그릇이 나란히 — 좌측 기존(탁한 국물), 우측 표준(맑고 진한 붉은색). 비교하는 손, 숟가락.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="pull-quote">
+            <blockquote>
+                표준화의 진짜 시험은<br>종이 위가 아니라 현장에 있었습니다
+            </blockquote>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <!-- 소제목 — 외부 반응 -->
+        <div class="section-heading">
+            <span class="section-number">Voices from Outside</span>
+            <h2>"이 육개장,<br>어디서 만드는 겁니까?"</h2>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="text-block">
+            <p>내부에서 공을 들인 변화가 실제로 고객에게 닿기 시작했습니다. 조문객이 먼저 물었습니다. 상주가 감사를 전했습니다. 외부 관계자가 견학을 요청했습니다. 기준이 바뀌자, 한 그릇을 받는 사람의 인식이 달라졌습니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- 2-up — 외부 반응 -->
+        <div class="image-pair">
+            <div class="image-item ph-linen">
+                <div class="image-placeholder">조문객 식사 장면 — 만족하며 식사하는 모습, 깨끗하게 비워진 그릇들</div>
+            </div>
+            <div class="image-item ph-cream">
+                <div class="image-placeholder">상주 감사 인사 — 손편지 또는 감사 메시지, 따뜻한 톤의 텍스트 카드</div>
+            </div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — 외부 반응</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 4:3 × 2장 (각 594×446px)</p>
+                    <p><strong>무드:</strong> 좌측은 자연스러운 식사 장면(다큐멘터리 톤), 우측은 따뜻한 감사의 기록.</p>
+                    <p><strong>피사체:</strong> 좌측 — 조문객 식사 중, 손과 그릇에 포커스, 얼굴 최소화. 우측 — 상주 감사 메시지 카드 또는 손편지 클로즈업.</p>
+                </div>
+            </details>
+        </div>
+        <div class="image-caption">
+            <p>조문객이 먼저 묻기 시작했습니다 — 기준을 바꾸면 경험이 바뀝니다</p>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER FOUR — 증명 (bg-dark) ════════ -->
+        <div class="bg-dark" style="padding: 100px 0;">
+
+            <div class="section-heading">
+                <span class="section-number">Chapter Four — Proof</span>
+                <h2>감각이 아닌 구조가<br>품질을 만듭니다</h2>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <div class="text-block">
+                <p style="color: #F5EDE0;">이 프로젝트의 결론은 단순합니다. 표준화된 공정만으로, 조리자가 누구든 동일한 품질의 육개장을 매일 재현할 수 있다는 것을 증명했습니다. 이것은 맛있는 육개장을 만든 이야기가 아닙니다. 음식의 품질은 감각이 아니라 구조에서 나온다는 것, 그리고 그 구조는 어디서든 재현될 수 있다는 것을 증명하는 프로젝트입니다.</p>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <!-- KPI 인포그래픽 -->
+            <div class="image-full wide">
+                <div class="image-placeholder ph-charcoal" style="color:rgba(160,82,45,0.3);">KPI — 맛 편차율 감소 (조리자 간 품질 일관성) / 조문객 만족도 상승 / 공정표 준수율 달성</div>
+            </div>
+            <div class="image-direction">
+                <details>
+                    <summary>Infographic Direction — KPI</summary>
+                    <div class="dir-content">
+                        <p><strong>비율:</strong> 16:9 와이드 (1200×675px)</p>
+                        <p><strong>무드:</strong> 다크 브라운 배경, 시에나 악센트. 신뢰감 있는 데이터 비주얼.</p>
+                        <p><strong>구성:</strong> 가로 3등분 카드. 맛 편차율 감소(관능검사 전후 비교) / 조문객 만족도 상승(긍정 반응 비율) / 공정표 준수율(모니터링 기반). 대형 숫자 + 보조 텍스트. 산세리프, 미니멀.</p>
+                    </div>
+                </details>
+            </div>
+            <div class="image-caption">
+                <p style="color: var(--color-text-muted);">2025.06~, 쉴낙원 서울 장례식장 표준화 프로젝트 데이터 기반</p>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <!-- 2-up — 결과물 in dark -->
+            <div class="image-pair">
+                <div class="image-item ph-sienna">
+                    <div class="image-placeholder" style="color:rgba(255,255,255,0.3);">완성된 소고기 능이 육개장 클로즈업 — 진한 붉은 국물, 풍성한 건더기, 정면 45도</div>
+                </div>
+                <div class="image-item ph-dark">
+                    <div class="image-placeholder" style="color:rgba(250,240,225,0.25);">공정표와 완성품 나란히 — 문서 위에 놓인 한 그릇, 구조와 결과물의 대비</div>
+                </div>
+            </div>
+            <div class="image-direction">
+                <details>
+                    <summary>Photo Direction — 결과물</summary>
+                    <div class="dir-content">
+                        <p><strong>비율:</strong> 4:3 × 2장 (각 594×446px)</p>
+                        <p><strong>무드:</strong> 좌측은 완성된 음식의 품격(식욕 자극, 따뜻한 톤), 우측은 체계와 결과의 공존(다큐멘터리).</p>
+                        <p><strong>피사체:</strong> 좌측 — 육개장 45도 클로즈업, 김 피어오르는 순간. 우측 — 나무 테이블 위 공정표 문서, 그 위 또는 옆에 완성된 한 그릇.</p>
+                    </div>
+                </details>
+            </div>
+
+            <div class="spacer-lg"></div>
+
+            <div class="pull-quote">
+                <blockquote style="color: rgba(245,237,224,0.7);">
+                    한 그릇의 기준이 바뀌자,<br>그 한 그릇을 받는 사람의<br>경험이 바뀌었습니다
+                </blockquote>
+            </div>
+
+            <div class="spacer-sm"></div>
+
+        </div><!-- end bg-dark -->
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CLOSING IMAGE ════════ -->
+        <div class="image-full wide">
+            <div class="image-placeholder ph-warm">조리팀 단체 — 공정표를 손에 든 조리팀이 주방 앞에 서있는 장면, 자부심 있는 표정</div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — Closing</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 16:9 와이드 (1200×675px)</p>
+                    <p><strong>무드:</strong> 따뜻하고 자부심 있는 팀 포트레이트. 자연스러운 표정, 주방 배경. 현장감.</p>
+                    <p><strong>피사체:</strong> 조리팀 3~4명이 주방 앞에 서있는 반신 그룹샷. 한 명은 공정표를 들고. 유니폼 착용. 자연광 또는 따뜻한 조명.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <!-- ════════ CLOSING TEXT ════════ -->
+        <div class="closing">
+            <p>표준화는 정성의 반대가 아닙니다.<br>정성을 지속하는 유일한 방법입니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="closing">
+            <p style="font-size: 1.2rem; font-weight: 600; font-style: normal; color: var(--color-text);">한 그릇의 기준을 다시 세우는 것,<br>그것이 프레시오의 방식입니다.</p>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+    </article>
+
+    <!-- Footer -->
+    <footer>
+        <span class="footer-brand">Freshoh</span>
+        <span class="footer-note">이 글은 쉴낙원 서울 장례식장의 소고기 능이 육개장 표준화 프로젝트를 바탕으로 작성되었습니다</span>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="장례식장의 철학과 태도를 고객이 경험하는 모든 접점에서 일관되게 전달하는 브랜드 경험 재설계 프로젝트. 쉴낙원 서울 × 프레시오.">
+    <meta name="keywords" content="장례식장 BX, 브랜드 경험, 쉴낙원 서울, 프레시오, 장례식장 브랜딩, 고객 경험 설계">
+    <title>'아름다운 이별'의 철학을 브랜드 경험으로 완성하다 — 프레시오 | Freshoh Works</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-text: #2B241E;
+            --color-text-light: #5E5246;
+            --color-text-muted: #8F7A63;
+            --color-bg: #FDFBF8;
+            --color-bg-warm: #F5F1EA;
+            --color-bg-cream: #FAF7F1;
+            --color-accent: #8F7154;
+            --color-border: #E3D8CB;
+            --font-serif: 'Noto Serif KR', Georgia, 'Times New Roman', serif;
+            --font-sans: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --content-width: 720px;
+            --wide-width: 960px;
+            --full-width: 1200px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 17px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            line-height: 1.85;
+            color: var(--color-text);
+            background-color: var(--color-bg);
+        }
+
+        /* ─── Navigation (overlay on hero) ─── */
+        nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            padding: 28px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: var(--full-width);
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .nav-label {
+            font-family: var(--font-sans);
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* ─── Hero (Full-bleed overlay) ─── */
+        .hero {
+            position: relative;
+            width: 100%;
+            min-height: 88vh;
+            display: grid;
+            align-items: end;
+            overflow: hidden;
+        }
+
+        .hero-media {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-media .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+            padding: 48px;
+        }
+
+        .hero-media .image-placeholder span {
+            font-size: 13px;
+            color: rgba(255,255,255,0.2);
+            font-style: italic;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background:
+                linear-gradient(180deg, rgba(43,36,30,0.08) 0%, rgba(43,36,30,0.30) 50%, rgba(43,36,30,0.72) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: var(--full-width);
+            margin: 0 auto;
+            padding: 64px 48px 56px;
+            width: 100%;
+        }
+
+        .hero-label {
+            display: inline-block;
+            padding: 5px 10px;
+            letter-spacing: 0.13em;
+            font-family: var(--font-sans);
+            font-size: 10px;
+            font-weight: 500;
+            color: rgba(245,241,234,0.85);
+            border: 1px solid rgba(245,241,234,0.4);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 4.1vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.22;
+            color: #FFFAF4;
+            max-width: 840px;
+            margin-bottom: 14px;
+            letter-spacing: -0.5px;
+            word-break: keep-all;
+            text-wrap: balance;
+        }
+
+        .hero h1 .title-line {
+            display: block;
+            line-height: 1.18;
+        }
+
+        .hero-sub {
+            font-family: var(--font-serif);
+            font-size: clamp(0.98rem, 1.7vw, 1.15rem);
+            font-weight: 400;
+            color: rgba(245,235,224,0.9);
+            max-width: 680px;
+            margin-bottom: 22px;
+            line-height: 1.7;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .hero-chip {
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            color: rgba(245,235,224,0.8);
+            border: 1px solid rgba(245,235,224,0.3);
+            background: rgba(43,36,30,0.3);
+            padding: 5px 10px;
+        }
+
+        /* ─── Text Content ─── */
+        .text-block {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .text-block p {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--color-text);
+            margin-bottom: 28px;
+            letter-spacing: -0.2px;
+            word-break: keep-all;
+        }
+
+        .text-block p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Section headings */
+        .section-heading {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .section-heading h2 {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--color-text);
+            letter-spacing: -0.3px;
+        }
+
+        .section-heading .section-number {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        /* ─── Full Bleed Image ─── */
+        .image-full {
+            width: 100%;
+            max-width: var(--full-width);
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .image-full.landscape {
+            aspect-ratio: 3 / 2;
+        }
+
+        .image-full.wide {
+            aspect-ratio: 16 / 9;
+        }
+
+        .image-full.square {
+            aspect-ratio: 4 / 3;
+        }
+
+        /* ─── 2-Up Image Layout ─── */
+        .image-pair {
+            max-width: var(--full-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 0;
+        }
+
+        .image-pair .image-item {
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+        }
+
+        /* ─── Side-by-Side Text+Image ─── */
+        .split-layout {
+            max-width: var(--full-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 500px;
+        }
+
+        .split-layout.reverse {
+            direction: rtl;
+        }
+
+        .split-layout.reverse > * {
+            direction: ltr;
+        }
+
+        .split-layout .split-image {
+            aspect-ratio: auto;
+            min-height: 100%;
+        }
+
+        .split-layout .split-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 56px;
+        }
+
+        .split-layout .split-text p {
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--color-text);
+            margin-bottom: 24px;
+            word-break: keep-all;
+        }
+
+        .split-layout .split-text h3 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 28px;
+            color: var(--color-text);
+        }
+
+        /* ─── Pull Quote ─── */
+        .pull-quote {
+            max-width: var(--wide-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .pull-quote blockquote {
+            font-family: var(--font-serif);
+            font-size: 1.55rem;
+            font-weight: 400;
+            font-style: italic;
+            line-height: 1.7;
+            color: var(--color-text-light);
+            border: none;
+            padding: 0;
+            position: relative;
+        }
+
+        .pull-quote blockquote::before {
+            content: '';
+            display: block;
+            width: 48px;
+            height: 2px;
+            background-color: var(--color-accent);
+            margin: 0 auto 32px;
+        }
+
+        .pull-quote blockquote::after {
+            content: '';
+            display: block;
+            width: 48px;
+            height: 2px;
+            background-color: var(--color-accent);
+            margin: 32px auto 0;
+        }
+
+        .pull-quote .quote-attribution {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-top: 20px;
+            font-style: normal;
+        }
+
+        /* ─── Image Caption ─── */
+        .image-caption {
+            max-width: var(--content-width);
+            margin: 12px auto 0;
+            padding: 0 24px;
+        }
+
+        .image-caption p {
+            font-family: var(--font-sans);
+            font-size: 0.72rem;
+            color: var(--color-text-muted);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            line-height: 1.6;
+        }
+
+        /* ─── Background Transition ─── */
+        .bg-warm {
+            background-color: var(--color-bg-warm);
+        }
+
+        .bg-cream {
+            background-color: var(--color-bg-cream);
+        }
+
+        .bg-dark {
+            background-color: #1F1B16;
+        }
+
+        .bg-dark .text-block p,
+        .bg-dark .section-heading h2 {
+            color: #F5F1EA;
+        }
+
+        .bg-dark .section-heading .section-number {
+            color: var(--color-accent);
+        }
+
+        .bg-dark .pull-quote blockquote {
+            color: rgba(245, 241, 234, 0.8);
+        }
+
+        /* ─── Spacing System ─── */
+        .spacer-xs { height: 32px; }
+        .spacer-sm { height: 48px; }
+        .spacer-md { height: 72px; }
+        .spacer-lg { height: 100px; }
+        .spacer-xl { height: 140px; }
+
+        /* ─── Closing Section ─── */
+        .closing {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .closing p {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--color-text-light);
+            line-height: 1.8;
+        }
+
+        /* ─── Footer ─── */
+        footer {
+            max-width: var(--full-width);
+            margin: 0 auto;
+            padding: 48px 40px;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        footer .footer-brand {
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--color-text);
+        }
+
+        footer .footer-note {
+            font-family: var(--font-sans);
+            font-size: 11px;
+            color: var(--color-text-muted);
+        }
+
+        /* ─── Placeholder Styling ─── */
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: rgba(43, 36, 30, 0.25);
+            text-align: center;
+            padding: 32px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .ph-dark { background: linear-gradient(160deg, #1F1B16 0%, #2B241E 40%, #3A322A 100%); }
+        .ph-dark .image-placeholder { color: rgba(245,241,234,0.25); }
+        .ph-warm { background: linear-gradient(160deg, #E8DED0 0%, #D9CDB8 100%); }
+        .ph-cream { background: linear-gradient(160deg, #F5F1EA 0%, #EAE3D7 100%); }
+        .ph-stone { background: linear-gradient(160deg, #BFB5A5 0%, #A89A88 100%); }
+        .ph-stone .image-placeholder { color: rgba(255,255,255,0.3); }
+        .ph-ivory { background: linear-gradient(160deg, #FAF7F1 0%, #F0EBE2 100%); }
+        .ph-charcoal { background: linear-gradient(160deg, #3A322A 0%, #2B241E 100%); }
+        .ph-charcoal .image-placeholder { color: rgba(245,241,234,0.25); }
+        .ph-linen { background: linear-gradient(160deg, #F0E8DC 0%, #E5DDD0 100%); }
+        .ph-muted { background: linear-gradient(160deg, #C8BCA8 0%, #B0A48E 100%); }
+        .ph-muted .image-placeholder { color: rgba(255,255,255,0.3); }
+
+        /* ─── Image Direction Box ─── */
+        .image-direction {
+            max-width: var(--content-width);
+            margin: 8px auto 0;
+            padding: 0 24px;
+        }
+
+        .image-direction details {
+            border: 1px dashed var(--color-border);
+            border-radius: 4px;
+            padding: 12px 16px;
+            background: var(--color-bg-cream);
+        }
+
+        .image-direction summary {
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            cursor: pointer;
+        }
+
+        .image-direction .dir-content {
+            margin-top: 12px;
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            line-height: 1.7;
+            color: var(--color-text-light);
+        }
+
+        .image-direction .dir-content strong {
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .image-direction .dir-content p {
+            margin-bottom: 8px;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1024px) {
+            html { font-size: 16px; }
+            .hero-content { padding: 48px 36px 48px; }
+            .split-layout .split-text { padding: 40px 36px; }
+        }
+
+        @media (max-width: 768px) {
+            html { font-size: 15px; }
+            nav { padding: 20px 24px; }
+            .hero { min-height: 76vh; }
+            .hero-content { padding: 38px 24px 32px; }
+            .section-heading h2 { font-size: 1.5rem; }
+            .pull-quote blockquote { font-size: 1.3rem; }
+            .text-block, .section-heading, .pull-quote, .image-caption, .closing {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .image-pair { gap: 8px; }
+            .split-layout {
+                grid-template-columns: 1fr;
+            }
+            .split-layout .split-image {
+                aspect-ratio: 4 / 3;
+            }
+            .split-layout.reverse {
+                direction: ltr;
+            }
+            .split-layout .split-text {
+                padding: 40px 20px;
+            }
+            footer {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+                padding: 36px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-heading h2 { font-size: 1.3rem; }
+            .pull-quote blockquote { font-size: 1.15rem; }
+            .spacer-xl { height: 80px; }
+            .spacer-lg { height: 64px; }
+            .spacer-md { height: 48px; }
+        }
+
+        @media print {
+            nav, footer, .image-direction { display: none; }
+            .bg-warm, .bg-cream, .bg-dark { background-color: transparent !important; }
+            .bg-dark .text-block p, .bg-dark .section-heading h2 { color: var(--color-text) !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <article>
+
+        <!-- ════════ HERO — Full-bleed overlay ════════ -->
+        <header class="hero">
+            <nav>
+                <span class="nav-logo">Freshoh</span>
+                <span class="nav-label">Works</span>
+            </nav>
+            <div class="hero-media ph-dark">
+                <div class="image-placeholder">
+                    <span>장례식장 로비 전경 — 차분한 간접 조명, 정돈된 안내 데스크, 조용히 준비하는 직원의 뒷모습</span>
+                </div>
+            </div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-label">Freshoh Works Editorial</span>
+                <h1>
+                    <span class="title-line">'아름다운 이별'의 철학을</span>
+                    <span class="title-line">브랜드 경험으로 완성하다</span>
+                </h1>
+                <p class="hero-sub">접객·조문·온라인 전 경험을 하나의 기준으로 통합하다</p>
+                <div class="hero-meta">
+                    <span class="hero-chip">Site: 쉴낙원 서울 장례식장</span>
+                    <span class="hero-chip">Period: 2021.06 ~ 현재 진행 중</span>
+                    <span class="hero-chip">Category: Brand Experience Design</span>
+                    <span class="hero-chip">Read Time: 12분</span>
+                </div>
+            </div>
+        </header>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — Hero</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 풀블리드 (min-height 88vh)</p>
+                    <p><strong>무드:</strong> 차분하고 격조 있는 공간. 과하지 않은 간접 조명, 정숙한 분위기. 고급 호텔 로비에 가까운 인상.</p>
+                    <p><strong>피사체:</strong> 장례식장 로비 또는 접객 공간 전경. 안내 데스크, 꽃 장식, 조용히 준비하는 직원의 뒷모습. 사진 핵심 디테일은 상단~중앙 배치 (하단에 텍스트 오버레이).</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ INTRO ════════ -->
+        <div class="text-block">
+            <p>쉴낙원 서울 장례식장은 오랫동안 '장례를 치른다'기보다 '아름다운 이별을 돕는다'는 관점으로 장례식장을 운영해왔습니다. 이 철학은 문구나 슬로건에 머물지 않고, 현장에서 근무하는 직원들의 태도와 말투, 유가족을 대하는 자세 속에 자연스럽게 스며들어 있었습니다.</p>
+            <p>그러나 문제는 철학 그 자체가 아니라 전달 방식이었습니다. 이 진정성과 소명 의식이 고객이 마주하는 수많은 접점 — 온라인 정보, 인쇄물, 공간 안내, 작은 소지품 하나까지 — 모두에서 일관된 경험으로 체감되고 있는가에 대한 질문이 남아 있었습니다.</p>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <!-- Intro — Full Bleed Image -->
+        <div class="image-full landscape">
+            <div class="image-placeholder ph-warm">기존 안내물, 명함, 인쇄물이 각기 다른 톤과 서체로 흩어져 있는 테이블 위 정물</div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 3:2 가로형 (1200×800px)</p>
+                    <p><strong>무드:</strong> 정돈되지 않은 상태의 기록. 각기 다른 디자인 톤의 산출물들이 혼재된 느낌.</p>
+                    <p><strong>피사체:</strong> 탑다운 45도. 기존 명함, 리플렛, 안내장, 웹 캡처 출력물이 테이블 위에 놓인 장면. 통일감 없는 서체와 색감.</p>
+                </div>
+            </details>
+        </div>
+        <div class="image-caption">
+            <p>철학은 분명했지만, 고객이 마주하는 접점은 저마다 다른 언어를 사용하고 있었습니다</p>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <div class="text-block">
+            <p>프레시오는 이 지점에서 역할을 정의했습니다. 새로운 메시지를 만들기보다, 쉴낙원 서울이 이미 지켜오고 있던 철학과 태도를 고객이 자연스럽게 이해하고 신뢰할 수 있는 경험의 언어로 번역하는 것입니다. 장례식장의 브랜드는 시설이나 규모가 아니라 일하는 사람들의 태도로 완성된다고 판단했습니다.</p>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER ONE — 온라인 경험의 정합성 ════════ -->
+        <div class="section-heading">
+            <span class="section-number">Chapter One</span>
+            <h2>온라인에서의 첫 인상이,<br>신뢰의 기준이 되다</h2>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="text-block">
+            <p>유가족이 장례식장을 처음 접하는 순간은 대부분 온라인입니다. 웹사이트, 네이버 플레이스, 블로그 검색 결과 — 이 첫 접점에서의 인상이 장례식장에 대한 신뢰의 기준을 만듭니다. 쉴낙원 서울의 온라인 접점은 기본적인 정보는 갖추고 있었지만, 현장에서 느껴지는 격조와 진정성이 화면에서는 충분히 전달되지 않고 있었습니다.</p>
+            <p>프레시오는 웹사이트의 구조, 문장의 톤, 이미지의 품질, 정보의 위계를 다시 정렬했습니다. 화려하게 만드는 것이 아니라, 현장의 태도가 온라인에서도 동일하게 느껴지도록 정제하는 작업이었습니다. 장례식장 웹사이트는 광고가 아니라 안내여야 합니다. 불안한 순간에 접하는 정보는 명확하고, 차분하고, 신뢰를 줄 수 있어야 합니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- 2-up Image Pair -->
+        <div class="image-pair">
+            <div class="image-item ph-cream">
+                <div class="image-placeholder">기존 웹사이트 캡처 — 정보는 있으나 톤이 분산된 화면</div>
+            </div>
+            <div class="image-item ph-ivory">
+                <div class="image-placeholder">리뉴얼 후 웹사이트 — 정제된 타이포그래피, 차분한 색감, 명확한 정보 위계</div>
+            </div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — 웹사이트 Before/After</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 4:3 × 2장 (각 594×446px)</p>
+                    <p><strong>무드:</strong> 좌측은 산만하고 불통일한 느낌, 우측은 정돈되고 차분한 느낌. 명확한 전환 대비.</p>
+                    <p><strong>피사체:</strong> 웹사이트 스크린샷 또는 목업. 좌측 기존/우측 리뉴얼.</p>
+                </div>
+            </details>
+        </div>
+        <div class="image-caption">
+            <p>같은 장례식장, 다른 첫인상. 정보의 정합성이 신뢰를 만듭니다</p>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <div class="text-block">
+            <p>네이버 플레이스와 리뷰 영역도 동일한 기준으로 정비했습니다. 고객이 검색을 통해 처음 접하는 이미지, 설명문, 리뷰 응대 톤까지 — 온라인에서 만나는 모든 순간이 현장의 철학과 같은 온도를 유지하도록 설계했습니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="pull-quote">
+            <blockquote>
+                장례식장의 브랜드는<br>시설이 아니라 태도로 완성됩니다
+            </blockquote>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER TWO — 디테일에서 드러나는 진심 ════════ -->
+        <!-- Full bleed transition image -->
+        <div class="image-full wide">
+            <div class="image-placeholder ph-stone">깔끔하게 정돈된 테이블 위, 영수증 케이스와 안내물이 나란히 놓인 정물</div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 16:9 와이드 (1200×675px)</p>
+                    <p><strong>무드:</strong> 정제된 미니멀. 부드러운 자연광, 리넨 또는 우드 배경. 고급스럽지만 과하지 않은 느낌.</p>
+                    <p><strong>피사체:</strong> 영수증 케이스, 안내 카드, 봉투가 정돈되어 놓인 정물. 질감과 타이포그래피가 선명하게 보이는 클로즈업.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <div class="section-heading">
+            <span class="section-number">Chapter Two</span>
+            <h2>진심은 가장 작은<br>디테일에서 드러납니다</h2>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="text-block">
+            <p>브랜드 철학은 선언이 아니라 디테일을 통해 체감됩니다. 퇴실 시 건네받는 영수증 케이스, 안내문 한 줄, 봉투의 질감 — 고객은 이 작은 접점에서 장례식장의 수준을 감지합니다. 프레시오는 쉴낙원 서울의 모든 물리적 산출물을 하나의 일관된 브랜드 언어로 재설계했습니다.</p>
+            <p>과한 장식이나 트렌디한 디자인을 추구하지 않았습니다. 장례식장의 브랜드는 '튀는 디자인'보다 '정제된 기준'이 중요합니다. 절제된 타이포그래피, 차분한 색감, 균형 잡힌 여백 — 모든 산출물이 같은 톤과 태도를 유지하도록 기준을 세웠습니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- Side-by-Side Layout — 산출물 + 설명 -->
+        <div class="split-layout">
+            <div class="split-image ph-linen">
+                <div class="image-placeholder">영수증 케이스 클로즈업 — 정제된 디자인, 브랜드 로고, 차분한 색감의 케이스 안에 영수증이 담긴 모습</div>
+            </div>
+            <div class="split-text bg-cream">
+                <h3>마지막 순간까지, 품격을 담다</h3>
+                <p>유가족이 퇴실할 때 건네받는 것 중 하나가 영수증입니다. 대부분의 장례식장에서 영수증은 그냥 종이입니다. 프레시오는 이 순간도 브랜드 경험의 일부라고 판단했습니다.</p>
+                <p>전용 영수증 케이스를 제작해, 퇴실 시 정리된 형태로 전달합니다. 작은 차이지만, 마지막 접점에서 느껴지는 인상이 장례식장 전체에 대한 기억을 만듭니다.</p>
+            </div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — Split Layout</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 세로형 자유 비율 (600×500px 이상)</p>
+                    <p><strong>무드:</strong> 정제된 고급감. 부드러운 자연광 아래 케이스 질감이 선명하게 드러나는 접사.</p>
+                    <p><strong>피사체:</strong> 영수증 케이스 클로즈업. 케이스 안에 영수증이 깔끔하게 담긴 상태. 브랜드 로고, 색감, 마감 디테일이 보이도록.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- 2-up — 안내물 Before/After -->
+        <div class="image-pair">
+            <div class="image-item ph-warm">
+                <div class="image-placeholder">기존 안내 인쇄물 — 통일되지 않은 서체와 레이아웃</div>
+            </div>
+            <div class="image-item ph-ivory">
+                <div class="image-placeholder">재설계된 안내물 — 동일한 브랜드 언어로 정렬된 디자인 시스템</div>
+            </div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — 안내물 Before/After</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 4:3 × 2장 (각 594×446px)</p>
+                    <p><strong>무드:</strong> 좌측은 산만함, 우측은 정돈된 일관성. 실물 촬영 또는 산출물 이미지.</p>
+                    <p><strong>피사체:</strong> 리플렛, 안내장, 봉투 등 인쇄물 비교.</p>
+                </div>
+            </details>
+        </div>
+        <div class="image-caption">
+            <p>작은 산출물의 완성도가 고객의 신뢰 인식에 직접적인 영향을 미칩니다</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="pull-quote">
+            <blockquote>
+                브랜드는 과함이 아니라<br>절제에서 완성됩니다
+            </blockquote>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER THREE — 조문객 접객 경험 ════════ -->
+        <div class="bg-warm" style="padding: 100px 0;">
+
+            <div class="section-heading">
+                <span class="section-number">Chapter Three</span>
+                <h2>조문객의 경험은 곧<br>브랜드의 얼굴입니다</h2>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <div class="text-block">
+                <p>설계된 브랜드 경험은 현장에서 사람을 통해 전달됩니다. 아무리 정제된 산출물이 있어도, 응대하는 사람의 태도가 다르면 브랜드는 무너집니다. 프레시오는 쉴낙원 서울의 접객 톤, 제공 흐름, 응대 기준을 철학에 맞게 정렬하는 작업을 진행했습니다.</p>
+                <p>친절보다 존중, 속도보다 정확성. 누가 응대하더라도 동일한 온도와 태도가 유지되도록 구조를 맞추는 데 집중했습니다. 브랜드 경험이 개인의 감각에 의존하지 않고, 반복 가능한 기준 위에서 작동하도록 만드는 것이 핵심이었습니다.</p>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <div class="image-full landscape">
+                <div class="image-placeholder ph-muted">복도에서 유가족을 조용히 안내하는 직원의 옆모습 — 절제된 동작, 정중한 거리감</div>
+            </div>
+            <div class="image-direction">
+                <details>
+                    <summary>Photo Direction</summary>
+                    <div class="dir-content">
+                        <p><strong>비율:</strong> 3:2 가로형 (1200×800px)</p>
+                        <p><strong>무드:</strong> 조용하고 정중한 현장. 연출 없이 실제 업무 흐름 속에서 포착된 순간.</p>
+                        <p><strong>피사체:</strong> 복도 또는 안내 공간에서 유가족을 안내하는 직원. 뒷모습 또는 옆모습. 표정보다 자세와 동작에 포커스.</p>
+                    </div>
+                </details>
+            </div>
+            <div class="image-caption">
+                <p>브랜드는 매뉴얼이 아니라 반복되는 태도입니다</p>
+            </div>
+
+            <div class="spacer-lg"></div>
+
+            <div class="text-block">
+                <p>머무는 시간만큼 기억도 남습니다. 조문객이 장례식장에서 보내는 시간은 짧지만, 그 짧은 시간 동안 경험하는 공간의 분위기, 안내의 톤, 식사의 품질이 장례식장 전체에 대한 인식을 결정합니다. 프레시오는 이 모든 순간이 같은 철학 아래 정렬되도록 경험 흐름을 설계했습니다.</p>
+            </div>
+
+            <div class="spacer-sm"></div>
+
+            <div class="pull-quote">
+                <blockquote>
+                    친절보다 존중,<br>속도보다 정확성
+                </blockquote>
+            </div>
+
+            <div class="spacer-sm"></div>
+
+        </div><!-- end bg-warm -->
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER FOUR — 사람을 통해 드러나는 브랜드 ════════ -->
+
+        <!-- Full bleed — 직원 인터뷰 -->
+        <div class="image-full landscape">
+            <div class="image-placeholder ph-charcoal">묵묵히 자리를 준비하는 장례 전문 인력의 손 — 가장 소중한 일을 하는 사람들</div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 3:2 가로형 (1200×800px)</p>
+                    <p><strong>무드:</strong> 묵직하고 진실한 다큐멘터리 톤. 포즈나 연출 없이, 실제 일하는 모습 그대로.</p>
+                    <p><strong>피사체:</strong> 장례 준비 과정 중 일하는 손 클로즈업. 또는 빈소를 정리하는 직원의 뒷모습/옆모습.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <div class="section-heading">
+            <span class="section-number">Chapter Four</span>
+            <h2>사람을 대하는 태도가<br>브랜드가 됩니다</h2>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="text-block">
+            <p>장례식장에서 일하는 사람들은 눈에 띄는 일을 하지 않습니다. 그러나 그들이 하는 일은 세상에서 가장 중요하고 조심스러운 일입니다. 누군가의 마지막 시간을 정리하고, 남은 사람들의 감정을 조심스럽게 배려하며, 말보다 태도로 위로를 전하는 일은 숙련이나 매뉴얼만으로는 완성되지 않습니다.</p>
+            <p>프레시오는 이 프로젝트에서 브랜드를 설명하는 대신, 그 일을 살고 지켜내고 있는 사람들을 조명하기로 했습니다. 과장된 미담이나 감동 연출 대신, 각자의 자리에서 묵묵히 역할을 수행하는 모습. '왜 이 일을 선택하고 어떤 마음으로 일하고 있는가'에 대한 솔직한 목소리를 기록했습니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="pull-quote">
+            <blockquote>
+                브랜드는 사람이<br>어떻게 일하는지로 기억됩니다
+            </blockquote>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- Side-by-Side reversed — 인터뷰 -->
+        <div class="split-layout reverse">
+            <div class="split-image ph-stone">
+                <div class="image-placeholder" style="color:rgba(255,255,255,0.3);">현장 직원 인터뷰 장면 — 자연광 아래 차분한 표정, 편안한 자세로 이야기하는 모습</div>
+            </div>
+            <div class="split-text">
+                <h3>가장 소중한 일을 하는<br>사람들의 목소리</h3>
+                <p>직원들은 스스로를 단순한 장례식장 직원이 아니라, 유가족의 마지막 시간을 함께 책임지는 사람으로 인식하고 있었습니다. 그 인식은 눈에 띄는 친절보다 과하지 않은 배려와 절제된 행동으로 드러나고 있었습니다.</p>
+                <p>이 진정성을 고객이 느낄 수 있도록, 사람의 이야기를 브랜드의 언어로 기록하는 작업을 병행했습니다.</p>
+            </div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — Split Layout Reverse</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 세로형 자유 비율 (600×500px 이상)</p>
+                    <p><strong>무드:</strong> 편안하고 진솔한 인터뷰 분위기. 자연광, 따뜻한 톤.</p>
+                    <p><strong>피사체:</strong> 직원 반신 또는 상반신. 유니폼, 일하는 환경이 자연스럽게 보이도록. 포즈 없이 대화 중 포착.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <!-- 2-up — 현장 기록 -->
+        <div class="image-pair">
+            <div class="image-item ph-linen">
+                <div class="image-placeholder">빈소 준비 과정 — 꽃을 정리하는 손, 조명을 확인하는 모습</div>
+            </div>
+            <div class="image-item ph-warm">
+                <div class="image-placeholder">행사 지원 현장 — 조용히 동선을 확인하며 준비하는 직원들</div>
+            </div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — 현장 기록</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 4:3 × 2장 (각 594×446px)</p>
+                    <p><strong>무드:</strong> 비하인드 다큐멘터리. 조용한 현장의 진지함. 연출 배제, 실제 업무 흐름 포착.</p>
+                    <p><strong>피사체:</strong> 좌측 — 빈소 꽃/조명 준비 장면. 우측 — 행사 전 동선 체크하는 직원들.</p>
+                </div>
+            </details>
+        </div>
+        <div class="image-caption">
+            <p>눈에 띄지 않는 준비가, 가장 중요한 순간을 완성합니다</p>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CHAPTER FIVE — 결과 ════════ -->
+        <div class="bg-dark" style="padding: 100px 0;">
+
+            <div class="section-heading">
+                <span class="section-number">Chapter Five</span>
+                <h2>진실된 경험은<br>설명하지 않아도 증명됩니다</h2>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <div class="text-block">
+                <p style="color: #F5F1EA;">철학과 태도는 결국 결과로 남아야 합니다. 브랜드 경험을 재설계한 이후, 네이버 만족도 점수가 상승했고, 고객 리뷰에서 '세심함', '품격', '진심'과 같은 키워드가 반복적으로 등장하기 시작했습니다. 동일 유형 불만의 재발생률은 감소했고, 유가족의 추천 의향은 눈에 띄게 개선되었습니다.</p>
+                <p style="color: #F5F1EA;">하지만 이 프로젝트의 핵심 성과는 숫자 자체가 아닙니다. 쉴낙원 서울은 '운영을 잘하는 장례식장'을 넘어, 신념과 태도가 분명한 브랜드로 인식되기 시작했습니다. 그리고 이 인식은 고객 만족도와 신뢰라는 지표로 자연스럽게 이어졌습니다.</p>
+            </div>
+
+            <div class="spacer-md"></div>
+
+            <!-- KPI 인포그래픽 -->
+            <div class="image-full wide">
+                <div class="image-placeholder ph-charcoal" style="color:rgba(143,113,84,0.3);">KPI — 네이버 만족도 상승, 긍정 키워드 증가 (세심함·품격·진심), CS 재발생률 감소, 추천 의향 개선</div>
+            </div>
+            <div class="image-direction">
+                <details>
+                    <summary>Infographic Direction — KPI</summary>
+                    <div class="dir-content">
+                        <p><strong>비율:</strong> 16:9 와이드 (1200×675px)</p>
+                        <p><strong>무드:</strong> 다크 브라운 배경, 골드 악센트. 고급스러운 비즈니스 대시보드 느낌.</p>
+                        <p><strong>구성:</strong> 가로 4등분 카드. 만족도 점수 / 긍정 키워드 / CS 감소율 / 추천 의향. 산세리프, 미니멀.</p>
+                    </div>
+                </details>
+            </div>
+            <div class="image-caption">
+                <p style="color: var(--color-text-muted);">2021–2026, 쉴낙원 서울 장례식장 고객 경험 데이터 기반</p>
+            </div>
+
+            <div class="spacer-lg"></div>
+
+            <div class="text-block">
+                <p style="color: #F5F1EA;">브랜드 경험이란 무엇을 더 보여주는 일이 아닙니다. 이미 가지고 있는 철학을 흔들림 없이 전달하는 일입니다. 쉴낙원 서울이 오랫동안 지켜온 '아름다운 이별을 돕는다'는 철학은, 이제 고객이 마주하는 모든 순간에서 동일한 언어로 전달되고 있습니다.</p>
+            </div>
+
+            <div class="spacer-sm"></div>
+
+            <div class="pull-quote">
+                <blockquote style="color: rgba(245,241,234,0.7);">
+                    진심은 감상이 아니라<br>반복된 긍정 경험의 축적에서 형성됩니다
+                </blockquote>
+            </div>
+
+            <div class="spacer-sm"></div>
+
+        </div><!-- end bg-dark -->
+
+        <div class="spacer-xl"></div>
+
+        <!-- ════════ CLOSING IMAGE ════════ -->
+        <div class="image-full landscape">
+            <div class="image-placeholder ph-linen">클로징 정물 — 깔끔하게 정돈된 안내 데스크 위 명함, 안내 카드, 은은한 꽃 한 송이</div>
+        </div>
+        <div class="image-direction">
+            <details>
+                <summary>Photo Direction — Closing</summary>
+                <div class="dir-content">
+                    <p><strong>비율:</strong> 3:2 가로형 (1200×800px)</p>
+                    <p><strong>무드:</strong> 고요한 완결. 부드러운 자연광, 따뜻한 톤. 정돈된 아름다움.</p>
+                    <p><strong>피사체:</strong> 안내 데스크 또는 깨끗한 테이블 위 — 재설계된 명함, 안내 카드, 작은 꽃 한 송이가 나란히 놓인 정물. 넉넉한 여백.</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="spacer-lg"></div>
+
+        <!-- ════════ CLOSING TEXT ════════ -->
+        <div class="closing">
+            <p>장례식장의 브랜드는<br>시설이나 규모에서 시작되지 않습니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="closing">
+            <p>일하는 사람들의 태도와 철학이<br>고객 경험 전반에서 일관되게 전달될 때<br>비로소 완성됩니다.</p>
+        </div>
+
+        <div class="spacer-md"></div>
+
+        <div class="closing">
+            <p style="font-size: 1.2rem; font-weight: 600; font-style: normal; color: var(--color-text);">'아름다운 이별'의 철학은<br>이제 경험의 언어가 되었습니다.</p>
+        </div>
+
+        <div class="spacer-sm"></div>
+
+        <div class="closing">
+            <p style="font-size: 0.95rem;">우리는 파트너의 철학을 경험으로 번역합니다.</p>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+    </article>
+
+    <!-- Footer -->
+    <footer>
+        <span class="footer-brand">Freshoh</span>
+        <span class="footer-note">이 글은 쉴낙원 서울 장례식장의 BX 경험 재설계 사례를 바탕으로 작성되었습니다</span>
+    </footer>
+
+</body>
+</html>

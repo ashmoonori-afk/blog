@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 - 이야기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      background: #f5f3f0;
+      color: #1a1a1a;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* Top Bar */
+    .topbar {
+      background: #1a1a1a;
+      color: #fff;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-logo {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+    }
+    .topbar-actions { display: flex; gap: 12px; align-items: center; }
+    .topbar-link {
+      font-size: 0.78rem;
+      color: #aaa;
+      transition: color 0.2s;
+    }
+    .topbar-link:hover { color: #fff; }
+
+    /* Layout */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+    .page-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+    }
+
+    /* Buttons */
+    .btn {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 10px 24px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .btn-primary {
+      background: #1a1a1a;
+      color: #fff;
+    }
+    .btn-primary:hover { background: #333; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #ccc;
+      color: #666;
+    }
+    .btn-outline:hover { border-color: #1a1a1a; color: #1a1a1a; }
+    .btn-danger {
+      background: transparent;
+      border: 1px solid #e74c3c;
+      color: #e74c3c;
+    }
+    .btn-danger:hover { background: #e74c3c; color: #fff; }
+    .btn-sm { padding: 6px 14px; font-size: 0.75rem; }
+
+    /* Post List */
+    .post-list { display: flex; flex-direction: column; gap: 1px; }
+    .post-item {
+      background: #fff;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: box-shadow 0.2s;
+    }
+    .post-item:first-child { border-radius: 8px 8px 0 0; }
+    .post-item:last-child { border-radius: 0 0 8px 8px; }
+    .post-item:only-child { border-radius: 8px; }
+    .post-item:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+
+    .post-thumb {
+      width: 72px;
+      height: 72px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      background-size: cover;
+      background-position: center;
+    }
+    .post-info { flex: 1; min-width: 0; }
+    .post-info-title {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .post-info-meta {
+      font-size: 0.78rem;
+      color: #999;
+      display: flex;
+      gap: 12px;
+    }
+    .post-info-meta .draft {
+      color: #e67e22;
+      font-weight: 500;
+    }
+    .post-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+    .empty {
+      text-align: center;
+      padding: 80px 20px;
+      color: #999;
+    }
+    .empty p {
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    /* Stats */
+    .stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      background: #fff;
+      padding: 20px 24px;
+      border-radius: 8px;
+      flex: 1;
+    }
+    .stat-num {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      margin-bottom: 2px;
+    }
+    .stat-label {
+      font-size: 0.78rem;
+      color: #999;
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 24px 16px; }
+      .post-item { flex-wrap: wrap; padding: 16px; }
+      .post-actions { width: 100%; justify-content: flex-end; }
+      .stats { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <span class="topbar-logo">이야기 관리</span>
+    <div class="topbar-actions">
+      <a href="/admin/settings.html" class="topbar-link">사이트 설정</a>
+      <a href="/" class="topbar-link" target="_blank">사이트 보기 ↗</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="stats" id="stats">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-total">0</div>
+        <div class="stat-label">전체 글</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-published">0</div>
+        <div class="stat-label">발행됨</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-draft">0</div>
+        <div class="stat-label">임시저장</div>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <h1 class="page-title">글 관리</h1>
+      <a href="/admin/editor.html" class="btn btn-primary">+ 새 글 작성</a>
+    </div>
+
+    <div class="post-list" id="post-list"></div>
+    <div class="empty" id="empty" style="display:none;">
+      <p>아직 작성된 글이 없습니다.</p>
+      <a href="/admin/editor.html" class="btn btn-primary">첫 번째 글 작성하기</a>
+    </div>
+  </div>
+
+  <script>
+    async function loadPosts() {
+      const res = await fetch('/api/admin/posts');
+      const posts = await res.json();
+
+      const total = posts.length;
+      const published = posts.filter(p => p.published).length;
+      document.getElementById('stat-total').textContent = total;
+      document.getElementById('stat-published').textContent = published;
+      document.getElementById('stat-draft').textContent = total - published;
+
+      const list = document.getElementById('post-list');
+      const empty = document.getElementById('empty');
+
+      if (posts.length === 0) {
+        empty.style.display = '';
+        return;
+      }
+
+      list.innerHTML = posts.map(post => {
+        const d = new Date(post.createdAt);
+        const date = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+        const thumbStyle = post.thumbnail
+          ? `background-image:url('${post.thumbnail}')`
+          : `background-color:${post.thumbnailColor || '#c8b8a8'}`;
+        const statusHTML = post.published ? '' : '<span class="draft">임시저장</span>';
+
+        return `
+          <div class="post-item">
+            <div class="post-thumb" style="${thumbStyle}"></div>
+            <div class="post-info">
+              <div class="post-info-title">${post.title}</div>
+              <div class="post-info-meta">
+                <span>${post.category}</span>
+                <span>${date}</span>
+                ${statusHTML}
+              </div>
+            </div>
+            <div class="post-actions">
+              <a href="/admin/editor.html?id=${post.id}" class="btn btn-outline btn-sm">수정</a>
+              <button class="btn btn-danger btn-sm" onclick="deletePost('${post.id}')">삭제</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function deletePost(id) {
+      if (!confirm('정말 삭제하시겠습니까?')) return;
+      await fetch(`/api/posts/${id}`, { method: 'DELETE' });
+      loadPosts();
+    }
+
+    loadPosts();
+  </script>
+
+</body>
+</html>

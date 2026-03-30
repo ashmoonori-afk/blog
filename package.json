@@ -1,0 +1,36 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --ignore posts/ --ignore uploads/ server.js",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@editorjs/checklist": "^1.6.0",
+    "@editorjs/code": "^2.9.4",
+    "@editorjs/delimiter": "^1.4.2",
+    "@editorjs/editorjs": "^2.31.4",
+    "@editorjs/embed": "^2.8.0",
+    "@editorjs/header": "^2.8.8",
+    "@editorjs/image": "^2.10.3",
+    "@editorjs/inline-code": "^1.5.2",
+    "@editorjs/list": "^2.0.9",
+    "@editorjs/marker": "^1.4.0",
+    "@editorjs/quote": "^2.7.6",
+    "@editorjs/table": "^2.4.5",
+    "@editorjs/underline": "^1.2.1",
+    "@editorjs/warning": "^1.4.1",
+    "express": "^5.2.1",
+    "multer": "^2.1.1",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
