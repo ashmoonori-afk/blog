@@ -287,6 +287,27 @@
   <script>
     let heroBgImage = '';
 
+    async function uploadImageFile(file) {
+      const fd = new FormData();
+      fd.append('image', file);
+
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+
+      if (!res.ok || !data.url) {
+        throw new Error(data.error || '이미지 업로드에 실패했습니다.');
+      }
+
+      return data.url;
+    }
+
+    function enableFileReplacement(input) {
+      input.addEventListener('click', (e) => {
+        e.stopPropagation();
+        input.value = '';
+      });
+    }
+
     // Tabs
     document.querySelectorAll('.nav-tab').forEach(tab => {
       tab.addEventListener('click', () => {
@@ -308,23 +329,26 @@
     });
 
     // Hero bg upload
+    enableFileReplacement(document.getElementById('hero-bg-file'));
+
     document.getElementById('hero-bg-file').addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      const fd = new FormData();
-      fd.append('image', file);
-      const res = await fetch('/api/upload', { method:'POST', body:fd });
-      const data = await res.json();
-      heroBgImage = data.url;
-      document.getElementById('hero-bg-preview').src = data.url;
-      document.getElementById('hero-bg-preview').style.display = 'block';
-      document.getElementById('hero-bg-text').style.display = 'none';
-      document.getElementById('hero-bg-upload').classList.add('has-image');
-      // Update preview
-      const pv = document.getElementById('hero-preview');
-      pv.style.backgroundImage = `url('${data.url}')`;
-      pv.style.backgroundSize = 'cover';
-      pv.style.backgroundPosition = 'center';
+
+      try {
+        const url = await uploadImageFile(file);
+        heroBgImage = url;
+        document.getElementById('hero-bg-preview').src = url;
+        document.getElementById('hero-bg-preview').style.display = 'block';
+        document.getElementById('hero-bg-text').style.display = 'none';
+        document.getElementById('hero-bg-upload').classList.add('has-image');
+        const pv = document.getElementById('hero-preview');
+        pv.style.backgroundImage = `url('${url}')`;
+        pv.style.backgroundSize = 'cover';
+        pv.style.backgroundPosition = 'center';
+      } catch (error) {
+        alert(error.message);
+      }
     });
 
     function removeHeroBg() {
