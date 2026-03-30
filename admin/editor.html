@@ -456,7 +456,7 @@
         <div class="thumb-upload" id="thumb-upload" onclick="document.getElementById('thumb-file').click()">
           <div class="thumb-upload-text" id="thumb-text">
             클릭하여 이미지 업로드
-            <span>JPG, PNG, WebP (최대 10MB)</span>
+            <span>JPG, PNG, WebP (최대 20MB)</span>
           </div>
           <img id="thumb-preview" style="display:none;">
           <button class="thumb-remove" id="thumb-remove" onclick="event.stopPropagation();removeThumbnail();">&times;</button>
@@ -891,23 +891,58 @@
       save() { return this.data; }
     }
 
+    const API_BASE = ['127.0.0.1', 'localhost'].includes(location.hostname) ? '' : 'http://127.0.0.1:3000';
+
     let editingId = null;
     let thumbnailUrl = '';
     let thumbnailColor = '#c8b8a8';
     let thumbnailRatio = '';
 
-    async function uploadImageFile(file) {
-      const fd = new FormData();
-      fd.append('image', file);
+    function buildApiUrl(path) {
+      return `${API_BASE}${path}`;
+    }
 
-      const res = await fetch('/api/upload', { method: 'POST', body: fd });
-      const data = await res.json();
+    async function fetchJson(path, options) {
+      const res = await fetch(buildApiUrl(path), options);
+      const text = await res.text();
+      const contentType = res.headers.get('content-type') || '';
 
-      if (!res.ok || !data.url) {
-        throw new Error(data.error || '이미지 업로드에 실패했습니다.');
+      if (!contentType.includes('application/json')) {
+        const looksLikeHtml = /^\s*</.test(text);
+        throw new Error(
+          looksLikeHtml
+            ? 'API가 JSON 대신 HTML을 반환했습니다. 반드시 http://127.0.0.1:3000 에서 페이지를 열어주세요.'
+            : '예상치 못한 응답을 받았습니다.'
+        );
       }
 
-      return data.url;
+      const data = JSON.parse(text);
+
+      if (!res.ok) {
+        throw new Error(data.error || `요청 실패 (${res.status})`);
+      }
+
+      return data;
+    }
+
+    async function uploadImageFile(file) {
+      try {
+        const fd = new FormData();
+        fd.append('image', file);
+        const data = await fetchJson('/api/upload', { method: 'POST', body: fd });
+
+        if (!data.url) {
+          throw new Error('이미지 업로드에 실패했습니다.');
+        }
+
+        return data.url;
+      } catch (error) {
+        if (error.message.includes('JSON 대신 HTML')) {
+          throw new Error('이미지 업로드 요청이 HTML 페이지로 이동했습니다. 로컬 서버 주소로 다시 열어주세요.');
+        }
+
+        throw error;
+      }
     }
 
     function enableFileReplacement(input) {
@@ -1129,12 +1164,11 @@
 
       const url = editingId ? `/api/posts/${editingId}` : '/api/posts';
       const method = editingId ? 'PUT' : 'POST';
-      const res = await fetch(url, {
+      const post = await fetchJson(url, {
         method,
         headers: { 'Content-Type':'application/json' },
         body: JSON.stringify(body)
       });
-      const post = await res.json();
       editingId = post.id;
       showStatus(publish ? '발행되었습니다' : '임시저장되었습니다');
       document.getElementById('page-mode').textContent = '글 수정';
@@ -1155,8 +1189,7 @@
       editingId = id;
       document.getElementById('page-mode').textContent = '글 수정';
 
-      const res = await fetch(`/api/posts/${id}`);
-      const post = await res.json();
+      const post = await fetchJson(`/api/posts/${id}`);
 
       document.getElementById('post-title').value = post.title;
       document.getElementById('post-category').value = post.category;
