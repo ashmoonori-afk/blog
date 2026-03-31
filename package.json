@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --ignore posts/ --ignore uploads/ server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "build:static": "node scripts/export-static.js"
   },
   "keywords": [],
   "author": "",
