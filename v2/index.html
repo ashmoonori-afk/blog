@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freshoh Works</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="/v2/styles.css">
+</head>
+
+<body>
+
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="/v2/" class="site-logo">Freshoh</a>
+      <nav class="site-nav">
+        <a href="/v2/" class="active">Work</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="portfolio">
+    <div class="filter-bar" id="filter-bar"></div>
+    <div class="portfolio-rows" id="portfolio-rows"></div>
+  </main>
+
+  <footer class="site-footer">
+    <span class="footer-brand">Freshoh</span>
+    <span class="footer-note">&copy; 2026 Freshoh. All rights reserved.</span>
+  </footer>
+
+  <script>
+    // === Helpers ===
+    function escapeHTML(str) {
+      const d = document.createElement('div');
+      d.textContent = str == null ? '' : String(str);
+      return d.innerHTML;
+    }
+
+    function normalizeImageAsset(value) {
+      if (!value) return null;
+      if (typeof value === 'string') return { url: value, variants: {} };
+      if (typeof value === 'object' && typeof value.url === 'string') {
+        return { ...value, variants: value.variants || {} };
+      }
+      return null;
+    }
+
+    function getImageUrl(value, preferred) {
+      const asset = normalizeImageAsset(value);
+      if (!asset) return '';
+      const prefs = Array.isArray(preferred) ? preferred : [preferred || 'thumb'];
+      for (const key of prefs) {
+        const v = asset.variants?.[key]?.url;
+        if (v) return v;
+      }
+      return asset.url || '';
+    }
+
+    // === Header hide on scroll ===
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const cur = window.scrollY;
+      document.getElementById('site-header').classList.toggle('site-header--hidden', cur > lastScroll && cur > 200);
+      lastScroll = cur;
+    }, { passive: true });
+
+    // === Build Card ===
+    function createCard(post, isHero) {
+      const card = document.createElement('article');
+      card.className = 'project-card';
+
+      const thumbUrl = getImageUrl(post.thumbnail, isHero ? ['hero', 'body', 'thumb'] : ['body', 'thumb']);
+      const thumbColor = escapeHTML(post.thumbnailColor || '#c8b8a8');
+      const safeTitle = escapeHTML(post.title || '');
+      const safeCategory = escapeHTML(post.category || '');
+      const safeExcerpt = escapeHTML(post.excerpt || '');
+      const safeId = encodeURIComponent(post.id);
+
+      const imageContent = thumbUrl
+        ? `<img src="${thumbUrl}" alt="${safeTitle}" loading="${isHero ? 'eager' : 'lazy'}">`
+        : `<div class="project-card-image-bg" style="background-color:${thumbColor};"></div>`;
+
+      card.innerHTML = `
+        <a href="/v2/project.html?id=${safeId}">
+          <div class="project-card-image">${imageContent}</div>
+          <div class="project-card-info">
+            <div class="project-card-sector">${safeCategory}</div>
+            <h2 class="project-card-title">${safeTitle}</h2>
+            ${safeExcerpt ? `<p class="project-card-excerpt">${safeExcerpt}</p>` : ''}
+          </div>
+        </a>`;
+
+      return card;
+    }
+
+    // === Row Layout Pattern ===
+    // Pattern: 1 - 2 - 3(carousel) - 1 - 2 - 1 - 3(carousel), repeat
+    const ROW_PATTERN = [1, 2, 3, 1, 2, 1, 3];
+
+    function createRow(type, posts) {
+      const row = document.createElement('div');
+      if (type === 1) {
+        row.className = 'row-hero';
+        row.appendChild(createCard(posts[0], true));
+      } else if (type === 2) {
+        row.className = 'row-pair';
+        posts.forEach(p => row.appendChild(createCard(p, false)));
+      } else {
+        row.className = 'row-carousel';
+        // Duplicate cards for seamless infinite loop
+        const cards = posts.map(p => createCard(p, false));
+        const clones = posts.map(p => createCard(p, false));
+        cards.forEach(c => row.appendChild(c));
+        clones.forEach(c => row.appendChild(c));
+
+        // Drag-to-scroll
+        let isDown = false, startX, scrollLeft, userInteracting = false, resumeTimer;
+        row.addEventListener('mousedown', (e) => { isDown = true; userInteracting = true; startX = e.pageX - row.offsetLeft; scrollLeft = row.scrollLeft; clearTimeout(resumeTimer); });
+        row.addEventListener('mouseleave', () => { isDown = false; resumeAfterDelay(); });
+        row.addEventListener('mouseup', () => { isDown = false; resumeAfterDelay(); });
+        row.addEventListener('mousemove', (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          row.scrollLeft = scrollLeft - (e.pageX - row.offsetLeft - startX) * 1.5;
+        });
+        row.addEventListener('touchstart', () => { userInteracting = true; clearTimeout(resumeTimer); }, { passive: true });
+        row.addEventListener('touchend', () => { resumeAfterDelay(); });
+
+        function resumeAfterDelay() {
+          resumeTimer = setTimeout(() => { userInteracting = false; }, 3000);
+        }
+
+        // Auto-scroll (start after DOM paint)
+        let speed = 0.5;
+        let rafId;
+        function autoScroll() {
+          if (!userInteracting && row.isConnected) {
+            row.scrollLeft += speed;
+            const halfScroll = row.scrollWidth / 2;
+            if (halfScroll > 0 && row.scrollLeft >= halfScroll) {
+              row.scrollLeft -= halfScroll;
+            }
+          }
+          rafId = requestAnimationFrame(autoScroll);
+        }
+        // Delay start to ensure layout is computed
+        setTimeout(() => { rafId = requestAnimationFrame(autoScroll); }, 100);
+      }
+      return row;
+    }
+
+    // === Filter ===
+    function buildFilters(posts) {
+      const categories = [...new Set(posts.map(p => p.category).filter(Boolean))];
+      const bar = document.getElementById('filter-bar');
+
+      const allBtn = document.createElement('button');
+      allBtn.className = 'filter-btn active';
+      allBtn.textContent = 'All';
+      allBtn.dataset.category = '';
+      bar.appendChild(allBtn);
+
+      categories.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn';
+        btn.textContent = cat;
+        btn.dataset.category = cat;
+        bar.appendChild(btn);
+      });
+
+      bar.addEventListener('click', (e) => {
+        const btn = e.target.closest('.filter-btn');
+        if (!btn) return;
+        bar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderRows(posts, btn.dataset.category);
+      });
+    }
+
+    // === Render ===
+    function renderRows(posts, filterCategory) {
+      const container = document.getElementById('portfolio-rows');
+      container.innerHTML = '';
+      const filtered = filterCategory
+        ? posts.filter(p => p.category === filterCategory)
+        : posts;
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<p style="padding:80px 40px;text-align:center;color:#999;">프로젝트가 없습니다.</p>';
+        return;
+      }
+
+      let cursor = 0;
+      let patternIdx = 0;
+
+      while (cursor < filtered.length) {
+        const count = ROW_PATTERN[patternIdx % ROW_PATTERN.length];
+        const slice = filtered.slice(cursor, cursor + count);
+        if (slice.length === 0) break;
+
+        // If not enough posts for a full row, adjust type
+        const rowType = slice.length < count ? Math.min(slice.length, count) : count;
+        container.appendChild(createRow(rowType, slice));
+
+        cursor += slice.length;
+        patternIdx++;
+      }
+    }
+
+    // === Load ===
+    async function init() {
+      try {
+        const res = await fetch('/api/posts');
+        if (!res.ok) throw new Error('Failed');
+        const posts = await res.json();
+        buildFilters(posts);
+        renderRows(posts, '');
+      } catch (e) {
+        console.error('Load failed:', e);
+      }
+    }
+
+    init();
+  </script>
+
+</body>
+
+</html>

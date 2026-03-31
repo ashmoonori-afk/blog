@@ -3,9 +3,9 @@ const path = require('path');
 
 const rootDir = path.resolve(__dirname, '..');
 const outputDir = path.join(rootDir, 'site');
-const uploadsDir = path.join(rootDir, 'uploads');
 const postsFile = path.join(rootDir, 'posts', 'posts.json');
 const settingsFile = path.join(rootDir, 'posts', 'settings.json');
+const v2StylesFile = path.join(rootDir, 'v2', 'styles.css');
 
 function readJson(filePath, fallback) {
   try {
@@ -66,16 +66,15 @@ function buildSrcSet(value, depth) {
   const asset = normalizeImageAsset(value);
   if (!asset) return '';
 
-  const variants = ['thumb', 'body', 'hero']
+  return ['thumb', 'body', 'hero']
     .map((key) => asset.variants?.[key])
     .filter(Boolean)
-    .filter((variant, index, list) => list.findIndex((item) => item.url === variant.url) === index)
+    .filter((variant, index, variants) => variants.findIndex((item) => item.url === variant.url) === index)
     .map((variant) => {
       const url = rootRelativePath(depth, variant.url);
       return variant.width ? `${url} ${variant.width}w` : url;
-    });
-
-  return variants.join(', ');
+    })
+    .join(', ');
 }
 
 function renderResponsiveImage(value, depth, options = {}) {
@@ -88,7 +87,6 @@ function renderResponsiveImage(value, depth, options = {}) {
   ];
   const srcSet = buildSrcSet(value, depth);
 
-  if (options.className) attrs.push(`class="${options.className}"`);
   if (srcSet) attrs.push(`srcset="${srcSet}"`);
   if (options.sizes) attrs.push(`sizes="${options.sizes}"`);
   if (options.loading) attrs.push(`loading="${options.loading}"`);
@@ -98,80 +96,11 @@ function renderResponsiveImage(value, depth, options = {}) {
   return `<img ${attrs.join(' ')}>`;
 }
 
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  if (Number.isNaN(date.getTime())) return '';
-  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-}
-
-function estimateReadTime(post) {
-  const text = `${post.title || ''}${post.excerpt || ''}`;
-  return `${Math.max(3, Math.ceil(text.length / 80))} min read`;
-}
-
-function getCardVariant(index) {
-  if (index === 0) return 'featured';
-  return ((index - 1) % 3) === 2 ? 'landscape' : 'standard';
-}
-
-function buildThumbStyle(post, depth, preferredVariant) {
-  const thumbUrl = rootRelativePath(depth, pickImageUrl(post.thumbnail, [preferredVariant, 'body', 'hero', 'thumb']));
-  if (!thumbUrl) {
-    return `background-color:${escapeHtml(post.thumbnailColor || '#c8b8a8')};`;
-  }
-
-  return `background-image:url('${thumbUrl}');background-size:cover;background-position:center;`;
-}
-
-function renderIndexCard(post, index) {
-  const variant = getCardVariant(index);
-  const ratioMap = { '16:9': 'ratio-16-9', '1:1': 'ratio-1-1', '4:3': 'ratio-4-3' };
-  const ratioClass = ratioMap[post.thumbnailRatio] || '';
-  const thumbStyle = buildThumbStyle(post, 0, variant === 'featured' ? 'body' : 'thumb');
-  const href = `./article/${encodeURIComponent(post.id)}/`;
-  const metaHtml = `
-        <div class="story-meta">
-          <span class="story-category">${escapeHtml(post.category || '')}</span>
-          <span class="story-divider">|</span>
-          <span class="story-date">${escapeHtml(formatDate(post.createdAt))}</span>
-          <span class="story-divider">|</span>
-          <span class="story-read-time">${escapeHtml(estimateReadTime(post))}</span>
-        </div>`;
-
-  if (variant === 'featured') {
-    return `
-      <article class="story-card featured">
-        <a href="${href}" class="story-card-link">
-          <div class="story-image${ratioClass ? ` ${ratioClass}` : ''}">
-            <div class="story-image-placeholder" style="${thumbStyle}"></div>
-          </div>
-          <div class="story-overlay">
-            ${metaHtml}
-            <h3 class="story-title">${escapeHtml(post.title || '')}</h3>
-            <p class="story-excerpt">${escapeHtml(post.excerpt || '')}</p>
-          </div>
-          <div class="story-content">
-            ${metaHtml}
-            <h3 class="story-title">${escapeHtml(post.title || '')}</h3>
-            <p class="story-excerpt">${escapeHtml(post.excerpt || '')}</p>
-          </div>
-        </a>
-      </article>`;
-  }
-
-  return `
-      <article class="story-card${variant === 'landscape' ? ' landscape' : ''}">
-        <a href="${href}" class="story-card-link">
-          <div class="story-image${ratioClass ? ` ${ratioClass}` : ''}">
-            <div class="story-image-placeholder" style="${thumbStyle}"></div>
-          </div>
-          <div class="story-content">
-            ${metaHtml}
-            <h3 class="story-title">${escapeHtml(post.title || '')}</h3>
-            <p class="story-excerpt">${escapeHtml(post.excerpt || '')}</p>
-          </div>
-        </a>
-      </article>`;
+function mapScope(category) {
+  if (category === 'R&D') return 'Menu R&D';
+  if (category === '브랜드') return 'Brand Design';
+  if (category === '고객경험') return 'Customer Experience';
+  return 'Operations System';
 }
 
 function renderBlock(block, depth) {
@@ -180,23 +109,6 @@ function renderBlock(block, depth) {
       return `<p>${block.data.text || ''}</p>`;
     case 'header':
       return `<h${block.data.level}>${block.data.text || ''}</h${block.data.level}>`;
-    case 'image': {
-      const classes = [];
-      if (block.data.stretched) classes.push('article-img--stretched');
-      if (block.data.withBorder) classes.push('article-img--bordered');
-      const align = block.tunes?.alignmentTune?.alignment;
-      if (align === 'left') classes.push('article-img--left');
-      if (align === 'right') classes.push('article-img--right');
-      const image = renderResponsiveImage(block.data.file, depth, {
-        alt: block.data.caption || '',
-        preferred: ['body', 'hero', 'thumb'],
-        sizes: block.data.stretched ? '100vw' : '(min-width: 980px) 820px, 92vw',
-        loading: 'lazy',
-        decoding: 'async'
-      });
-      const caption = block.data.caption ? `<figcaption>${block.data.caption}</figcaption>` : '';
-      return `<figure class="article-img ${classes.join(' ')}">${image}${caption}</figure>`;
-    }
     case 'list': {
       const tag = block.data.style === 'ordered' ? 'ol' : 'ul';
       const items = (block.data.items || [])
@@ -207,47 +119,41 @@ function renderBlock(block, depth) {
         .join('');
       return `<${tag}>${items}</${tag}>`;
     }
-    case 'checklist': {
-      const items = (block.data.items || [])
-        .map((item) => `<li class="${item.checked ? 'checked' : ''}">${item.text || ''}</li>`)
-        .join('');
-      return `<ul class="article-check">${items}</ul>`;
-    }
-    case 'quote': {
-      const cite = block.data.caption ? `<cite>${block.data.caption}</cite>` : '';
-      return `<blockquote class="article-quote"><p>${block.data.text || ''}</p>${cite}</blockquote>`;
-    }
     case 'delimiter':
-      return '<div class="article-delimiter">...</div>';
-    case 'code':
-      return `<pre class="article-code"><code>${escapeHtml(block.data.code || '')}</code></pre>`;
+      return '<div class="article-delimiter">* * *</div>';
+    case 'quote':
+      return `<blockquote class="article-quote"><p>${block.data.text || ''}</p>${block.data.caption ? `<cite>${block.data.caption}</cite>` : ''}</blockquote>`;
     case 'table': {
-      const rows = (block.data.content || [])
-        .map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`)
-        .join('');
-      return `<div class="article-table"><table>${rows}</table></div>`;
+      const rows = block.data.content || [];
+      if (!rows.length) return '';
+      let html = '<div class="article-table"><table>';
+      rows.forEach((row, index) => {
+        const tag = block.data.withHeadings && index === 0 ? 'th' : 'td';
+        html += `<tr>${row.map((cell) => `<${tag}>${cell}</${tag}>`).join('')}</tr>`;
+      });
+      return `${html}</table></div>`;
     }
-    case 'warning':
-      return `<div class="article-warning"><strong>${block.data.title || ''}</strong><p>${block.data.message || ''}</p></div>`;
-    case 'alert':
-      return `<div class="article-alert article-alert--${escapeHtml(block.data.type || 'info')}">${block.data.message || ''}</div>`;
-    case 'embed':
-      return `<div class="article-embed"><iframe src="${escapeHtml(block.data.embed || '')}" height="${escapeHtml(block.data.height || 320)}" allowfullscreen></iframe></div>`;
+    case 'image': {
+      const image = renderResponsiveImage(block.data.file, depth, {
+        alt: block.data.caption || '',
+        preferred: ['body', 'hero', 'thumb'],
+        sizes: '(min-width: 980px) 820px, 92vw',
+        loading: 'lazy',
+        decoding: 'async'
+      });
+      const caption = block.data.caption ? `<figcaption>${block.data.caption}</figcaption>` : '';
+      return `<figure class="article-img">${image}${caption}</figure>`;
+    }
     case 'gallery': {
       const layout = block.data.layout || '2-equal';
       const width = block.data.width || 'wide';
       const arMap = { '16:9': 'gallery-ratio--16-9', '1:1': 'gallery-ratio--1-1', '4:3': 'gallery-ratio--4-3' };
       const arClass = arMap[block.data.aspectRatio] || '';
-      const imageSizes = width === 'full'
-        ? '100vw'
-        : width === 'wide'
-          ? '(min-width: 1200px) 1100px, 96vw'
-          : '(min-width: 980px) 820px, 92vw';
       const images = [block.data.image1, block.data.image2, block.data.image3]
         .filter(Boolean)
         .map((image) => renderResponsiveImage(image, depth, {
           preferred: ['body', 'hero', 'thumb'],
-          sizes: imageSizes,
+          sizes: width === 'full' ? '100vw' : '(min-width: 1200px) 1100px, 96vw',
           loading: 'lazy',
           decoding: 'async'
         }))
@@ -275,7 +181,7 @@ function renderBlock(block, depth) {
       return `<div class="article-chapter">${label}<div class="article-chapter__title">${block.data.title || ''}</div></div>`;
     }
     case 'pullQuote': {
-      const attribution = block.data.attribution ? `<div class="attribution">${block.data.attribution}</div>` : '';
+      const attribution = block.data.attribution ? `<div class="attribution">${escapeHtml(block.data.attribution)}</div>` : '';
       return `<div class="article-pullquote"><blockquote>${block.data.text || ''}</blockquote>${attribution}</div>`;
     }
     case 'spacer':
@@ -285,9 +191,384 @@ function renderBlock(block, depth) {
   }
 }
 
-function renderBlocks(content, depth) {
-  if (!content?.blocks) return '';
-  return content.blocks.map((block) => renderBlock(block, depth)).join('\n');
+function renderBlocks(post, depth) {
+  try {
+    const content = JSON.parse(post.content || '{}');
+    return (content.blocks || []).map((block) => renderBlock(block, depth)).join('\n');
+  } catch (error) {
+    return `<p>${escapeHtml(post.content || '')}</p>`;
+  }
+}
+
+function serializeAssetForClient(value, depth) {
+  const asset = normalizeImageAsset(value);
+  if (!asset) return null;
+
+  return {
+    ...asset,
+    url: rootRelativePath(depth, asset.url),
+    variants: Object.fromEntries(
+      Object.entries(asset.variants || {}).map(([key, variant]) => [
+        key,
+        { ...variant, url: rootRelativePath(depth, variant.url) }
+      ])
+    )
+  };
+}
+
+function serializePostsForIndex(posts) {
+  return posts.map((post) => ({
+    id: post.id,
+    title: post.title || '',
+    category: post.category || '',
+    excerpt: post.excerpt || '',
+    thumbnail: serializeAssetForClient(post.thumbnail, 0),
+    thumbnailColor: post.thumbnailColor || '#c8b8a8'
+  }));
+}
+
+function renderIndexPage(posts, settings) {
+  const serializedPosts = JSON.stringify(serializePostsForIndex(posts));
+  const settingsJson = JSON.stringify({
+    siteName: settings?.site?.name || 'Freshoh',
+    heroLabel: settings?.hero?.label || 'FRESHOH WORKS'
+  });
+
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${escapeHtml(settings?.site?.name || 'Freshoh Works')}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="./" class="site-logo">${escapeHtml(settings?.site?.name || 'Freshoh')}</a>
+      <nav class="site-nav">
+        <a href="./" class="active">Work</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="portfolio">
+    <div class="filter-bar" id="filter-bar"></div>
+    <div class="portfolio-rows" id="portfolio-rows"></div>
+  </main>
+
+  <footer class="site-footer">
+    <span class="footer-brand">${escapeHtml(settings?.site?.name || 'Freshoh')}</span>
+    <span class="footer-note">&copy; 2026 ${escapeHtml(settings?.site?.name || 'Freshoh')}. All rights reserved.</span>
+  </footer>
+
+  <script id="settings-data" type="application/json">${escapeHtml(settingsJson)}</script>
+  <script id="posts-data" type="application/json">${escapeHtml(serializedPosts)}</script>
+  <script>
+    const settings = JSON.parse(document.getElementById('settings-data').textContent);
+    const posts = JSON.parse(document.getElementById('posts-data').textContent);
+
+    function escapeHTML(str) {
+      const d = document.createElement('div');
+      d.textContent = str == null ? '' : String(str);
+      return d.innerHTML;
+    }
+
+    function normalizeImageAsset(value) {
+      if (!value) return null;
+      if (typeof value === 'string') return { url: value, variants: {} };
+      if (typeof value === 'object' && typeof value.url === 'string') {
+        return { ...value, variants: value.variants || {} };
+      }
+      return null;
+    }
+
+    function getImageUrl(value, preferred) {
+      const asset = normalizeImageAsset(value);
+      const prefs = Array.isArray(preferred) ? preferred : [preferred || 'thumb'];
+      if (!asset) return '';
+      for (const key of prefs) {
+        const variantUrl = asset.variants?.[key]?.url;
+        if (variantUrl) return variantUrl;
+      }
+      return asset.url || '';
+    }
+
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const cur = window.scrollY;
+      document.getElementById('site-header').classList.toggle('site-header--hidden', cur > lastScroll && cur > 200);
+      lastScroll = cur;
+    }, { passive: true });
+
+    function createCard(post, isHero) {
+      const card = document.createElement('article');
+      card.className = 'project-card';
+      card.dataset.category = post.category || '';
+
+      const thumbUrl = getImageUrl(post.thumbnail, isHero ? ['hero', 'body', 'thumb'] : ['body', 'thumb']);
+      const thumbColor = escapeHTML(post.thumbnailColor || '#c8b8a8');
+      const safeTitle = escapeHTML(post.title || '');
+      const safeCategory = escapeHTML(post.category || '');
+      const safeExcerpt = escapeHTML(post.excerpt || '');
+      const safeId = encodeURIComponent(post.id);
+
+      const imageContent = thumbUrl
+        ? '<img src="' + thumbUrl + '" alt="' + safeTitle + '" loading="' + (isHero ? 'eager' : 'lazy') + '">'
+        : '<div class="project-card-image-bg" style="background-color:' + thumbColor + ';"></div>';
+
+      card.innerHTML = \`
+        <a href="./project/\${safeId}/">
+          <div class="project-card-image">\${imageContent}</div>
+          <div class="project-card-info">
+            <div class="project-card-sector">\${safeCategory}</div>
+            <h2 class="project-card-title">\${safeTitle}</h2>
+            \${safeExcerpt ? '<p class="project-card-excerpt">' + safeExcerpt + '</p>' : ''}
+          </div>
+        </a>\`;
+
+      return card;
+    }
+
+    const ROW_PATTERN = [1, 2, 3, 1, 2, 1, 3];
+
+    function createRow(type, rowPosts) {
+      const row = document.createElement('div');
+      if (type === 1) {
+        row.className = 'row-hero';
+        row.appendChild(createCard(rowPosts[0], true));
+      } else if (type === 2) {
+        row.className = 'row-pair';
+        rowPosts.forEach((post) => row.appendChild(createCard(post, false)));
+      } else {
+        row.className = 'row-carousel';
+        const cards = rowPosts.map((post) => createCard(post, false));
+        const clones = rowPosts.map((post) => createCard(post, false));
+        cards.forEach((card) => row.appendChild(card));
+        clones.forEach((card) => row.appendChild(card));
+
+        let isDown = false;
+        let startX = 0;
+        let scrollLeft = 0;
+        let userInteracting = false;
+        let resumeTimer = null;
+
+        row.addEventListener('mousedown', (event) => {
+          isDown = true;
+          userInteracting = true;
+          startX = event.pageX - row.offsetLeft;
+          scrollLeft = row.scrollLeft;
+          clearTimeout(resumeTimer);
+        });
+        row.addEventListener('mouseleave', () => { isDown = false; resumeAfterDelay(); });
+        row.addEventListener('mouseup', () => { isDown = false; resumeAfterDelay(); });
+        row.addEventListener('mousemove', (event) => {
+          if (!isDown) return;
+          event.preventDefault();
+          row.scrollLeft = scrollLeft - (event.pageX - row.offsetLeft - startX) * 1.5;
+        });
+        row.addEventListener('touchstart', () => { userInteracting = true; clearTimeout(resumeTimer); }, { passive: true });
+        row.addEventListener('touchend', () => { resumeAfterDelay(); });
+
+        function resumeAfterDelay() {
+          resumeTimer = setTimeout(() => { userInteracting = false; }, 3000);
+        }
+
+        function autoScroll() {
+          if (!userInteracting && row.isConnected) {
+            row.scrollLeft += 0.5;
+            const halfScroll = row.scrollWidth / 2;
+            if (halfScroll > 0 && row.scrollLeft >= halfScroll) {
+              row.scrollLeft -= halfScroll;
+            }
+          }
+          requestAnimationFrame(autoScroll);
+        }
+
+        setTimeout(() => requestAnimationFrame(autoScroll), 100);
+      }
+      return row;
+    }
+
+    function buildFilters(allPosts) {
+      const categories = [...new Set(allPosts.map((post) => post.category).filter(Boolean))];
+      const bar = document.getElementById('filter-bar');
+
+      const allBtn = document.createElement('button');
+      allBtn.className = 'filter-btn active';
+      allBtn.textContent = 'All';
+      allBtn.dataset.category = '';
+      bar.appendChild(allBtn);
+
+      categories.forEach((category) => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn';
+        btn.textContent = category;
+        btn.dataset.category = category;
+        bar.appendChild(btn);
+      });
+
+      bar.addEventListener('click', (event) => {
+        const btn = event.target.closest('.filter-btn');
+        if (!btn) return;
+        bar.querySelectorAll('.filter-btn').forEach((button) => button.classList.remove('active'));
+        btn.classList.add('active');
+        renderRows(allPosts, btn.dataset.category);
+      });
+    }
+
+    function renderRows(allPosts, filterCategory) {
+      const container = document.getElementById('portfolio-rows');
+      const filtered = filterCategory
+        ? allPosts.filter((post) => post.category === filterCategory)
+        : allPosts;
+
+      container.innerHTML = '';
+      if (!filtered.length) {
+        container.innerHTML = '<p style="padding:80px 40px;text-align:center;color:#999;">No projects found.</p>';
+        return;
+      }
+
+      let cursor = 0;
+      let patternIndex = 0;
+
+      while (cursor < filtered.length) {
+        const count = ROW_PATTERN[patternIndex % ROW_PATTERN.length];
+        const slice = filtered.slice(cursor, cursor + count);
+        if (!slice.length) break;
+        const rowType = slice.length < count ? Math.min(slice.length, count) : count;
+        container.appendChild(createRow(rowType, slice));
+        cursor += slice.length;
+        patternIndex += 1;
+      }
+    }
+
+    buildFilters(posts);
+    renderRows(posts, '');
+  </script>
+</body>
+</html>`;
+}
+
+function renderProjectPage(post, allPosts, settings) {
+  const thumbUrl = pickImageUrl(post.thumbnail, ['hero', 'body', 'thumb']);
+  const heroContent = thumbUrl
+    ? renderResponsiveImage(post.thumbnail, 2, {
+        preferred: ['hero', 'body', 'thumb'],
+        alt: post.title || '',
+        sizes: '100vw',
+        loading: 'eager',
+        decoding: 'async',
+        fetchpriority: 'high'
+      })
+    : `<div class="project-hero-bg" style="background-color:${escapeHtml(post.thumbnailColor || '#c8b8a8')};"></div>`;
+  const renderedContent = renderBlocks(post, 2);
+  const currentIndex = allPosts.findIndex((item) => item.id === post.id);
+  const nextPost = allPosts.length > 1 ? allPosts[(currentIndex + 1) % allPosts.length] : null;
+  const nextThumb = nextPost ? pickImageUrl(nextPost.thumbnail, ['body', 'thumb']) : '';
+  const nextImage = nextPost
+    ? nextThumb
+      ? renderResponsiveImage(nextPost.thumbnail, 2, {
+          preferred: ['body', 'thumb', 'hero'],
+          alt: nextPost.title || '',
+          sizes: '(min-width: 1200px) 50vw, 100vw',
+          loading: 'lazy',
+          decoding: 'async'
+        })
+      : `<div class="next-project-image-bg" style="background-color:${escapeHtml(nextPost.thumbnailColor || '#c8b8a8')};height:100%;"></div>`
+    : '';
+
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${escapeHtml(post.title || 'Project')} - ${escapeHtml(settings?.site?.name || 'Freshoh Works')}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="../../styles.css">
+  <style>
+    html, body { overflow-x: hidden; }
+    .project-body .article-rendered::after { content:''; display:table; clear:both; }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="../../" class="site-logo">${escapeHtml(settings?.site?.name || 'Freshoh')}</a>
+      <nav class="site-nav">
+        <a href="../../">Work</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="project-hero" id="project-hero">${heroContent}</div>
+
+  <div class="project-header" id="project-header">
+    <div class="project-header-main">
+      <h1 class="project-title" id="project-title">${escapeHtml(post.title || '')}</h1>
+      <p class="project-intro" id="project-intro">${escapeHtml(post.excerpt || '')}</p>
+    </div>
+    <aside class="project-meta" id="project-meta">
+      <div class="project-meta-item">
+        <div class="project-meta-label">Sector</div>
+        <div class="project-meta-value">${escapeHtml(post.category || '')}</div>
+      </div>
+      <div class="project-meta-item">
+        <div class="project-meta-label">Client</div>
+        <div class="project-meta-value">Freshoh</div>
+      </div>
+      <div class="project-meta-item">
+        <div class="project-meta-label">Scope</div>
+        <div class="project-meta-value">${escapeHtml(mapScope(post.category || ''))}</div>
+      </div>
+      <div class="project-meta-item">
+        <div class="project-meta-label">Partner</div>
+        <div class="project-meta-value">${escapeHtml(settings?.site?.name || 'Freshoh')}</div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="project-body">
+    <div class="article-rendered" id="project-content">${renderedContent}</div>
+  </div>
+
+  ${nextPost ? `<div class="next-project" id="next-project">
+    <a href="../../project/${encodeURIComponent(nextPost.id)}/">
+      <div class="next-project-text">
+        <div class="next-project-label">Next Project</div>
+        <h3 class="next-project-title">${escapeHtml(nextPost.title || '')}</h3>
+        <p class="next-project-sector">${escapeHtml(nextPost.category || '')}</p>
+      </div>
+      <div class="next-project-image">${nextImage}</div>
+    </a>
+  </div>` : ''}
+
+  <footer class="site-footer">
+    <span class="footer-brand">${escapeHtml(settings?.site?.name || 'Freshoh')}</span>
+    <span class="footer-note">&copy; 2026 ${escapeHtml(settings?.site?.name || 'Freshoh')}. All rights reserved.</span>
+  </footer>
+
+  <script>
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const cur = window.scrollY;
+      document.getElementById('site-header').classList.toggle('site-header--hidden', cur > lastScroll && cur > 200);
+      lastScroll = cur;
+    }, { passive: true });
+  </script>
+</body>
+</html>`;
 }
 
 function collectAssetUrls(set, value) {
@@ -306,9 +587,8 @@ function extractAssets(posts, settings) {
   posts.forEach((post) => {
     collectAssetUrls(urls, post.thumbnail);
 
-    if (!post.content) return;
     try {
-      const content = JSON.parse(post.content);
+      const content = JSON.parse(post.content || '{}');
       (content.blocks || []).forEach((block) => {
         if (block.type === 'image') collectAssetUrls(urls, block.data?.file);
         if (block.type === 'gallery') {
@@ -324,137 +604,6 @@ function extractAssets(posts, settings) {
 
   collectAssetUrls(urls, settings?.hero?.bgImage);
   return urls;
-}
-
-function renderIndexPage(posts, settings) {
-  const heroBackground = rootRelativePath(0, pickImageUrl(settings?.hero?.bgImage, ['hero', 'body', 'thumb']));
-  const heroStyle = heroBackground
-    ? ` style="background-image:linear-gradient(rgba(0,0,0,0.24), rgba(0,0,0,0.24)), url('${heroBackground}');background-size:cover;background-position:center;"`
-    : '';
-  const cards = posts.map((post, index) => renderIndexCard(post, index)).join('\n');
-
-  return `<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${escapeHtml(settings?.site?.name || 'Freshoh Works')}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-  <link rel="stylesheet" href="./styles.css">
-</head>
-<body>
-  <header class="header">
-    <div class="header-inner">
-      <a href="./" class="logo">${escapeHtml(settings?.site?.name || 'Freshoh')}</a>
-      <nav class="header-nav">
-        <a href="./#stories" class="nav-link active">Projects</a>
-      </nav>
-    </div>
-  </header>
-
-  <section class="hero"${heroStyle}>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <p class="hero-label">${escapeHtml(settings?.hero?.label || 'FRESHOH WORKS')}</p>
-      <h1 class="hero-title">${escapeHtml(settings?.hero?.title || 'Freshoh Works')}</h1>
-      <p class="hero-subtitle">${escapeHtml(settings?.hero?.subtitle || '')}</p>
-      <a href="${escapeHtml(settings?.hero?.ctaLink || '#stories')}" class="hero-cta">${escapeHtml(settings?.hero?.cta || 'View stories')}</a>
-    </div>
-  </section>
-
-  <section class="stories-section" id="stories">
-    <div class="stories-container">
-      <h2 class="section-title">${escapeHtml(settings?.site?.sectionTitle || 'Projects')}</h2>
-      <p class="section-subtitle">${escapeHtml(settings?.site?.sectionSubtitle || '')}</p>
-      <div class="stories-grid" id="stories-grid">
-${cards}
-      </div>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <div class="footer-inner">
-      <div class="footer-bottom">
-        <p>&copy; 2026 ${escapeHtml(settings?.site?.name || 'Freshoh')}. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
-</body>
-</html>`;
-}
-
-function renderArticlePage(post, settings) {
-  let renderedContent = '';
-  try {
-    renderedContent = renderBlocks(JSON.parse(post.content || '{}'), 2);
-  } catch (error) {
-    renderedContent = post.content || '';
-  }
-
-  const heroImage = renderResponsiveImage(post.thumbnail, 2, {
-    preferred: ['hero', 'body', 'thumb'],
-    alt: post.title || '',
-    sizes: '100vw',
-    loading: 'eager',
-    decoding: 'async',
-    fetchpriority: 'high'
-  });
-
-  return `<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${escapeHtml(post.title || 'Article')} - ${escapeHtml(settings?.site?.name || 'Freshoh')}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-  <link rel="stylesheet" href="../../styles.css">
-</head>
-<body>
-  <header class="header">
-    <div class="header-inner">
-      <a href="../../" class="logo">${escapeHtml(settings?.site?.name || 'Freshoh')}</a>
-      <nav class="header-nav">
-        <a href="../../" class="nav-link">Stories</a>
-      </nav>
-    </div>
-  </header>
-
-  <section class="article-hero">
-    <div class="article-hero-bg" id="hero-bg">${heroImage}</div>
-    <div class="article-hero-overlay"></div>
-    <div class="article-hero-content">
-      <div class="article-hero-meta">
-        <span class="article-hero-category">${escapeHtml(post.category || '')}</span>
-        <span class="story-divider" style="color:rgba(255,255,255,0.5);">|</span>
-        <span class="article-hero-date">${escapeHtml(formatDate(post.createdAt))}</span>
-      </div>
-      <h1 class="article-hero-title">${escapeHtml(post.title || '')}</h1>
-    </div>
-  </section>
-
-  <article class="article-body">
-    <a href="../../" class="article-back">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      All stories
-    </a>
-    <div class="article-rendered" id="article-content">${renderedContent}</div>
-  </article>
-
-  <footer class="footer">
-    <div class="footer-inner">
-      <div class="footer-bottom">
-        <p>&copy; 2026 ${escapeHtml(settings?.site?.name || 'Freshoh')}. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
-</body>
-</html>`;
 }
 
 function copyUsedAssets(assetUrls) {
@@ -479,7 +628,7 @@ function main() {
   ensureDir(outputDir);
 
   writeFile(path.join(outputDir, '.nojekyll'), '');
-  fs.copyFileSync(path.join(rootDir, 'styles.css'), path.join(outputDir, 'styles.css'));
+  fs.copyFileSync(v2StylesFile, path.join(outputDir, 'styles.css'));
 
   const usedAssets = extractAssets(posts, settings);
   copyUsedAssets(usedAssets);
@@ -488,8 +637,8 @@ function main() {
 
   posts.forEach((post) => {
     writeFile(
-      path.join(outputDir, 'article', post.id, 'index.html'),
-      renderArticlePage(post, settings)
+      path.join(outputDir, 'project', post.id, 'index.html'),
+      renderProjectPage(post, posts, settings)
     );
   });
 

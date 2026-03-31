@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freshoh Works</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="/v2/styles.css">
+  <style>
+    html, body { overflow-x: hidden; }
+    .project-body .article-rendered::after { content:''; display:table; clear:both; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a href="/v2/" class="site-logo">Freshoh</a>
+      <nav class="site-nav">
+        <a href="/v2/">Work</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="project-hero" id="project-hero"></div>
+
+  <!-- Header + Meta -->
+  <div class="project-header" id="project-header">
+    <div class="project-header-main">
+      <h1 class="project-title" id="project-title"></h1>
+      <p class="project-intro" id="project-intro"></p>
+    </div>
+    <aside class="project-meta" id="project-meta"></aside>
+  </div>
+
+  <!-- Body -->
+  <div class="project-body">
+    <div class="article-rendered" id="project-content"></div>
+  </div>
+
+  <!-- Next Project -->
+  <div class="next-project" id="next-project" style="display:none;"></div>
+
+  <footer class="site-footer">
+    <span class="footer-brand">Freshoh</span>
+    <span class="footer-note">&copy; 2026 Freshoh. All rights reserved.</span>
+  </footer>
+
+  <script>
+    // === Helpers ===
+    function escapeHTML(str) {
+      const d = document.createElement('div');
+      d.textContent = str == null ? '' : String(str);
+      return d.innerHTML;
+    }
+
+    function normalizeImageAsset(value) {
+      if (!value) return null;
+      if (typeof value === 'string') return { url: value, variants: {} };
+      if (typeof value === 'object' && typeof value.url === 'string') {
+        return { ...value, variants: value.variants || {} };
+      }
+      return null;
+    }
+
+    function getImageUrl(value, preferred) {
+      const asset = normalizeImageAsset(value);
+      if (!asset) return '';
+      const prefs = Array.isArray(preferred) ? preferred : [preferred || 'body'];
+      for (const key of prefs) {
+        const v = asset.variants?.[key]?.url;
+        if (v) return v;
+      }
+      return asset.url || '';
+    }
+
+    function renderResponsiveImage(value, alt) {
+      const src = getImageUrl(value, ['body', 'hero', 'thumb']);
+      if (!src) return '';
+      return `<img src="${src}" alt="${escapeHTML(alt || '')}" loading="lazy" decoding="async">`;
+    }
+
+    // === Header scroll ===
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const cur = window.scrollY;
+      document.getElementById('site-header').classList.toggle('site-header--hidden', cur > lastScroll && cur > 200);
+      lastScroll = cur;
+    }, { passive: true });
+
+    // === Block Renderer ===
+    function renderBlock(block) {
+      switch (block.type) {
+        case 'paragraph':
+          return `<p>${block.data.text}</p>`;
+
+        case 'header':
+          return `<h${block.data.level}>${block.data.text}</h${block.data.level}>`;
+
+        case 'list': {
+          const tag = block.data.style === 'ordered' ? 'ol' : 'ul';
+          const items = block.data.items.map(i => {
+            const text = typeof i === 'string' ? i : i.content || i.text || i;
+            return `<li>${text}</li>`;
+          }).join('');
+          return `<${tag}>${items}</${tag}>`;
+        }
+
+        case 'delimiter':
+          return '<div class="article-delimiter">* * *</div>';
+
+        case 'quote':
+          return `<blockquote class="article-quote"><p>${block.data.text}</p>${block.data.caption ? `<cite>${block.data.caption}</cite>` : ''}</blockquote>`;
+
+        case 'table': {
+          const rows = block.data.content || [];
+          if (!rows.length) return '';
+          let html = '<div class="article-table"><table>';
+          rows.forEach((row, i) => {
+            const tag = (block.data.withHeadings && i === 0) ? 'th' : 'td';
+            html += '<tr>' + row.map(c => `<${tag}>${c}</${tag}>`).join('') + '</tr>';
+          });
+          return html + '</table></div>';
+        }
+
+        case 'image': {
+          const img = renderResponsiveImage(block.data.file, block.data.caption || '');
+          const cap = block.data.caption ? `<figcaption>${block.data.caption}</figcaption>` : '';
+          return `<figure class="article-img">${img}${cap}</figure>`;
+        }
+
+        case 'gallery': {
+          const layout = block.data.layout || '2-equal';
+          const width = block.data.width || 'wide';
+          const arMap = {'16:9':'gallery-ratio--16-9','1:1':'gallery-ratio--1-1','4:3':'gallery-ratio--4-3'};
+          const arClass = arMap[block.data.aspectRatio] || '';
+          const images = [block.data.image1, block.data.image2, block.data.image3]
+            .filter(Boolean)
+            .map(src => renderResponsiveImage(src, ''))
+            .join('');
+          const cap = block.data.caption ? `<figcaption>${block.data.caption}</figcaption>` : '';
+          return `<figure class="article-gallery article-gallery--${layout} block-width--${width}${arClass ? ' '+arClass : ''}">${images}${cap}</figure>`;
+        }
+
+        case 'columns': {
+          const rev = block.data.layout === 'image-right' ? ' reverse' : '';
+          const ratio = (block.data.ratio || '1:1').replace(':', '-');
+          const width = block.data.width || 'wide';
+          const img = block.data.image ? renderResponsiveImage(block.data.image, '') : '';
+          const heading = block.data.heading ? `<h3>${block.data.heading}</h3>` : '';
+          return `<div class="article-columns article-columns--${ratio} block-width--${width}${rev}"><div class="article-columns__image">${img}</div><div class="article-columns__text">${heading}<div class="col-body">${block.data.text||''}</div></div></div>`;
+        }
+
+        case 'chapterHeading': {
+          const label = block.data.label ? `<span class="article-chapter__label">${block.data.label}</span>` : '';
+          return `<div class="article-chapter">${label}<div class="article-chapter__title">${block.data.title||''}</div></div>`;
+        }
+
+        case 'pullQuote': {
+          const attr = block.data.attribution ? `<div class="attribution">${escapeHTML(block.data.attribution)}</div>` : '';
+          return `<div class="article-pullquote"><blockquote>${block.data.text}</blockquote>${attr}</div>`;
+        }
+
+        case 'spacer':
+          return `<div class="article-spacer--${block.data.size || 'md'}"></div>`;
+
+        default:
+          return '';
+      }
+    }
+
+    // === Render Post ===
+    function renderPost(post, allPosts) {
+      document.title = `${post.title} — Freshoh Works`;
+
+      // Hero
+      const hero = document.getElementById('project-hero');
+      const thumbUrl = getImageUrl(post.thumbnail, ['hero', 'body', 'thumb']);
+      if (thumbUrl) {
+        hero.innerHTML = `<img src="${thumbUrl}" alt="${escapeHTML(post.title)}">`;
+      } else {
+        hero.innerHTML = `<div class="project-hero-bg" style="background-color:${escapeHTML(post.thumbnailColor || '#c8b8a8')};"></div>`;
+      }
+
+      // Title + Intro
+      document.getElementById('project-title').textContent = post.title;
+      document.getElementById('project-intro').textContent = post.excerpt || '';
+
+      // Meta sidebar
+      const meta = document.getElementById('project-meta');
+      const metaItems = [
+        { label: 'Sector', value: post.category },
+        { label: 'Client', value: '쉴낙원 서울 장례식장' },
+        { label: 'Scope', value: post.category === 'R&D' ? '메뉴 표준화' : post.category === '브랜드' ? 'BX 재설계' : post.category === '고객경험' ? '고객경험 설계' : '데이터 기반 운영' },
+        { label: 'Partner', value: 'Freshoh' }
+      ];
+      meta.innerHTML = metaItems.map(m =>
+        `<div class="project-meta-item">
+          <div class="project-meta-label">${m.label}</div>
+          <div class="project-meta-value">${escapeHTML(m.value)}</div>
+        </div>`
+      ).join('');
+
+      // Body
+      try {
+        const content = JSON.parse(post.content);
+        document.getElementById('project-content').innerHTML = content.blocks.map(renderBlock).join('\n');
+      } catch (e) {
+        document.getElementById('project-content').innerHTML = `<p>${escapeHTML(post.content)}</p>`;
+      }
+
+      // Next project
+      const idx = allPosts.findIndex(p => p.id === post.id);
+      const nextPost = allPosts[(idx + 1) % allPosts.length];
+      if (nextPost && nextPost.id !== post.id) {
+        const np = document.getElementById('next-project');
+        np.style.display = '';
+        const nextThumb = getImageUrl(nextPost.thumbnail, ['body', 'thumb']);
+        const nextImage = nextThumb
+          ? `<img src="${nextThumb}" alt="${escapeHTML(nextPost.title)}">`
+          : `<div class="next-project-image-bg" style="background-color:${escapeHTML(nextPost.thumbnailColor || '#c8b8a8')};height:100%;"></div>`;
+
+        np.innerHTML = `
+          <a href="/v2/project.html?id=${encodeURIComponent(nextPost.id)}">
+            <div class="next-project-text">
+              <div class="next-project-label">Next Project</div>
+              <h3 class="next-project-title">${escapeHTML(nextPost.title)}</h3>
+              <p class="next-project-sector">${escapeHTML(nextPost.category || '')}</p>
+            </div>
+            <div class="next-project-image">${nextImage}</div>
+          </a>`;
+      }
+    }
+
+    // === Init ===
+    async function init() {
+      const id = new URLSearchParams(location.search).get('id');
+      if (!id) { location.href = '/v2/'; return; }
+
+      try {
+        const [postRes, allRes] = await Promise.all([
+          fetch(`/api/posts/${id}`),
+          fetch('/api/posts')
+        ]);
+        if (!postRes.ok) throw new Error('Not found');
+        const post = await postRes.json();
+        const allPosts = await allRes.json();
+        renderPost(post, allPosts);
+      } catch (e) {
+        console.error(e);
+        document.getElementById('project-title').textContent = '프로젝트를 찾을 수 없습니다';
+      }
+    }
+
+    init();
+  </script>
+
+</body>
+</html>
