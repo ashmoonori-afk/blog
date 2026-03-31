@@ -286,10 +286,40 @@
 
   <script>
     const API_BASE = ['127.0.0.1', 'localhost'].includes(location.hostname) ? '' : 'http://127.0.0.1:3000';
-    let heroBgImage = '';
+    let heroBgImage = null;
 
     function buildApiUrl(path) {
       return `${API_BASE}${path}`;
+    }
+
+    function normalizeImageAsset(value) {
+      if (!value) return null;
+      if (typeof value === 'string') {
+        return { url: value, variants: {} };
+      }
+
+      if (typeof value === 'object' && typeof value.url === 'string') {
+        return {
+          ...value,
+          variants: value.variants || {}
+        };
+      }
+
+      return null;
+    }
+
+    function getImageUrl(value, preferred = ['hero', 'body', 'thumb']) {
+      const asset = normalizeImageAsset(value);
+      const preferredList = Array.isArray(preferred) ? preferred : [preferred];
+
+      if (!asset) return '';
+
+      for (const key of preferredList) {
+        const variantUrl = asset.variants?.[key]?.url;
+        if (variantUrl) return variantUrl;
+      }
+
+      return asset.url || '';
     }
 
     async function fetchJson(path, options) {
@@ -321,11 +351,12 @@
         fd.append('image', file);
         const data = await fetchJson('/api/upload', { method: 'POST', body: fd });
 
-        if (!data.url) {
+        const image = normalizeImageAsset(data.image || data.url);
+        if (!image) {
           throw new Error('이미지 업로드에 실패했습니다.');
         }
 
-        return data.url;
+        return image;
       } catch (error) {
         if (error.message.includes('JSON 대신 HTML')) {
           throw new Error('이미지 업로드 요청이 HTML 페이지로 이동했습니다. 로컬 서버 주소로 다시 열어주세요.');
@@ -380,13 +411,13 @@
       pv.style.backgroundPosition = 'center';
 
       try {
-        const url = await uploadImageFile(file);
-        heroBgImage = url;
-        document.getElementById('hero-bg-preview').src = url;
+        const image = await uploadImageFile(file);
+        heroBgImage = image;
+        document.getElementById('hero-bg-preview').src = getImageUrl(image, ['hero', 'body', 'thumb']);
         document.getElementById('hero-bg-preview').style.display = 'block';
         document.getElementById('hero-bg-text').style.display = 'none';
         document.getElementById('hero-bg-upload').classList.add('has-image');
-        pv.style.backgroundImage = `url('${url}')`;
+        pv.style.backgroundImage = `url('${getImageUrl(image, ['hero', 'body', 'thumb'])}')`;
         pv.style.backgroundSize = 'cover';
         pv.style.backgroundPosition = 'center';
       } catch (error) {
@@ -397,7 +428,7 @@
     });
 
     function removeHeroBg() {
-      heroBgImage = '';
+      heroBgImage = null;
       document.getElementById('hero-bg-preview').style.display = 'none';
       document.getElementById('hero-bg-text').style.display = '';
       document.getElementById('hero-bg-upload').classList.remove('has-image');
@@ -420,13 +451,13 @@
       document.getElementById('site-section-subtitle').value = s.site.sectionSubtitle || '';
 
       if (s.hero.bgImage) {
-        heroBgImage = s.hero.bgImage;
-        document.getElementById('hero-bg-preview').src = s.hero.bgImage;
+        heroBgImage = normalizeImageAsset(s.hero.bgImage);
+        document.getElementById('hero-bg-preview').src = getImageUrl(heroBgImage, ['hero', 'body', 'thumb']);
         document.getElementById('hero-bg-preview').style.display = 'block';
         document.getElementById('hero-bg-text').style.display = 'none';
         document.getElementById('hero-bg-upload').classList.add('has-image');
         const pv = document.getElementById('hero-preview');
-        pv.style.backgroundImage = `url('${s.hero.bgImage}')`;
+        pv.style.backgroundImage = `url('${getImageUrl(heroBgImage, ['hero', 'body', 'thumb'])}')`;
         pv.style.backgroundSize = 'cover';
         pv.style.backgroundPosition = 'center';
       }

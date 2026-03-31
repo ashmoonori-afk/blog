@@ -16,7 +16,10 @@ fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 app.use(express.json());
 app.use(express.static(__dirname));
-app.use('/uploads', express.static(UPLOADS_DIR));
+app.use('/uploads', express.static(UPLOADS_DIR, {
+  maxAge: '1y',
+  immutable: true
+}));
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 
 const upload = multer({
@@ -73,31 +76,74 @@ function makeUploadName(ext) {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`;
 }
 
+function buildAsset(url, meta = {}) {
+  return {
+    url,
+    width: meta.width || null,
+    height: meta.height || null,
+    format: meta.format || '',
+    variants: meta.variants || {}
+  };
+}
+
 function saveOriginalUpload(file) {
   const ext = path.extname(file.originalname).toLowerCase() || '.bin';
   const filename = makeUploadName(ext);
+  const url = `/uploads/${filename}`;
+
   fs.writeFileSync(path.join(UPLOADS_DIR, filename), file.buffer);
-  return `/uploads/${filename}`;
+
+  return buildAsset(url, {
+    format: ext.replace('.', ''),
+    variants: {
+      thumb: { url },
+      body: { url },
+      hero: { url }
+    }
+  });
 }
 
 async function saveOptimizedUpload(file) {
-  const filename = makeUploadName('.webp');
-  const optimizedBuffer = await sharp(file.buffer)
-    .rotate()
-    .resize({
-      width: 1600,
-      height: 1600,
-      fit: 'inside',
-      withoutEnlargement: true
-    })
-    .webp({
-      quality: 82,
-      effort: 4
-    })
-    .toBuffer();
+  const variantsConfig = [
+    { key: 'thumb', width: 640, quality: 72 },
+    { key: 'body', width: 1280, quality: 80 },
+    { key: 'hero', width: 1600, quality: 82 }
+  ];
+  const metadata = await sharp(file.buffer).metadata();
+  const basename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const variants = {};
 
-  fs.writeFileSync(path.join(UPLOADS_DIR, filename), optimizedBuffer);
-  return `/uploads/${filename}`;
+  for (const config of variantsConfig) {
+    const filename = `${basename}-${config.key}.webp`;
+    const outputPath = path.join(UPLOADS_DIR, filename);
+    const info = await sharp(file.buffer)
+      .rotate()
+      .resize({
+        width: config.width,
+        height: config.width,
+        fit: 'inside',
+        withoutEnlargement: true
+      })
+      .webp({
+        quality: config.quality,
+        effort: 4
+      })
+      .toFile(outputPath);
+
+    variants[config.key] = {
+      url: `/uploads/${filename}`,
+      width: info.width,
+      height: info.height,
+      format: 'webp'
+    };
+  }
+
+  return buildAsset(variants.hero.url, {
+    width: metadata.width || variants.hero.width,
+    height: metadata.height || variants.hero.height,
+    format: 'webp',
+    variants
+  });
 }
 
 async function storeUpload(file) {
@@ -207,8 +253,8 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
   }
 
   try {
-    const url = await storeUpload(req.file);
-    res.json({ url });
+    const image = await storeUpload(req.file);
+    res.json({ url: image.url, image });
   } catch (error) {
     res.status(500).json({ error: '이미지 처리에 실패했습니다' });
   }

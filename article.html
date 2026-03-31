@@ -398,6 +398,84 @@
 
   <script>
     // ===== Editor.js Block Renderer =====
+    function escapeHTML(str) {
+      const div = document.createElement('div');
+      div.textContent = str == null ? '' : String(str);
+      return div.innerHTML;
+    }
+
+    function sanitizeURL(url) {
+      if (!url) return '';
+      try {
+        const parsed = new URL(url, location.origin);
+        if (parsed.protocol === 'http:' || parsed.protocol === 'https:' || parsed.pathname.startsWith('/')) {
+          return parsed.href;
+        }
+      } catch (e) {}
+      return '';
+    }
+
+    function normalizeImageAsset(value) {
+      if (!value) return null;
+      if (typeof value === 'string') return { url: value, variants: {} };
+      if (typeof value === 'object' && typeof value.url === 'string') {
+        return { ...value, variants: value.variants || {} };
+      }
+      return null;
+    }
+
+    function getImageUrl(value, preferred = ['body', 'hero', 'thumb']) {
+      const asset = normalizeImageAsset(value);
+      const preferredList = Array.isArray(preferred) ? preferred : [preferred];
+
+      if (!asset) return '';
+
+      for (const key of preferredList) {
+        const variantUrl = sanitizeURL(asset.variants?.[key]?.url);
+        if (variantUrl) return variantUrl;
+      }
+
+      return sanitizeURL(asset.url);
+    }
+
+    function buildImageSrcSet(value) {
+      const asset = normalizeImageAsset(value);
+      if (!asset) return '';
+
+      const candidates = ['thumb', 'body', 'hero']
+        .map((key) => asset.variants?.[key])
+        .filter(Boolean)
+        .filter((variant, index, arr) => arr.findIndex((item) => item.url === variant.url) === index)
+        .map((variant) => {
+          const url = sanitizeURL(variant.url);
+          if (!url) return '';
+          return variant.width ? `${url} ${variant.width}w` : url;
+        })
+        .filter(Boolean);
+
+      return candidates.join(', ');
+    }
+
+    function renderResponsiveImage(value, options = {}) {
+      const src = getImageUrl(value, options.preferred || ['body', 'hero', 'thumb']);
+      if (!src) return '';
+
+      const attrs = [
+        `src="${src}"`,
+        `alt="${escapeHTML(options.alt || '')}"`
+      ];
+      const srcset = buildImageSrcSet(value);
+
+      if (options.className) attrs.push(`class="${options.className}"`);
+      if (srcset) attrs.push(`srcset="${srcset}"`);
+      if (options.sizes) attrs.push(`sizes="${options.sizes}"`);
+      if (options.loading) attrs.push(`loading="${options.loading}"`);
+      if (options.decoding) attrs.push(`decoding="${options.decoding}"`);
+      if (options.fetchpriority) attrs.push(`fetchpriority="${options.fetchpriority}"`);
+
+      return `<img ${attrs.join(' ')}>`;
+    }
+
     function renderBlocks(data) {
       if (!data || !data.blocks) return '';
       return data.blocks.map(renderBlock).join('\n');
@@ -420,7 +498,14 @@
           if (align === 'left') cls.push('article-img--left');
           if (align === 'right') cls.push('article-img--right');
           const caption = block.data.caption ? `<figcaption>${block.data.caption}</figcaption>` : '';
-          return `<figure class="article-img ${cls.join(' ')}"><img src="${block.data.file?.url || ''}" alt="${block.data.caption || ''}">${caption}</figure>`;
+          const image = renderResponsiveImage(block.data.file, {
+            alt: block.data.caption || '',
+            preferred: ['body', 'hero', 'thumb'],
+            sizes: block.data.stretched ? '100vw' : '(min-width: 980px) 820px, 92vw',
+            loading: 'lazy',
+            decoding: 'async'
+          });
+          return `<figure class="article-img ${cls.join(' ')}">${image}${caption}</figure>`;
         }
 
         case 'list': {
@@ -471,8 +556,20 @@
           const width = block.data.width || 'wide';
           const arMap = {'16:9':'gallery-ratio--16-9','1:1':'gallery-ratio--1-1','4:3':'gallery-ratio--4-3'};
           const arClass = arMap[block.data.aspectRatio] || '';
+          const imageSizes = width === 'full'
+            ? '100vw'
+            : width === 'wide'
+              ? '(min-width: 1200px) 1100px, 96vw'
+              : '(min-width: 980px) 820px, 92vw';
           const images = [block.data.image1, block.data.image2, block.data.image3]
-            .filter(Boolean).map(src => `<img src="${src}" alt="">`).join('');
+            .filter(Boolean)
+            .map((image) => renderResponsiveImage(image, {
+              preferred: ['body', 'hero', 'thumb'],
+              sizes: imageSizes,
+              loading: 'lazy',
+              decoding: 'async'
+            }))
+            .join('');
           const cap = block.data.caption ? `<figcaption>${block.data.caption}</figcaption>` : '';
           return `<figure class="article-gallery article-gallery--${layout} block-width--${width}${arClass ? ' '+arClass : ''}">${images}${cap}</figure>`;
         }
@@ -481,7 +578,14 @@
           const rev = block.data.layout === 'image-right' ? ' reverse' : '';
           const ratio = (block.data.ratio || '1:1').replace(':', '-');
           const width = block.data.width || 'wide';
-          const img = block.data.image ? `<img src="${block.data.image}" alt="">` : '';
+          const img = block.data.image
+            ? renderResponsiveImage(block.data.image, {
+                preferred: ['body', 'hero', 'thumb'],
+                sizes: width === 'full' ? '100vw' : '(min-width: 1200px) 1100px, 96vw',
+                loading: 'lazy',
+                decoding: 'async'
+              })
+            : '';
           const heading = block.data.heading ? `<h3>${block.data.heading}</h3>` : '';
           return `<div class="article-columns article-columns--${ratio} block-width--${width}${rev}"><div class="article-columns__image">${img}</div><div class="article-columns__text">${heading}<div class="col-body">${block.data.text||''}</div></div></div>`;
         }
@@ -520,10 +624,18 @@
 
         const bg = document.getElementById('hero-bg');
         if (post.thumbnail) {
-          bg.style.backgroundImage = `url('${post.thumbnail}')`;
-          bg.style.backgroundSize = 'cover';
-          bg.style.backgroundPosition = 'center';
+          const heroImage = renderResponsiveImage(post.thumbnail, {
+            preferred: ['hero', 'body', 'thumb'],
+            alt: post.title || '',
+            sizes: '100vw',
+            loading: 'eager',
+            decoding: 'async',
+            fetchpriority: 'high'
+          });
+          bg.style.backgroundColor = '';
+          bg.innerHTML = heroImage;
         } else {
+          bg.innerHTML = '';
           bg.style.backgroundColor = post.thumbnailColor || '#c8b8a8';
         }
 

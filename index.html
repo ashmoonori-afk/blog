@@ -122,6 +122,29 @@
       return '';
     }
 
+    function normalizeImageAsset(value) {
+      if (!value) return null;
+      if (typeof value === 'string') return { url: value, variants: {} };
+      if (typeof value === 'object' && typeof value.url === 'string') {
+        return { ...value, variants: value.variants || {} };
+      }
+      return null;
+    }
+
+    function getImageUrl(value, preferred = ['thumb', 'body', 'hero']) {
+      const asset = normalizeImageAsset(value);
+      const preferredList = Array.isArray(preferred) ? preferred : [preferred];
+
+      if (!asset) return '';
+
+      for (const key of preferredList) {
+        const variantUrl = sanitizeURL(asset.variants?.[key]?.url);
+        if (variantUrl) return variantUrl;
+      }
+
+      return sanitizeURL(asset.url);
+    }
+
     function formatDate(dateStr) {
       const d = new Date(dateStr);
       if (isNaN(d)) return '';
@@ -142,9 +165,9 @@
       return 'standard';
     }
 
-    function buildThumbStyle(post) {
+    function buildThumbStyle(post, preferredVariant = 'thumb') {
       if (post.thumbnail) {
-        const url = sanitizeURL(post.thumbnail);
+        const url = getImageUrl(post.thumbnail, [preferredVariant, 'body', 'hero', 'thumb']);
         if (!url) return `background-color:${escapeHTML(post.thumbnailColor || '#c8b8a8')};`;
         return `background-image:url('${encodeURI(url)}');background-size:cover;background-position:center;`;
       }
@@ -152,8 +175,8 @@
     }
 
     function createCard(post, absoluteIdx) {
-      const thumbStyle = buildThumbStyle(post);
       const variant = getCardVariant(absoluteIdx);
+      const thumbStyle = buildThumbStyle(post, variant === 'featured' ? 'body' : 'thumb');
       const card = document.createElement('article');
       card.className = 'story-card' + (variant !== 'standard' ? ' ' + variant : '');
       card.style.animationDelay = `${(absoluteIdx % POSTS_PER_PAGE) * 0.1 + 0.1}s`;
@@ -250,7 +273,7 @@
         document.getElementById('section-title').textContent = s.site.sectionTitle;
         document.getElementById('section-subtitle').textContent = s.site.sectionSubtitle;
         if (s.hero.bgImage) {
-          const bgUrl = sanitizeURL(s.hero.bgImage);
+          const bgUrl = getImageUrl(s.hero.bgImage, ['hero', 'body', 'thumb']);
           if (bgUrl) {
             const hero = document.querySelector('.hero');
             hero.style.backgroundImage = `url('${encodeURI(bgUrl)}')`;

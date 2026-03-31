@@ -533,7 +533,9 @@
       constructor({data, config, api}) {
         this.data = {
           layout: data.layout||'2-equal',
-          image1: data.image1||'', image2: data.image2||'', image3: data.image3||'',
+          image1: normalizeImageAsset(data.image1) || '',
+          image2: normalizeImageAsset(data.image2) || '',
+          image3: normalizeImageAsset(data.image3) || '',
           caption: data.caption||'',
           width: data.width||'normal', // normal, wide, full
           aspectRatio: data.aspectRatio||'4:3' // 4:3, 16:9, 1:1
@@ -629,7 +631,7 @@
         enableFileReplacement(inp);
         slot.appendChild(inp);
         if (this.data[key]) {
-          const img = document.createElement('img'); img.src = this.data[key]; slot.appendChild(img);
+          const img = document.createElement('img'); img.src = getImageUrl(this.data[key], ['thumb', 'body', 'hero']); slot.appendChild(img);
         } else {
           const ph = document.createElement('div'); ph.classList.add('gallery-placeholder');
           ph.textContent = '클릭하여 이미지 추가'; slot.appendChild(ph);
@@ -647,9 +649,9 @@
           slot.appendChild(previewImg);
 
           try {
-            const url = await uploadImageFile(file);
-            this.data[key] = url;
-            previewImg.src = url;
+            const image = await uploadImageFile(file);
+            this.data[key] = image;
+            previewImg.src = getImageUrl(image, ['thumb', 'body', 'hero']);
           } catch (error) {
             alert(error.message);
           } finally {
@@ -664,7 +666,7 @@
         this.outer.querySelectorAll('.gallery-tool__slot').forEach(s => s.style.aspectRatio = ar);
       }
       save() { return this.data; }
-      validate(d) { return d.image1 || d.image2; }
+      validate(d) { return getImageUrl(d.image1) || getImageUrl(d.image2); }
     }
 
     // --- Columns (split image+text with ratio control) ---
@@ -680,7 +682,7 @@
       }
       constructor({data, config, api}) {
         this.data = {
-          image: data.image||'', heading: data.heading||'', text: data.text||'',
+          image: normalizeImageAsset(data.image) || '', heading: data.heading||'', text: data.text||'',
           layout: data.layout||'image-left',
           ratio: data.ratio||'1:1',
           width: data.width||'normal' // normal, wide, full
@@ -703,7 +705,7 @@
         enableFileReplacement(inp);
         imgSide.appendChild(inp);
         if (this.data.image) {
-          const img = document.createElement('img'); img.src=this.data.image; imgSide.appendChild(img);
+          const img = document.createElement('img'); img.src = getImageUrl(this.data.image, ['body', 'hero', 'thumb']); imgSide.appendChild(img);
         } else {
           const ph = document.createElement('div'); ph.classList.add('col-placeholder');
           ph.textContent='클릭하여 이미지 추가'; imgSide.appendChild(ph);
@@ -720,9 +722,9 @@
           imgSide.appendChild(previewImg);
 
           try {
-            const url = await uploadImageFile(file);
-            this.data.image = url;
-            previewImg.src = url;
+            const image = await uploadImageFile(file);
+            this.data.image = image;
+            previewImg.src = getImageUrl(image, ['body', 'hero', 'thumb']);
           } catch (error) {
             alert(error.message);
           } finally {
@@ -904,12 +906,42 @@
     const API_BASE = ['127.0.0.1', 'localhost'].includes(location.hostname) ? '' : 'http://127.0.0.1:3000';
 
     let editingId = null;
-    let thumbnailUrl = '';
+    let thumbnailAsset = null;
     let thumbnailColor = '#c8b8a8';
     let thumbnailRatio = '';
 
     function buildApiUrl(path) {
       return `${API_BASE}${path}`;
+    }
+
+    function normalizeImageAsset(value) {
+      if (!value) return null;
+      if (typeof value === 'string') {
+        return { url: value, variants: {} };
+      }
+
+      if (typeof value === 'object' && typeof value.url === 'string') {
+        return {
+          ...value,
+          variants: value.variants || {}
+        };
+      }
+
+      return null;
+    }
+
+    function getImageUrl(value, preferred = ['body', 'hero', 'thumb']) {
+      const asset = normalizeImageAsset(value);
+      const preferredList = Array.isArray(preferred) ? preferred : [preferred];
+
+      if (!asset) return '';
+
+      for (const key of preferredList) {
+        const variantUrl = asset.variants?.[key]?.url;
+        if (variantUrl) return variantUrl;
+      }
+
+      return asset.url || '';
     }
 
     async function fetchJson(path, options) {
@@ -941,11 +973,12 @@
         fd.append('image', file);
         const data = await fetchJson('/api/upload', { method: 'POST', body: fd });
 
-        if (!data.url) {
+        const image = normalizeImageAsset(data.image || data.url);
+        if (!image) {
           throw new Error('이미지 업로드에 실패했습니다.');
         }
 
-        return data.url;
+        return image;
       } catch (error) {
         if (error.message.includes('JSON 대신 HTML')) {
           throw new Error('이미지 업로드 요청이 HTML 페이지로 이동했습니다. 로컬 서버 주소로 다시 열어주세요.');
@@ -983,8 +1016,8 @@
           config: {
             uploader: {
               async uploadByFile(file) {
-                const url = await uploadImageFile(file);
-                return { success:1, file:{ url } };
+                const image = await uploadImageFile(file);
+                return { success:1, file: { ...image, url: getImageUrl(image, ['body', 'hero', 'thumb']) } };
               },
               async uploadByUrl(url) {
                 return { success:1, file:{ url } };
@@ -1141,9 +1174,9 @@
       document.getElementById('thumb-upload').classList.add('has-image');
 
       try {
-        const url = await uploadImageFile(file);
-        thumbnailUrl = url;
-        document.getElementById('thumb-preview').src = url;
+        const image = await uploadImageFile(file);
+        thumbnailAsset = image;
+        document.getElementById('thumb-preview').src = getImageUrl(image, ['thumb', 'body', 'hero']);
         document.getElementById('thumb-preview').style.display = 'block';
         document.getElementById('thumb-text').style.display = 'none';
         document.getElementById('thumb-upload').classList.add('has-image');
@@ -1155,7 +1188,7 @@
     });
 
     function removeThumbnail() {
-      thumbnailUrl = '';
+      thumbnailAsset = null;
       document.getElementById('thumb-preview').style.display = 'none';
       document.getElementById('thumb-text').style.display = '';
       document.getElementById('thumb-upload').classList.remove('has-image');
@@ -1174,7 +1207,7 @@
         category: document.getElementById('post-category').value,
         excerpt: document.getElementById('post-excerpt').value.trim(),
         content: JSON.stringify(editorData),
-        thumbnail: thumbnailUrl,
+        thumbnail: thumbnailAsset || '',
         thumbnailColor,
         thumbnailRatio,
         published: publish
@@ -1229,8 +1262,8 @@
       }
 
       if (post.thumbnail) {
-        thumbnailUrl = post.thumbnail;
-        document.getElementById('thumb-preview').src = post.thumbnail;
+        thumbnailAsset = normalizeImageAsset(post.thumbnail);
+        document.getElementById('thumb-preview').src = getImageUrl(thumbnailAsset, ['thumb', 'body', 'hero']);
         document.getElementById('thumb-preview').style.display = 'block';
         document.getElementById('thumb-text').style.display = 'none';
         document.getElementById('thumb-upload').classList.add('has-image');

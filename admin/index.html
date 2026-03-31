@@ -218,6 +218,29 @@
   </div>
 
   <script>
+    function normalizeImageAsset(value) {
+      if (!value) return null;
+      if (typeof value === 'string') return { url: value, variants: {} };
+      if (typeof value === 'object' && typeof value.url === 'string') {
+        return { ...value, variants: value.variants || {} };
+      }
+      return null;
+    }
+
+    function getImageUrl(value, preferred = ['thumb', 'body', 'hero']) {
+      const asset = normalizeImageAsset(value);
+      const preferredList = Array.isArray(preferred) ? preferred : [preferred];
+
+      if (!asset) return '';
+
+      for (const key of preferredList) {
+        const variantUrl = asset.variants?.[key]?.url;
+        if (variantUrl) return variantUrl;
+      }
+
+      return asset.url || '';
+    }
+
     async function loadPosts() {
       const res = await fetch('/api/admin/posts');
       const posts = await res.json();
@@ -239,8 +262,9 @@
       list.innerHTML = posts.map(post => {
         const d = new Date(post.createdAt);
         const date = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
-        const thumbStyle = post.thumbnail
-          ? `background-image:url('${post.thumbnail}')`
+        const thumbUrl = getImageUrl(post.thumbnail, ['thumb', 'body', 'hero']);
+        const thumbStyle = thumbUrl
+          ? `background-image:url('${thumbUrl}')`
           : `background-color:${post.thumbnailColor || '#c8b8a8'}`;
         const statusHTML = post.published ? '' : '<span class="draft">임시저장</span>';
 
