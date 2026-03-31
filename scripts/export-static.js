@@ -33,6 +33,13 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
+function serializeJsonForScript(value) {
+  return JSON.stringify(value)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026');
+}
+
 function normalizeImageAsset(value) {
   if (!value) return null;
   if (typeof value === 'string') return { url: value, variants: {} };
@@ -228,8 +235,8 @@ function serializePostsForIndex(posts) {
 }
 
 function renderIndexPage(posts, settings) {
-  const serializedPosts = JSON.stringify(serializePostsForIndex(posts));
-  const settingsJson = JSON.stringify({
+  const serializedPosts = serializeJsonForScript(serializePostsForIndex(posts));
+  const settingsJson = serializeJsonForScript({
     siteName: settings?.site?.name || 'Freshoh',
     heroLabel: settings?.hero?.label || 'FRESHOH WORKS'
   });
@@ -268,8 +275,8 @@ function renderIndexPage(posts, settings) {
     <span class="footer-note">&copy; 2026 ${escapeHtml(settings?.site?.name || 'Freshoh')}. All rights reserved.</span>
   </footer>
 
-  <script id="settings-data" type="application/json">${escapeHtml(settingsJson)}</script>
-  <script id="posts-data" type="application/json">${escapeHtml(serializedPosts)}</script>
+  <script id="settings-data" type="application/json">${settingsJson}</script>
+  <script id="posts-data" type="application/json">${serializedPosts}</script>
   <script>
     const settings = JSON.parse(document.getElementById('settings-data').textContent);
     const posts = JSON.parse(document.getElementById('posts-data').textContent);
