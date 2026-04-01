@@ -158,14 +158,13 @@ async function storeUpload(file) {
 
 app.get('/api/posts', (req, res) => {
   const posts = readPosts()
-    .filter((post) => post.published)
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    .filter((post) => post.published); // preserve manual order
 
   res.json(posts);
 });
 
 app.get('/api/admin/posts', (req, res) => {
-  const posts = readPosts().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const posts = readPosts(); // preserve manual order
   res.json(posts);
 });
 
@@ -199,6 +198,21 @@ app.post('/api/posts', (req, res) => {
   posts.push(post);
   writePosts(posts);
   res.status(201).json(post);
+});
+
+// Reorder posts (must be before :id route)
+app.put('/api/posts/reorder', (req, res) => {
+  const { ids } = req.body;
+  if (!Array.isArray(ids)) return res.status(400).json({ error: 'ids 배열이 필요합니다' });
+
+  const posts = readPosts();
+  const sorted = ids
+    .map(id => posts.find(p => p.id === id))
+    .filter(Boolean);
+
+  const remaining = posts.filter(p => !ids.includes(p.id));
+  writePosts([...sorted, ...remaining]);
+  res.json({ success: true });
 });
 
 app.put('/api/posts/:id', (req, res) => {
@@ -262,6 +276,15 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 
 app.get('/article/:id', (req, res) => {
   res.sendFile(path.join(__dirname, 'article.html'));
+});
+
+// V2 routes
+app.get('/v2/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'v2', 'index.html'));
+});
+
+app.get('/v2/project.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'v2', 'project.html'));
 });
 
 if (require.main === module) {

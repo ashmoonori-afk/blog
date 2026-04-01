@@ -102,8 +102,35 @@
       display: flex;
       align-items: center;
       gap: 20px;
-      transition: box-shadow 0.2s;
+      transition: box-shadow 0.2s, opacity 0.2s, transform 0.2s;
     }
+    .post-item.dragging {
+      opacity: 0.4;
+      transform: scale(0.98);
+    }
+    .post-item.drag-over {
+      box-shadow: 0 -3px 0 0 #1a1a1a;
+    }
+    .drag-handle {
+      cursor: grab;
+      color: #ccc;
+      font-size: 1.1rem;
+      padding: 4px 8px;
+      -webkit-user-select: none;
+      user-select: none;
+      flex-shrink: 0;
+      transition: color 0.2s;
+    }
+    .drag-handle:hover { color: #666; }
+    .drag-handle:active { cursor: grabbing; }
+    .order-saved {
+      font-size: 0.75rem;
+      color: #27ae60;
+      opacity: 0;
+      transition: opacity 0.3s;
+      margin-left: 12px;
+    }
+    .order-saved.show { opacity: 1; }
     .post-item:first-child { border-radius: 8px 8px 0 0; }
     .post-item:last-child { border-radius: 0 0 8px 8px; }
     .post-item:only-child { border-radius: 8px; }
@@ -206,7 +233,7 @@
     </div>
 
     <div class="page-header">
-      <h1 class="page-title">글 관리</h1>
+      <h1 class="page-title">글 관리<span class="order-saved" id="order-saved">✓ 순서 저장됨</span></h1>
       <a href="/admin/editor.html" class="btn btn-primary">+ 새 글 작성</a>
     </div>
 
@@ -269,7 +296,8 @@
         const statusHTML = post.published ? '' : '<span class="draft">임시저장</span>';
 
         return `
-          <div class="post-item">
+          <div class="post-item" draggable="true" data-id="${post.id}">
+            <div class="drag-handle" title="드래그하여 순서 변경">⠿</div>
             <div class="post-thumb" style="${thumbStyle}"></div>
             <div class="post-info">
               <div class="post-info-title">${post.title}</div>
@@ -294,7 +322,78 @@
       loadPosts();
     }
 
+    // === Drag & Drop Reorder ===
+    function initDragDrop() {
+      const list = document.getElementById('post-list');
+      let dragItem = null;
+
+      list.addEventListener('dragstart', (e) => {
+        const item = e.target.closest('.post-item');
+        if (!item) return;
+        dragItem = item;
+        dragItem.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+
+      list.addEventListener('dragend', () => {
+        if (dragItem) dragItem.classList.remove('dragging');
+        list.querySelectorAll('.post-item').forEach(el => el.classList.remove('drag-over'));
+        dragItem = null;
+      });
+
+      list.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        const target = e.target.closest('.post-item');
+        if (!target || target === dragItem) return;
+        list.querySelectorAll('.post-item').forEach(el => el.classList.remove('drag-over'));
+        target.classList.add('drag-over');
+      });
+
+      list.addEventListener('dragleave', (e) => {
+        const target = e.target.closest('.post-item');
+        if (target) target.classList.remove('drag-over');
+      });
+
+      list.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        const target = e.target.closest('.post-item');
+        if (!target || !dragItem || target === dragItem) return;
+        target.classList.remove('drag-over');
+
+        // Reorder DOM
+        const items = [...list.querySelectorAll('.post-item')];
+        const fromIdx = items.indexOf(dragItem);
+        const toIdx = items.indexOf(target);
+        if (fromIdx < toIdx) {
+          target.after(dragItem);
+        } else {
+          target.before(dragItem);
+        }
+
+        // Save new order
+        const newOrder = [...list.querySelectorAll('.post-item')].map(el => el.dataset.id);
+        await saveOrder(newOrder);
+      });
+    }
+
+    async function saveOrder(orderedIds) {
+      try {
+        await fetch('/api/posts/reorder', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ids: orderedIds })
+        });
+        const badge = document.getElementById('order-saved');
+        badge.classList.add('show');
+        setTimeout(() => badge.classList.remove('show'), 2000);
+      } catch (e) {
+        console.error('순서 저장 실패:', e);
+      }
+    }
+
     loadPosts();
+    initDragDrop();
   </script>
 
 </body>
