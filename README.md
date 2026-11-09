@@ -40,7 +40,7 @@ npm start
 
 ### 실제 앱 동작 경로
 
-- [server.js](/c:/Users/lg/blog/server.js)
+- [server.js](server.js)
   - 전체 서버 엔트리
   - 정적 파일 서빙
   - 글 CRUD API
@@ -48,36 +48,36 @@ npm start
   - 글 순서 재정렬 API
   - `v2` 라우트 연결
 
-- [index.html](/c:/Users/lg/blog/index.html)
+- [index.html](index.html)
   - 기존 메인 목록 페이지
   - `/api/posts`, `/api/settings`를 읽어 메인 화면 렌더링
 
-- [article.html](/c:/Users/lg/blog/article.html)
+- [article.html](article.html)
   - 기존 글 상세 페이지
   - `/api/posts/:id`를 읽어 상세 본문 렌더링
 
-- [styles.css](/c:/Users/lg/blog/styles.css)
+- [styles.css](styles.css)
   - 기존 메인/상세 공통 스타일
 
-- [admin/index.html](/c:/Users/lg/blog/admin/index.html)
+- [admin/index.html](admin/index.html)
   - 관리자 글 목록
   - 현재는 드래그 앤 드롭 순서 변경 포함
 
-- [admin/editor.html](/c:/Users/lg/blog/admin/editor.html)
+- [admin/editor.html](admin/editor.html)
   - 글 작성/수정 에디터
   - 이미지 업로드와 블록 편집 담당
 
-- [admin/settings.html](/c:/Users/lg/blog/admin/settings.html)
+- [admin/settings.html](admin/settings.html)
   - 사이트 설정 편집
 
 ### 데이터 파일
 
-- [posts/posts.json](/c:/Users/lg/blog/posts/posts.json)
+- [posts/posts.json](posts/posts.json)
   - 글 데이터 저장소
   - 제목, 요약, 본문(Editor.js JSON 문자열), 썸네일, 공개 여부, 순서 포함
   - 현재 메인 목록 정렬 순서의 원본
 
-- [posts/settings.json](/c:/Users/lg/blog/posts/settings.json)
+- [posts/settings.json](posts/settings.json)
   - 사이트명, 히어로 텍스트 등 전역 설정 저장
 
 - `uploads/`
@@ -93,12 +93,12 @@ npm start
 
 ### A. 루트 버전: 현재 편집 가능한 메인 앱
 
-- [index.html](/c:/Users/lg/blog/index.html)
-- [article.html](/c:/Users/lg/blog/article.html)
-- [styles.css](/c:/Users/lg/blog/styles.css)
-- [admin/editor.html](/c:/Users/lg/blog/admin/editor.html)
-- [admin/index.html](/c:/Users/lg/blog/admin/index.html)
-- [admin/settings.html](/c:/Users/lg/blog/admin/settings.html)
+- [index.html](index.html)
+- [article.html](article.html)
+- [styles.css](styles.css)
+- [admin/editor.html](admin/editor.html)
+- [admin/index.html](admin/index.html)
+- [admin/settings.html](admin/settings.html)
 
 설명:
 
@@ -109,9 +109,9 @@ npm start
 
 ### B. `v2/`: 정적/대안 템플릿 소스
 
-- [v2/index.html](/c:/Users/lg/blog/v2/index.html)
-- [v2/project.html](/c:/Users/lg/blog/v2/project.html)
-- [v2/styles.css](/c:/Users/lg/blog/v2/styles.css)
+- [v2/index.html](v2/index.html)
+- [v2/project.html](v2/project.html)
+- [v2/styles.css](v2/styles.css)
 
 설명:
 
@@ -136,15 +136,15 @@ npm start
 
 ## 4. 정적 배포 관련 파일
 
-- [scripts/export-static.js](/c:/Users/lg/blog/scripts/export-static.js)
+- [scripts/export-static.js](scripts/export-static.js)
   - `posts/posts.json`, `posts/settings.json`, `uploads/`를 읽어
   - `site/` 정적 산출물을 생성
   - 현재는 `v2/styles.css`와 `v2` 기반 상세 구조를 사용
 
-- [.github/workflows/deploy-pages.yml](/c:/Users/lg/blog/.github/workflows/deploy-pages.yml)
+- [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)
   - 정적 Pages 배포 워크플로 파일
 
-- [package.json](/c:/Users/lg/blog/package.json)
+- [package.json](package.json)
   - `build:static` 스크립트 정의
 
 정적 export 실행:
@@ -192,25 +192,25 @@ npm run build:static
 
 먼저 볼 파일:
 
-- [admin/editor.html](/c:/Users/lg/blog/admin/editor.html)
-- [admin/index.html](/c:/Users/lg/blog/admin/index.html)
-- [article.html](/c:/Users/lg/blog/article.html)
-- [server.js](/c:/Users/lg/blog/server.js)
-- [posts/posts.json](/c:/Users/lg/blog/posts/posts.json)
+- [admin/editor.html](admin/editor.html)
+- [admin/index.html](admin/index.html)
+- [article.html](article.html)
+- [server.js](server.js)
+- [posts/posts.json](posts/posts.json)
 
 ### 메인 디자인을 수정할 때
 
 기존 경로를 수정하려면:
 
-- [index.html](/c:/Users/lg/blog/index.html)
-- [styles.css](/c:/Users/lg/blog/styles.css)
+- [index.html](index.html)
+- [styles.css](styles.css)
 
 정적 Pages용 v2 스타일을 수정하려면:
 
-- [v2/index.html](/c:/Users/lg/blog/v2/index.html)
-- [v2/project.html](/c:/Users/lg/blog/v2/project.html)
-- [v2/styles.css](/c:/Users/lg/blog/v2/styles.css)
-- [scripts/export-static.js](/c:/Users/lg/blog/scripts/export-static.js)
+- [v2/index.html](v2/index.html)
+- [v2/project.html](v2/project.html)
+- [v2/styles.css](v2/styles.css)
+- [scripts/export-static.js](scripts/export-static.js)
 
 ---
 
